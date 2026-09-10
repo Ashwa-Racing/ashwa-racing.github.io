@@ -57,55 +57,146 @@ function escapeAttr(str) {
   return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
 }
 
-(function () {
-  function initBgVideo(video) {
-    if (!video) return;
+/* ── Background video init ─────────────────────────────────────
+   Top-level now (not IIFE-scoped) so initSpotlightToggle can also
+   call it on-demand when a spotlight layer becomes active.
+   ────────────────────────────────────────────────────────────── */
+function initBgVideo(video) {
+  if (!video) return;
 
-    const reveal = () => video.classList.add('is-loaded');
+  const reveal = () => video.classList.add('is-loaded');
 
-    if (video.readyState >= 4) {
-      reveal();
-    } else {
-      video.addEventListener('canplaythrough', reveal, { once: true });
-    }
-
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        video.removeEventListener('canplaythrough', reveal);
-      });
-    }
+  if (video.readyState >= 4) {
+    reveal();
+  } else {
+    video.addEventListener('canplaythrough', reveal, { once: true });
   }
 
+  const playPromise = video.play();
+  if (playPromise !== undefined) {
+    playPromise.catch(() => {
+      video.removeEventListener('canplaythrough', reveal);
+    });
+  }
+}
+
+(function () {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
+  // .spotlight-bg-video intentionally excluded here — initSpotlightToggle()
+  // starts the active EV layer's video on load, and lazily starts CV's
+  // only when the visitor toggles to it, so we're not decoding two loops
+  // in the background at once.
   document
-    .querySelectorAll('.hero-video, .spotlight-bg-video')
+    .querySelectorAll('.hero-video')
     .forEach(initBgVideo);
 })();
 
+/* ── Car spotlight toggle (EV / CV) ────────────────────────────
+   Crossfades bg layers + content, lazily starts/stops the video
+   so only the visible car's video is ever decoding with 3s switch
+   ────────────────────────────────────────────────────────────── */
+function initSpotlightToggle() {
+  const section = document.getElementById('car-spotlight');
+  if (!section) return;
+
+  const toggleBtns = section.querySelectorAll('.spotlight-toggle-btn');
+  const bgLayers   = section.querySelectorAll('.spotlight-bg-layer');
+  const contents   = section.querySelectorAll('.spotlight-content');
+
+  function setActive(car) {
+    section.dataset.active = car;
+    section.classList.toggle('spotlight--ev', car === 'ev');
+
+    toggleBtns.forEach(btn => {
+      const active = btn.dataset.car === car;
+      btn.classList.toggle('is-active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+
+    bgLayers.forEach(layer => {
+      const isActive = layer.dataset.car === car;
+      layer.classList.toggle('is-active', isActive);
+
+      const video = layer.querySelector('.spotlight-bg-video');
+      if (!video) return;
+      if (isActive) {
+        initBgVideo(video);
+      } else {
+        video.pause();
+      }
+    });
+
+    contents.forEach(content => {
+      content.classList.toggle('is-active', content.dataset.car === car);
+    });
+  }
+
+  // ── One-time auto-advance to CV after 3s ──────────────────────
+  // Cancelled if the visitor touches the toggle themselves first,
+  // and never fires again after — this is a first-glance nudge,
+  // not a recurring carousel.
+  let autoAdvanceTimer = null;
+  let autoAdvanceFired = false;
+
+  function cancelAutoAdvance() {
+    if (autoAdvanceTimer) {
+      clearTimeout(autoAdvanceTimer);
+      autoAdvanceTimer = null;
+    }
+  }
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    autoAdvanceTimer = setTimeout(() => {
+      autoAdvanceTimer = null;
+      if (autoAdvanceFired) return;
+      autoAdvanceFired = true;
+      // only advance if the visitor hasn't already moved off EV themselves
+      if (section.dataset.active === 'ev') setActive('cv');
+    }, 3000);
+  }
+
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      cancelAutoAdvance();
+      autoAdvanceFired = true; // manual interaction retires the nudge for good
+      setActive(btn.dataset.car);
+    });
+  });
+
+  const cvVideo = section.querySelector('[data-car="cv"] .spotlight-bg-video');
+  if (cvVideo) cvVideo.pause();
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const evVideo = section.querySelector('[data-car="ev"] .spotlight-bg-video');
+    if (evVideo) initBgVideo(evVideo);
+  }
+}
+
 function renderSponsorStrip() {
-  const track = document.getElementById('sponsor-track');
-  if (!track) return;
+    const track = document.getElementById('sponsor-track');
+    if (!track) return;
 
-  const allSponsors = sponsorData;
+    const allSponsors = sponsorData;
 
-  const cardsHtml = allSponsors.map(s => {
-    const logo = `
-                  <img
-                      src="${escapeAttr(s.logo)}"
-                      alt="${escapeAttr(s.name)}"
-                      loading="eager"
-                      fetchpriority="high"
-                      decoding="async"
-                      width="360"
-                      height="360">
-                  `;
-    return `<a href="${escapeAttr(s.url)}" target="_blank" rel="noopener" class="sp-card">${logo}</a>`;
-  }).join('');
+    const cardsHtml = allSponsors.map(s => {
+        const logo = `
+            <img
+                src="${escapeAttr(s.logo)}"
+                alt="${escapeAttr(s.name)}"
+                loading="lazy"
+                decoding="async"
+                width="360"
+                height="360">
+        `;
 
-  // duplicated once so translateX(-50%) loops seamlessly
-  track.innerHTML = cardsHtml + cardsHtml;
+        return `<a href="${escapeAttr(s.url)}"
+                    target="_blank"
+                    rel="noopener"
+                    class="sp-card">${logo}</a>`;
+    }).join('');
+
+    track.innerHTML = cardsHtml + cardsHtml;
 }
 
 function preloadSponsorImages() {
@@ -119,14 +210,16 @@ function preloadSponsorImages() {
     );
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-    await preloadSponsorImages();
-
+document.addEventListener("DOMContentLoaded", () => {
     renderSponsorStrip();
     initReveal();
     initMaskReveal();
     initNewsletterPreview();
     initStatCounters();
+    initSpotlightToggle();
+
+    // Non-blocking sponsor preloading.
+    preloadSponsorImages();
 });
 
 /* ── Scroll reveal ────────────────────────────────────────────
@@ -140,11 +233,9 @@ function initReveal() {
 
   const groups = [
     document.querySelectorAll(".stat-bar-grid .stat"),
-    document.querySelectorAll(".bento .container > *"),
     document.querySelectorAll(".sponsors-grid img"),
-    document.querySelectorAll(".spotlight-overlay > *:not(h2)"),
+    document.querySelectorAll(".spotlight-toggle, .spotlight-content > *:not(h2)"),
     document.querySelectorAll(".news-grid .news-card"),
-    document.querySelectorAll(".insta-grid .insta-tile"),
     document.querySelectorAll(".launch-teaser-content > *:not(.launch-teaser-heading)"),
   ];
 
@@ -177,7 +268,7 @@ function initMaskReveal() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
   const targets = document.querySelectorAll(
-    ".spotlight-overlay > h2, .launch-teaser-heading, .news .container > h2, .insta-grid-section .container > h2"
+    ".spotlight-content h2, .launch-teaser-heading, .news .container > h2"
   );
   if (!targets.length) return;
 

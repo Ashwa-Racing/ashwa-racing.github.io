@@ -27,16 +27,12 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap">
   </noscript>
 
-  <link rel="preload" as="image" fetchpriority="high"
-    href="https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif,quality=100/images/heroimg/hero-desktop.jpg"
-    imagesrcset="
-      https://assets.ashwaracing.org/cdn-cgi/image/width=768,format=avif,quality=100/images/heroimg/hero-mobile.png 768w,
-      https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif,quality=100/images/heroimg/hero-desktop.jpg 1440w
-    " imagesizes="100vw">
-
   <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/pages/index.css">
   <link rel="stylesheet" href="assets/css/components/footer.css">
+
+  <!-- Start page JS download early. It remains deferred so DOM parsing is never blocked. -->
+  <link rel="preload" as="script" href="assets/js/pages/index.js">
 </head>
 
 <body>
@@ -51,30 +47,36 @@
     <section class="hero" aria-label="Ashwa Racing hero">
       <picture>
         <source media="(max-width: 768px)"
-          srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=768,format=avif,quality=85/images/heroimg/hero-mobile.png"
+          srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=768,format=avif,quality=50/images/heroimg/hero-mobile.png"
           width="768" height="1024">
         <img
-          src="https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif,quality=85/images/heroimg/hero-desktop.jpg"
+          src="https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif,quality=50/images/heroimg/hero-desktop.jpg"
           class="hero-img" alt="Ashwa Racing Formula Student car RZ-XX6-C on track at Formula Bharat 2026" width="1440"
-          height="860" fetchpriority="high" decoding="sync">
+          height="860" fetchpriority="low" decoding="sync">
       </picture>
 
         <!-- Video sits above the poster img but starts invisible. JS adds
        .is-loaded once the browser reports enough data buffered to
        play through without stalling — that's the "fully loaded" gate.
        Poster stays underneath permanently as the fallback. -->
-        <video class="hero-video" id="hero-video" autoplay muted loop playsinline preload="auto"
-          poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif,quality=85/images/heroimg/hero-desktop.jpg"
-          aria-hidden="true">
-          <source src="assets/videos/hero_vid.mp4" type="video/mp4">
-        </video>
+      <video class="hero-video" id="hero-video"
+            autoplay
+            muted
+            loop
+            playsinline
+            poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif,quality=50/images/heroimg/hero-desktop.jpg"
+            preload="none"
+            aria-hidden="true">
+        <source src="assets/videos/hero_vid.mp4" type="video/mp4">
+      </video>
 
 
       <div class="hero-overlay" aria-hidden="true"></div>
 
       <div class="hero-content">
 
-        <h1>22 Years.Four Powertrains.</h1>
+        <h1>Ashwa
+          Racing</h1>
 
         <p class="hero-para">
           Two international hybrid championships. A combustion legacy two decades
@@ -123,178 +125,104 @@
       <div class="sponsor-strip-track" id="sponsor-track"></div>
     </section>
 
-    <!-- ============================================================
-         BENTO — Join / Partner / Formula Student
-         ============================================================ -->
-    <section class="bento" aria-label="Join the team, partner with us, and about Formula Student">
-      <div class="container">
-        <a href="recruitment.html" class="bento-card bento-card--lg">
-          <div class="bento-img"
-            style="background-image:url('https://assets.ashwaracing.org/cdn-cgi/image/width=1200,format=avif,quality=80/images/team/fullteam/2026-C.JPG')">
-          </div>
-          <div class="bento-body">
-            <h2 class="bento-heading">Build Real Cars.<br>Race Them.</h2>
-            <p>Design hardware that competes internationally. Real subsystems, real stakes, real deadlines. Applications
-              open right now.</p>
-            <span class="btn-line" aria-hidden="true">
-              Apply Now
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" width="16"
-                height="16">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </span>
-          </div>
-        </a>
+    <section class="spotlight spotlight--ev" aria-label="Current car spotlight" id="car-spotlight" data-active="ev">
 
-        <a href="smp.html" class="bento-card">
-          <div class="bento-img"
-            style="background-image:url('https://assets.ashwaracing.org/cdn-cgi/image/width=800,format=avif,quality=80/images/prototypes/RZ-XX5-C/event/2.jpg')">
-          </div>
-          <div class="bento-body">
-            <h2 class="bento-heading">Put Your Brand<br>on the Grid.</h2>
-            <p>Reach engineers worldwide. Tiers from ₹25,000.</p>
-            <span class="btn-line" aria-hidden="true">
-              View Packages
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" width="16"
-                height="16">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </span>
-          </div>
-        </a>
-
-        <a href="about.html#formula-student" class="bento-card">
-          <div class="bento-img"
-            style="background-image:url('https://assets.ashwaracing.org/images/gallery/Panoramic-2024.jpg')"></div>
-          <div class="bento-body">
-            <h2 class="bento-heading">The Formula<br>Student</h2>
-            <p>600+ university teams, one year, one car. Ashwa has competed since 2003.</p>
-            <span class="btn-line" aria-hidden="true">
-              Our History
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" width="16"
-                height="16">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-              </svg>
-            </span>
-          </div>
-        </a>
+      <div class="spotlight-bg-layer is-active" data-car="ev">
+        <img class="spotlight-bg" data-src="assets/images/prototypes/RZ-XX6-E/preevent/1.png" alt="RZ-XX6-E">
+        <video class="spotlight-bg-video" autoplay muted loop playsinline
+          data-poster="assets/images/prototypes/RZ-XX6-E/preevent/1.png"
+          preload="none" aria-hidden="true">
+        </video>
       </div>
-    </section>
 
-        <section class="spotlight spotlight--ev" aria-label="Current car spotlight">
-
-      <img class="spotlight-bg"
-        src="assets/images/prototypes/RZ-XX6-E/preevent/1.png"
-        alt="RZ-XX6-E">
-
-          <video class="spotlight-bg-video" autoplay muted loop playsinline preload="auto"
-    poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif,quality=100/images/prototypes/RZ-XX6-E/preevent/1.png"
-    aria-hidden="true">
-    <source src="assets/videos/ev_spotlight.mp4" type="video/mp4">
-  </video>
+      <div class="spotlight-bg-layer" data-car="cv">
+        <img class="spotlight-bg"
+          data-src="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif,quality=50/images/prototypes/RZ-XX6-C/postevent/1.jpg"
+          alt="Ashwa Racing RZ-XX6-C Formula Student car">
+        <video class="spotlight-bg-video" autoplay muted loop playsinline
+          data-poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif,quality=50/images/prototypes/RZ-XX6-C/postevent/1.jpg"
+          preload="none" aria-hidden="true">
+        </video>
+      </div>
 
       <div class="spotlight-overlay">
 
-        <p class="label">Current EV Car</p>
+        <div class="spotlight-toggle" role="tablist" aria-label="Choose powertrain">
+          <button class="spotlight-toggle-btn is-active" data-car="ev" role="tab" aria-selected="true">EV</button>
+          <button class="spotlight-toggle-btn" data-car="cv" role="tab" aria-selected="false">CV</button>
+          <span class="spotlight-toggle-thumb" aria-hidden="true"></span>
+        </div>
 
-        <h2>
-          Meet <em>RZ-XX6-E</em>
-        </h2>
+        <div class="spotlight-stage">
 
-        <p class="spotlight-text">
-          Our first fully electric prototype — built from the ground up, not
-          adapted from a combustion platform. New chassis, new electrical
-          architecture, new powertrain logic. A single Emrax 208 MV motor and
-          a 252V pack replace the engine entirely, backed by a rebuilt data
-          acquisition stack. Designed, manufactured and raced by the students
-          of Ashwa Racing.
-        </p>
+          <div class="spotlight-content is-active" data-car="ev">
+            <p class="label">Current EV Car</p>
+            <h2>Meet <em>RZ-XX6-E</em></h2>
 
-        <div class="spotlight-specs">
+            <div class="spotlight-specs">
+              <div>
+                <span class="spotlight-spec-num">75kW</span>
+                <span class="spotlight-spec-label">Power</span>
+              </div>
+              <div>
+                <span class="spotlight-spec-num">4.8s</span>
+                <span class="spotlight-spec-label">0–100 km/h</span>
+              </div>
+              <div>
+                <span class="spotlight-spec-num">235kg</span>
+                <span class="spotlight-spec-label">Dry Weight</span>
+              </div>
+            </div>
 
-          <div>
-            <span class="spotlight-spec-num">75kW</span>
-            <span class="spotlight-spec-label">Power</span>
+            <p class="spotlight-tags">Emrax 208 MV Motor &middot; 252V Pack &middot; New Chassis &middot; Rebuilt DAQ Stack</p>
+
+            <p class="spotlight-text">
+              Our first fully electric prototype — built from the ground up. Designed, manufactured and raced by the students of Ashwa Racing.
+            </p>
+
+            <a href="projects.html" class="btn-line">
+              Full Specs
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
           </div>
 
-          <div>
-            <span class="spotlight-spec-num">4.8s</span>
-            <span class="spotlight-spec-label">0–100 km/h</span>
-          </div>
+          <div class="spotlight-content" data-car="cv">
+            <p class="label">Current Competition Car</p>
+            <h2>Meet <em>RZ-XX6-C</em></h2>
 
-          <div>
-            <span class="spotlight-spec-num">235kg</span>
-            <span class="spotlight-spec-label">Dry Weight</span>
+            <div class="spotlight-specs">
+              <div>
+                <span class="spotlight-spec-num">4</span>
+                <span class="spotlight-spec-label">Cylinders</span>
+              </div>
+              <div>
+                <span class="spotlight-spec-num">3.2s</span>
+                <span class="spotlight-spec-label">0–100 km/h</span>
+              </div>
+              <div>
+                <span class="spotlight-spec-num">185kg</span>
+                <span class="spotlight-spec-label">Dry Weight</span>
+              </div>
+            </div>
+
+            <p class="spotlight-tags">Redesigned Electrical Architecture &middot; Lighter Wiring Harness &middot; Rebuilt DAQ Stack</p>
+
+            <p class="spotlight-text">
+              Our combustion prototype for the 2026–27 season. Designed,
+              manufactured and raced by the students of Ashwa Racing.
+            </p>
+
+            <a href="projects.html" class="btn-line">
+              Full Specs
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+              </svg>
+            </a>
           </div>
 
         </div>
-
-        <a href="projects.html" class="btn-line">
-          Full Specs
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
-        </a>
-
-      </div>
-
-    </section>
-
-    <section class="spotlight" aria-label="Current car spotlight">
-
-      <img class="spotlight-bg"
-        src="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif,quality=100/images/prototypes/RZ-XX6-C/postevent/1.jpg"
-        alt="Ashwa Racing RZ-XX6-C Formula Student car">
-
-          <video class="spotlight-bg-video" autoplay muted loop playsinline preload="auto"
-    poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif,quality=100/images/prototypes/RZ-XX6-C/postevent/1.jpg"
-    aria-hidden="true">
-    <source src="assets/videos/cv_spotlight.mp4" type="video/mp4">
-  </video>
-
-      <div class="spotlight-overlay">
-
-        <p class="label">Current Competition Car</p>
-
-        <h2>
-          Meet <em>RZ-XX6-C</em>
-        </h2>
-
-        <p class="spotlight-text">
-          Our combustion prototype for the 2026–27 season — a complete redesign
-          of the electrical architecture, a lighter wiring harness and an
-          entirely rebuilt data acquisition stack. Designed, manufactured and
-          raced by the students of Ashwa Racing.
-        </p>
-
-        <div class="spotlight-specs">
-
-          <div>
-            <span class="spotlight-spec-num">4</span>
-            <span class="spotlight-spec-label">Cylinders</span>
-          </div>
-
-          <div>
-            <span class="spotlight-spec-num">3.2s</span>
-            <span class="spotlight-spec-label">0–100 km/h</span>
-          </div>
-
-          <div>
-            <span class="spotlight-spec-num">185kg</span>
-            <span class="spotlight-spec-label">Dry Weight</span>
-          </div>
-
-        </div>
-
-        
-
-        <a href="projects.html" class="btn-line">
-          Full Specs
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
-        </a>
-
       </div>
 
     </section>
@@ -311,7 +239,7 @@
           <a id="blog-card" href="newsletters.html" class="news-card">
             <div class="news-card-img-wrap">
               <img id="blog-thumb"
-                src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/newsletters/2026/2026-03.png"
+                data-src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/newsletters/2026/2026-03.png"
                 alt="Ashwa Racing newsletter cover" loading="lazy" width="600" height="400">
             </div>
             <div class="news-card-body">
@@ -326,7 +254,7 @@
           <a href="smp.html" class="news-card">
             <div class="news-card-img-wrap">
               <img
-                src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/gallery/Panoramic-2024.jpg"
+                data-src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/gallery/Panoramic-2024.jpg"
                 alt="Ashwa Racing at Formula Bharat 2026" loading="lazy" width="600" height="400">
             </div>
             <div class="news-card-body">
@@ -341,7 +269,7 @@
           <a href="recruitment.html" class="news-card">
             <div class="news-card-img-wrap">
               <img
-                src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/team/fullteam/2026-C.JPG"
+                data-src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/team/fullteam/2026-C.JPG"
                 alt="Ashwa Racing team 2026" loading="lazy" width="600" height="400">
             </div>
             <div class="news-card-body">
@@ -364,136 +292,96 @@
       </div>
     </section>
 
-    <!-- ============================================================
-         INSTAGRAM GRID — static thumbnails, no embed script needed
-         ============================================================ -->
-    <section class="insta-grid-section" aria-label="Follow us on Instagram">
-      <div class="container">
-        <p class="label" style="color:rgba(255,255,255,0.5)">FOLLOW ALONG</p>
-        <h2 style="color:var(--white)">@ashwa_<em>racing</em></h2>
-
-        <div class="insta-grid">
-          <a href="https://www.instagram.com/ashwa_racing/" target="_blank" rel="noopener noreferrer"
-            class="insta-tile">
-            <img
-              src="https://assets.ashwaracing.org/cdn-cgi/image/width=800,format=avif,quality=100/images/gallery/Panoramic-2024.jpg"
-              alt="Ashwa Racing on track" loading="lazy" width="400" height="400">
-          </a>
-          <a href="https://www.instagram.com/ashwa_racing/" target="_blank" rel="noopener noreferrer"
-            class="insta-tile">
-            <img
-              src="https://assets.ashwaracing.org/cdn-cgi/image/width=800,format=avif,quality=100/images/team/fullteam/2026-C.JPG"
-              alt="Ashwa Racing full team" loading="lazy" width="400" height="400">
-          </a>
-          <a href="https://www.instagram.com/ashwa_racing/" target="_blank" rel="noopener noreferrer"
-            class="insta-tile">
-            <img
-              src="https://assets.ashwaracing.org/cdn-cgi/image/width=800,format=avif,quality=100/images/prototypes/RZ-XX5-C/event/2.jpg"
-              alt="RZ-XX5-C at competition" loading="lazy" width="400" height="400">
-          </a>
-          <a href="https://www.instagram.com/ashwa_racing/" target="_blank" rel="noopener noreferrer"
-            class="insta-tile">
-            <img
-              src="https://assets.ashwaracing.org/cdn-cgi/image/width=800,format=avif,quality=100/images/heroimg/hero-desktop.jpg"
-              alt="Ashwa Racing hero shot" loading="lazy" width="400" height="400">
-          </a>
-        </div>
-
-        <a href="https://www.instagram.com/ashwa_racing/" target="_blank" rel="noopener noreferrer" class="btn-line"
-          style="color:var(--white);border-color:rgba(255,255,255,0.35)">
-          Follow on Instagram
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" width="16"
-            height="16">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
-        </a>
-      </div>
-    </section>
-
-    <!-- ============================================================
-         SPONSORS (full tiered list)
-         ============================================================ -->
-    <!-- <section class="sponsors" aria-label="Sponsors and partners">
-      <div class="container">
-        <p class="label">PARTNERS</p>
-        <h2>Our <em>Sponsors</em></h2>
-        <p class="sponsors-sub">
-          From sensors and microcontrollers to lubricants and logistics — our
-          partners supply the components, expertise, and resources that go
-          directly into the car. 40+ partners, 2026–27 season.
-        </p>
-
-        <p class="sponsors-tier-label">Executive Sponsors</p>
-        <div class="sponsors-grid sponsors-grid--exec">
-          <a href="https://www.rvce.edu.in" target="_blank" rel="noopener noreferrer"
-            aria-label="RVCE — our home institution">
-            <img src="https://assets.ashwaracing.org/images/sponsors/rvce.svg" alt="RVCE" loading="lazy" width="220"
-              height="80">
-          </a>
-          <a href="https://www.infineon.com" target="_blank" rel="noopener noreferrer"
-            aria-label="Infineon Technologies">
-            <img src="https://assets.ashwaracing.org/images/sponsors/infineon.svg" alt="Infineon Technologies"
-              loading="lazy" width="220" height="80">
-          </a>
-          <a href="https://www.bosch.com" target="_blank" rel="noopener noreferrer" aria-label="Bosch">
-            <img src="https://assets.ashwaracing.org/images/sponsors/bosch.svg" alt="Bosch" loading="lazy" width="220"
-              height="80">
-          </a>
-          <a href="https://www.adani.com" target="_blank" rel="noopener noreferrer" aria-label="Adani Group">
-            <img src="https://assets.ashwaracing.org/images/sponsors/adani.svg" alt="Adani" loading="lazy" width="220"
-              height="80">
-          </a>
-          <a href="https://www.dynamatics.com" target="_blank" rel="noopener noreferrer"
-            aria-label="Dynamatics Technologies">
-            <img src="https://assets.ashwaracing.org/images/sponsors/dynamatics.svg" alt="Dynamatics Technologies"
-              loading="lazy" width="220" height="80">
-          </a>
-        </div>
-
-        <p class="sponsors-tier-label">Platinum Sponsors</p>
-        <div class="sponsors-grid sponsors-grid--plat">
-          <a href="https://www.skf.com" target="_blank" rel="noopener noreferrer" aria-label="SKF"><img
-              src="https://assets.ashwaracing.org/images/sponsors/skf.svg" alt="SKF" loading="lazy" width="120"
-              height="60"></a>
-          <a href="https://www.analog.com" target="_blank" rel="noopener noreferrer" aria-label="Analog Devices"><img
-              src="https://assets.ashwaracing.org/images/sponsors/analogdevices.svg" alt="Analog Devices" loading="lazy"
-              width="120" height="60"></a>
-          <a href="https://www.vrl.in" target="_blank" rel="noopener noreferrer" aria-label="VRL Logistics"><img
-              src="https://assets.ashwaracing.org/images/sponsors/vrl.svg" alt="VRL Logistics" loading="lazy"
-              width="120" height="60"></a>
-          <a href="https://pegasyssystems.com/" target="_blank" rel="noopener noreferrer"
-            aria-label="Pegasys Systems"><img
-              src="https://assets.ashwaracing.org/images/sponsors/pegasyssystemspvtltd.svg" alt="Pegasys Systems"
-              loading="lazy" width="120" height="60"></a>
-          <a href="https://www.motul.com" target="_blank" rel="noopener noreferrer" aria-label="Motul"><img
-              src="https://assets.ashwaracing.org/images/sponsors/motul.svg" alt="Motul" loading="lazy" width="120"
-              height="60"></a>
-          <a href="https://www.lappgroup.com" target="_blank" rel="noopener noreferrer" aria-label="LAPP Group"><img
-              src="https://assets.ashwaracing.org/images/sponsors/lapp.svg" alt="LAPP Group" loading="lazy" width="120"
-              height="60"></a>
-          <a href="https://www.henkel.com" target="_blank" rel="noopener noreferrer" aria-label="Henkel"><img
-              src="https://assets.ashwaracing.org/images/sponsors/henkel.svg" alt="Henkel" loading="lazy" width="120"
-              height="60"></a>
-        </div>
-
-        <a href="sponsors.html" class="btn-line">
-          View All Partners
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" width="16"
-            height="16">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
-        </a>
-      </div>
-    </section> -->
-
   </main>
 
   <footer id="main-footer"></footer>
-
-  <script src="assets/js/components/header.js" defer></script>
+  <!-- JS is downloaded early via preload, then executes after DOM parsing. -->
   <script src="assets/js/pages/index.js" defer></script>
+  <script src="assets/js/components/header.js" defer></script>
 
+  <script>
+    /*
+     * Media loading policy:
+     * - The critical hero poster/image is available immediately.
+     * - Videos and non-critical images have no src/source during parsing.
+     * - They are activated only after the page DOM has parsed.
+     * - Spotlight/news images are additionally lazy-loaded when near viewport.
+     */
+    (() => {
+      const activateMedia = () => {
+        // Hero video: deliberately delayed until after initial HTML parsing.
+        const heroVideo = document.getElementById('hero-video');
+        if (heroVideo && !heroVideo.querySelector('source')) {
+          const source = document.createElement('source');
+          source.src = 'assets/videos/hero_vid.mp4';
+          source.type = 'video/mp4';
+          heroVideo.appendChild(source);
+          heroVideo.load();
 
+          const startHeroVideo = () => {
+            heroVideo.play().catch(() => {});
+          };
+
+          if (heroVideo.readyState >= 3) {
+            startHeroVideo();
+          } else {
+            heroVideo.addEventListener('canplay', startHeroVideo, { once: true });
+          }
+        }
+
+        // Spotlight images/videos.
+        document.querySelectorAll('.spotlight-bg[data-src]').forEach(img => {
+          if (!img.src) img.src = img.dataset.src;
+        });
+
+        document.querySelectorAll('.spotlight-bg-video[data-poster]').forEach(video => {
+          video.poster = video.dataset.poster;
+
+          if (!video.querySelector('source')) {
+            const source = document.createElement('source');
+            source.src = video.closest('[data-car]')?.dataset.car === 'cv'
+              ? 'assets/videos/cv_spotlight.mp4'
+              : 'assets/videos/ev_spotlight.mp4';
+            source.type = 'video/mp4';
+            video.appendChild(source);
+            video.load();
+          }
+        });
+
+        // News images: only activate when near the viewport.
+        const lazyImages = document.querySelectorAll('img[data-src]:not(.spotlight-bg)');
+
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+              if (!entry.isIntersecting) return;
+              const img = entry.target;
+              img.src = img.dataset.src;
+              img.removeAttribute('data-src');
+              obs.unobserve(img);
+            });
+          }, {
+            rootMargin: '300px 0px'
+          });
+
+          lazyImages.forEach(img => observer.observe(img));
+        } else {
+          lazyImages.forEach(img => {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+          });
+        }
+      };
+
+      // Run after parsing, before the browser needs below-fold media.
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', activateMedia, { once: true });
+      } else {
+        activateMedia();
+      }
+    })();
+  </script>
+  
 </body>
 
 </html>
