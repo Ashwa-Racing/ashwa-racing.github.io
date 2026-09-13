@@ -1,241 +1,178 @@
-# Ashwa Racing — Website
+<div align="center">
 
-The official website for Ashwa Racing, the Formula Student team of RV College of Engineering, Bengaluru. Live at [ashwaracing.org](https://ashwaracing.org).
+<img src="assets/images/favicon/header.png" alt="Ashwa Racing" width="90" />
 
-Built without a framework. No build step, no bundler, no dependencies to install. Open `index.html` in a browser and it works.
+# ASHWA RACING — WEBSITE
+
+### वेगः इतः आरभ्यते
+*Speed begins here.*
+
+**The official site of RV College of Engineering's Formula Student team.**
+
+[![Live Site](https://img.shields.io/badge/ashwaracing.org-live-e8001d?style=for-the-badge&logo=googlechrome&logoColor=white)](https://ashwaracing.org)
+[![Deploy](https://img.shields.io/github/actions/workflow/status/Ashwa-Racing/ashwa-racing.github.io/static.yml?label=pages%20deploy&style=for-the-badge&color=0a0a0a&labelColor=1e1e1e)](https://github.com/Ashwa-Racing/ashwa-racing.github.io/actions)
+[![License: MIT](https://img.shields.io/badge/license-MIT-e8001d?style=for-the-badge&labelColor=1e1e1e)](LICENSE)
+[![Formula Student](https://img.shields.io/badge/formula%20student-RVCE-e8001d?style=for-the-badge&labelColor=1e1e1e)](https://ashwaracing.org)
+
+</div>
+
+<img src="assets/images/heroimg/hero-desktop.jpg" alt="Ashwa Racing hero" width="100%" />
+
+<br>
+
+Built and broken and rebuilt by whoever on the team has a free evening between builds, exams, and competition prep. No framework, no build step, no `node_modules` — clone it, open `index.html`, and you're looking at the live site. That's the whole point.
+
+<div align="center">
+
+`HTML` · `CSS` · `Vanilla JS` · `GitHub Actions` · `Cloudflare R2`
+
+</div>
 
 ---
 
-## What's in the repo
+## Why so plain?
+
+Subsystem leads and recruits rotate through this repo every single year, most having never touched a JS framework in their life. A `.html` file with a matching `.css` and `.js` file is a shape anyone can read in five minutes, edit without breaking the build, and hand off to next year's batch without a training session. We'd rather have a codebase that survives team turnover than one that looks impressive for a semester.
+
+## Getting it running
+
+```bash
+git clone https://github.com/Ashwa-Racing/ashwa-racing.github.io.git
+cd ashwa-racing.github.io
+python -m http.server 8000     # or: npx serve .
+```
+
+Opening files straight off disk (`file://`) mostly works, but the header/footer and a couple of other bits load via `fetch()`, which browsers block on `file://`. Any static server fixes it.
+
+---
+
+## What's in here
+
+<details>
+<summary><b>Click to expand the full layout</b></summary>
 
 ```
-ashwaracing.org/
+ashwa-racing.github.io/
+├── index.html, about.html, team.html, alumni.html,
+│   subsystem.html, projects.html, sponsors.html, smp.html,
+│   recruitment.html, contact.html, gallery.html, newsletters.html
 │
-├── index.html                  # Home — hero slideshow, sponsors strip, subsystem grid
-├── about.html                  # Team history, mission, alumni testimonials
-├── projects.html               # Prototype archive across all generations
-├── team.html                   # Full team roster with subsystem filtering
-├── sponsors.html               # Partner showcase by tier
-├── smp.html                    # Sponsorship prospectus page
-├── recruitment.html            # Open positions and application flow
-├── contact.html                # Contact form
-├── alumni.html                 # Alumni org chart and legacy members
-├── achievements.html           # Competition results and records
-├── gallery.html                # Photo gallery
-├── blog_index.html             # Blog listing — all posts
-├── blog_post.html              # Blog post reader (shared template)
-│
-├── — Subsystem pages —
-├── aero.html
-├── brakes-logistics.html
-├── chassis-workshop.html
-├── drivetrain-hr.html
-├── electrical-testing.html
-├── engine.html
-├── finance.html
-├── it.html
-├── suspension-admin.html
+├── aero.html, brakes-logistics.html, chassis-workshop.html,
+│   drivetrain-hr.html, electrical-testing.html, engine.html,
+│   finance.html, it.html, suspension-admin.html
+│                                   # one page per subsystem/division
 │
 ├── components/
-│   ├── header.html             # Shared nav, loaded via fetch()
-│   └── footer.html             # Shared footer, loaded via fetch()
+│   ├── header.html                # shared nav, injected via fetch()
+│   └── footer.html
 │
 ├── assets/
 │   ├── css/
-│   │   ├── global.css          # Design tokens, reset, typography, shared layout
-│   │   └── pages/             # One CSS file per page (e.g. index.css, blog.css)
-│   │
+│   │   ├── components/            # header.css, footer.css
+│   │   └── pages/                 # one stylesheet per page
 │   ├── js/
-│   │   ├── header.js           # Injects header.html, handles nav scroll state
-│   │   └── pages/             # One JS file per page (e.g. index.js, blog.js, team.js)
-│   │
-│   ├── posts/
-│   │   ├── index.json          # Blog post manifest — source of truth for all posts
-│   │   └── *.md               # Individual post files in Markdown
-│   │
-│   └── images/
-│       ├── blog/              # Post cover images
-│       ├── prototypes/        # Car photography per generation
-│       ├── sponsors/          # Sponsor logos (SVG preferred)
-│       └── team/              # Team and event photography
+│   │   ├── components/            # header.js — injects header.html, nav state
+│   │   └── pages/                 # one script per page
+│   ├── images/, videos/, icons/, pdfs/
 │
-├── robots.txt
-├── sitemap.xml
-├── sitemap.txt
-└── .github/workflows/         # GitHub Actions (Pages deployment)
+├── scripts/
+│   ├── sync.py                    # nightly team-roster sync
+│   ├── upload_to_r2.py            # bulk-uploads media to Cloudflare R2
+│   └── audit.py                   # link/SEO/alt-text auditor → audit_report.md
+│
+├── .github/workflows/
+│   ├── static.yml                 # deploy to GitHub Pages on push to main
+│   └── sync.yml                   # runs sync.py nightly
+│
+├── CNAME, robots.txt, sitemap.xml
+└── CODE_OF_CONDUCT.md, LICENSE
 ```
+
+</details>
+
+Subsystem pages all share one template — hero, technical overview, roster filtered to that division, related content. Copy the nearest existing one when adding a new division; don't start from a blank file.
+
+<div align="center">
+<img src="assets/images/gallery/XX6C.webp" width="32%" alt="Ashwa Racing car" />
+<img src="assets/images/gallery/Costwin.webp" width="32%" alt="Ashwa Racing at competition" />
+<img src="assets/images/gallery/XX5C.webp" width="32%" alt="Ashwa Racing car" />
+</div>
 
 ---
 
-## How the site works
+## How the pieces fit together
 
-### No framework, no build step
-
-Every page is a plain HTML file. Styles live in `assets/css/`, scripts in `assets/js/`. There's no compilation, no npm, no bundler. To run it locally, just open any `.html` file directly in Chrome or Firefox — or serve the root directory with any static server if you need `fetch()` calls to work across pages:
-
-```bash
-# Python (any machine with Python 3)
-python -m http.server 8000
-
-# Node (if you have it)
-npx serve .
-```
-
-`fetch()` calls fail on `file://` protocol in some browsers (CORS restriction), so the local server route is recommended for anything involving the blog or shared components.
-
-### Shared header and footer
-
-Rather than copying nav HTML into every page, `header.html` and `footer.html` live in `components/` and are injected at runtime:
+**Shared header and footer.** `header.html` / `footer.html` live once, in `components/`, and every page pulls them in at runtime:
 
 ```js
-// header.js does roughly this
 fetch('/components/header.html')
   .then(r => r.text())
-  .then(html => {
-    document.getElementById('header-placeholder').innerHTML = html;
-    // then sets active nav link, scroll behaviour, etc.
-  });
+  .then(html => document.getElementById('main-header').innerHTML = html);
 ```
 
-Every HTML page has `<div id="header-placeholder"></div>` at the top and loads `header.js` with `defer`. This means any nav change is a one-file edit.
+Change the nav once, it updates on every page. The tradeoff is that `fetch()` needs a server, not `file://`.
 
-### Blog system
+**Design tokens.** Colors, fonts, spacing, and easing live as CSS custom properties (`--red`, `--font-display`, `--pad`, …), currently declared in `assets/css/components/header.css` and re-declared in most per-page stylesheets. That's copy-paste, not a single source of truth — pulling it into one shared stylesheet is on the list, not done yet. Match `header.css` if you're touching brand color or spacing.
 
-The blog runs on flat files — no database, no CMS.
+**Team roster & alumni — automated, not hand-edited.** `team.js` and `alumni-data.js` are regenerated every night by `scripts/sync.py`:
 
-**How it works:**
+- pulls responses from a Google Form via its Sheet's CSV export,
+- merges into the existing arrays by name — new fields win, manual-only fields survive,
+- pulls profile photos from a linked Drive folder,
+- routes people into `team.js` vs `alumni-data.js` by year (current + next two = active; the rest, alumni),
+- commits the result back to `main` automatically (`.github/workflows/sync.yml`).
 
-1. `assets/posts/index.json` is the post manifest. It's an array of objects, one per post:
+<div align="center">
+<img src="assets/images/team/fullteam/2026-C.png" width="70%" alt="Full team photo" />
+</div>
 
-```json
-{
-  "slug": "new-website-2026",
-  "title": "Welcome to Ashwa Racing — We're Back With a New Website",
-  "date": "2026-02-04",
-  "author": "Ashwa IT",
-  "cover": "/assets/images/blog/XX6C.jpg",
-  "tags": ["Announcement", "IT", "Team Update"],
-  "excerpt": "Ashwa Racing is entering a new phase — both on the track and online.",
-  "readTime": "5 min read"
-}
-```
+A few flags (easter eggs, manual overrides) are preserved across every sync — see `MANUAL_FLAGS` at the top of the script. Adding someone outside the form flow? Edit the arrays directly; the next sync merges cleanly around it.
 
-2. Each post is a `.md` file in `assets/posts/` named `{slug}.md`.
+**Media hosting.** Car photography, team photos, and spotlight videos add up fast, and we've bloated `git` history with large media before. Everything now serves from Cloudflare R2 at `assets.ashwaracing.org`, with `scripts/upload_to_r2.py` as the bulk-upload tool. The repo's own `assets/images/` and `assets/videos/` still carry a good chunk of source material while migration finishes — expect that folder to shrink, not grow, over time.
 
-3. `blog_index.html` fetches `index.json`, sorts by date, and renders the listing.
+A couple of the spotlight videos, straight from the site:
 
-4. `blog_post.html` is a shared template. It reads the `?slug=` query parameter, fetches the corresponding `.md` file, and renders it using [marked.js](https://marked.js.org/) loaded from CDN.
+<div align="center">
 
-**To publish a new post:**
-- Write the post as a `.md` file and drop it in `assets/posts/`
-- Add one entry to `assets/posts/index.json`
-- Commit and push — that's it
+[![Watch: EV Spotlight](https://img.shields.io/badge/▶-EV%20Spotlight-e8001d?style=for-the-badge&labelColor=0a0a0a)](assets/videos/ev_spotlight.mp4)
+[![Watch: CV Spotlight](https://img.shields.io/badge/▶-CV%20Spotlight-e8001d?style=for-the-badge&labelColor=0a0a0a)](assets/videos/cv_spotlight.mp4)
+[![Watch: Hero Reel](https://img.shields.io/badge/▶-Hero%20Reel-e8001d?style=for-the-badge&labelColor=0a0a0a)](assets/videos/hero_vid.mp4)
 
-No rebuild, no deploy step beyond the standard GitHub Pages push.
+</div>
 
-### Hero slideshow (index page)
+**Newsletters.** `newsletters.html` renders our archive going back to 2016 — literally a filename list in `assets/js/pages/newsletters.js` pointing at PDFs in `assets/pdfs/newsletters/`, with a matching cover image per issue in `assets/images/newsletters/<year>/`. To add one: drop the PDF, drop the cover, add the filename to the array, push.
 
-The home page hero pulls the five most recent posts from `index.json` and turns them into editorial slides — cover image as background, post title and excerpt overlaid. If the fetch fails or is slow, a static fallback with team photos shows immediately. The post-driven slides replace the fallback once loaded.
+<div align="center">
+<img src="assets/images/newsletters/2026/2026-06.png" width="18%" alt="Newsletter cover" />
+<img src="assets/images/newsletters/2026/2026-03.png" width="18%" alt="Newsletter cover" />
+<img src="assets/images/newsletters/2026/2026-02.png" width="18%" alt="Newsletter cover" />
+<img src="assets/images/newsletters/2025/2025-12.png" width="18%" alt="Newsletter cover" />
+<img src="assets/images/newsletters/2025/2025-10.png" width="18%" alt="Newsletter cover" />
+</div>
 
-### Team page filtering
-
-`team.html` renders the full roster and supports `?sub=Suspension` style query parameters to pre-filter by subsystem. The subsystem pages (`suspension-admin.html`, `aero.html`, etc.) link here with the relevant parameter so visitors land on the right filtered view.
-
-### Alumni org chart
-
-`alumni.html` builds the org chart dynamically from `alumni-data.js` — a structured JS object containing every alumnus, their role, subsystem, and which generation they were part of. The chart is rendered into the DOM via `alumni.js` using inline-flex column layout, no canvas, no third-party chart library.
-
-### Scroll animations
-
-All scroll-triggered fade-ins use `IntersectionObserver`. There are no scroll event listeners anywhere in the codebase. Elements get a `data-reveal` attribute in HTML; `global.js` (or the page script) sets up the observer and toggles a `.visible` class when they enter the viewport.
-
----
-
-## Adding content
-
-### New blog post
-
-```
-1. Create assets/posts/your-slug.md
-2. Add entry to assets/posts/index.json
-3. Push
-```
-
-The slug must match between the filename and the `index.json` entry. The `cover` path should be absolute from the repo root (e.g. `/assets/images/blog/your-image.jpg`).
-
-### New team member
-
-Open `assets/js/pages/team.js`. Members are stored in a JS array — add an object with `name`, `role`, `subsystem`, `image`, and optionally `linkedin`. The page re-renders on load.
-
-### New sponsor
-
-Sponsors on the home page and `sponsors.html` are rendered from a data array in their respective page scripts. Add the sponsor object with `name`, `logo` (path to SVG in `assets/images/sponsors/`), `tier`, and `url`. SVG logos are preferred — they stay sharp on retina displays and high-DPI screens.
-
-### New prototype / car generation
-
-`projects.html` pulls from a data array in `assets/js/pages/projects.js`. Each prototype entry has `name`, `year`, `image`, `specs`, and a short description. Add an entry and drop the images in `assets/images/prototypes/`.
-
----
-
-## Design system
-
-The visual language is defined in `assets/css/global.css` as CSS custom properties:
-
-```css
-:root {
-  --color-red:     #E63946;   /* Ashwa red — CTAs, accents, hover states */
-  --color-bg:      #0a0a0a;   /* Page background */
-  --color-surface: #111111;   /* Cards, panels */
-  --color-border:  rgba(255, 255, 255, 0.08);
-  --color-text:    #f0f0f0;
-  --color-muted:   rgba(255, 255, 255, 0.45);
-
-  --font-display:  'Barlow Condensed', sans-serif;   /* Headers, hero text */
-  --font-body:     'Barlow', sans-serif;             /* Body copy, UI */
-}
-```
-
-Both fonts are loaded from Google Fonts. The typographic scale, spacing units, and motion tokens (transition durations, easing curves) all live here rather than being repeated per-page.
-
-Page-specific overrides go in the corresponding `assets/css/pages/*.css` file.
-
----
-
-## Subsystem pages
-
-Each subsystem has a dedicated HTML page (`aero.html`, `chassis-workshop.html`, etc.) that follows the same layout template: a hero section, a technical overview, a team roster pulled from the team data filtered to that subsystem, and links to related blog posts. Adding a new subsystem page means copying an existing one and updating the content and the `?sub=` filter value.
+**Site audit.** `scripts/audit.py` crawls every page checking for broken internal/external links, missing `<title>`/meta description/viewport, and missing `alt` text, then writes `audit_report.md`. Run `python scripts/audit.py .` before a big push if pages or assets have moved around.
 
 ---
 
 ## Deployment
 
-The site deploys automatically to GitHub Pages on every push to `main`. The workflow is in `.github/workflows/`. No build step is involved — Pages serves the repo root directly.
+Every push to `main` deploys to GitHub Pages automatically via `.github/workflows/static.yml` — no build step, the repo root is served as-is. Custom domain is set in `CNAME`.
 
-Custom domain is not currently configured; the site lives at the default `ashwaracing.org` URL.
+## Contributing
 
----
+Most of us are picking this up between classes and car builds, so:
 
-## File naming conventions
+- Match the existing pattern for the page you're editing before inventing a new one.
+- New pages get a matching `assets/css/pages/*.css` and, if there's interactivity, `assets/js/pages/*.js` — same base filename as the HTML.
+- Run `scripts/audit.py` before opening a PR if you've touched links, images, or added a page.
+- New team member? Use the sync form — don't hand-edit `team.js` unless there's a good reason to.
 
-- HTML pages: lowercase, hyphenated (`blog_index.html`, `suspension-admin.html`)
-- CSS/JS page files: match the HTML filename (`blog.css`, `blog.js`)
-- Images: lowercase, hyphenated, descriptive (`XX6C-front-corner.jpg` not `IMG_2047.jpg`)
-- Blog post slugs: lowercase, hyphenated, match both the `.md` filename and `index.json` slug field
+Questions, broken things, ideas — open an issue, or ping IT/Web in the team group.
 
----
-
-## Things worth knowing
-
-**Why no framework?** The site has no npm, no React, no build pipeline. This is intentional — anyone on the team should be able to open a file, make a change, and push it without understanding a toolchain. The maintenance burden stays low across team turnovers.
-
-**Why `fetch()` for components?** Avoids duplicating nav HTML across 25+ pages. The alternative — server-side includes — isn't available on GitHub Pages. The fetch approach works fine for a static site this size.
-
-**Why Markdown for the blog?** Subsystem leads write posts. Asking them to write HTML is a barrier; Markdown isn't. The flat-file approach also means posts are version-controlled alongside the code with no external dependency.
-
-**Why inline JS data arrays instead of JSON for team/sponsors?** Simplicity. JSON requires a `fetch()` and error handling. A JS array in the page script is synchronous, easier to edit, and doesn't add a network request. For post metadata, `index.json` is external because it's shared across two pages (`blog_index.html` and `index.html`).
+<div align="center">
 
 ---
 
-## License
+**MIT Licensed** · Built by the students of **Ashwa Racing**, RVCE
 
-MIT. See `LICENSE`.
+</div>
