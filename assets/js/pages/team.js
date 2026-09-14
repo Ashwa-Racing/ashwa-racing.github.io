@@ -2991,7 +2991,7 @@ const teamData = [
     roles: ["Member"],
     subsystem: ["Electrical & Testing"],
     year: "2028",
-    experience: null,
+    experience: "",
     social: { linkedin: null, github: null, gmail: "kchinmay.ashwa@gmail.com" },
   },
   {
