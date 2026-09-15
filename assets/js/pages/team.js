@@ -174,11 +174,14 @@ const teamData = [
   },
   {
     name: "Arya Sunil",
-    roles: ["Member"],
-    subsystem: ["Engine", "Sponsorship, Marketing & Public Relations"],
+    roles: ["Subsystem Lead"],
+    subsystem: ["Engine"],
     year: "2028",
-    experience: "Contributes to both Engine development and Sponsorship & Marketing initiatives.",
-    social: { linkedin: "https://www.linkedin.com/in/arya-sunil-a781a5318", github: null, gmail: "aryas.ashwa@gmail.com" },
+    experience: "Designed an Absorptive-Reactive Exhaust Muffler",
+    social: { linkedin: "https://www.linkedin.com/in/arya-sunil-a781a5318/", github: null, gmail: "aryas.ashwa@gmail.com" },
+    prototypes: {"Combustion": "Member / Part of team", "Electric": "Member / Part of team"},
+    testimony: "Ashwa Racing has been one of the most thorough and engaging experiences of my life, challenging me both technically and personally. It has contributed immensely to my education while helping me grow in confidence, character, and as a person.",
+    currentJob: "Student, Mechanical Engineering, R V College of Engineering",
   },
   {
     name: "Prajwal G Koli",
