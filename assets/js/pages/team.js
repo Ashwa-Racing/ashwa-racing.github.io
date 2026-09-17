@@ -3006,6 +3006,15 @@ const teamData = [
     social: { linkedin: "https://www.linkedin.com/in/aitijhya", github: null, gmail: "aitijhya.ashwa@gmail.com" },
     prototypes: {"Combustion": "Member / Part of team"},
   },
+  {
+    name: "Soham Sil",
+    roles: ["Member"],
+    subsystem: ["Brakes & Logistics"],
+    year: "2028",
+    experience: null,
+    social: { linkedin: "https://www.linkedin.com/in/soham-sil", github: null, gmail: "sohamsil.ashwa@gmail.com" },
+    prototypes: {"Combustion": "Member / Part of team", "Electric": "Member / Part of team"},
+  },
 ];
 
 // ─── DOM refs ──────────────────────────────────────────────────
