@@ -3011,7 +3011,7 @@ const teamData = [
     roles: ["Member"],
     subsystem: ["Brakes & Logistics"],
     year: "2028",
-    experience: null,
+    experience: "",
     social: { linkedin: "https://www.linkedin.com/in/soham-sil", github: null, gmail: "sohamsil.ashwa@gmail.com" },
     prototypes: {"Combustion": "Member / Part of team", "Electric": "Member / Part of team"},
   },
