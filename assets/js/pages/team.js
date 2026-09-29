@@ -45,7 +45,7 @@ const rosterHeading = document.getElementById("roster-heading");
 const yearFilter  = document.getElementById("year-filter");
 const subFilter   = document.getElementById("subsystem-filter");
 
-const PROFILE_BASE           = "assets/images/team/members/";
+const PROFILE_BASE           = "https://assets.ashwaracing.org/images/team/members/";
 const DEFAULT_PROFILE_IMAGE  = "https://assets.ashwaracing.org/images/team/default.webp";
 
 // ─── Role Classification ───────────────────────────────────────
