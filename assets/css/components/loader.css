@@ -1,0 +1,171 @@
+/* ============================================================
+   ASHWA RACING — GLOBAL LOADER
+   ============================================================ */
+
+#site-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--white, #fff);
+  color: var(--ink, #000);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.7s var(--expo, cubic-bezier(0.16, 1, 0.3, 1)),
+    visibility 0.7s;
+}
+
+#site-loader.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loader-inner {
+  width: min(760px, 88vw);
+}
+
+.loader-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 38px;
+  white-space: nowrap;
+}
+
+.loader-ashwa {
+  font-family: var(--ashwa, 'Samarkan', serif);
+  font-size: clamp(3rem, 8vw, 5rem);
+  line-height: 0.9;
+  color: var(--red, #e8001d);
+  letter-spacing: 0;
+}
+
+.loader-racing {
+  margin-top: 0;
+  font-family: var(--racing, 'Xenotron', 'Barlow Condensed', sans-serif);
+  font-size: clamp(4.75rem, 4vw, 2.4rem);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  color: var(--ink, #000);
+}
+
+.loader-sponsor {
+  min-height: 138px;
+  margin-bottom: 28px;
+}
+
+.loader-sponsor-tier {
+  margin-bottom: 18px;
+  font-family: var(--display, 'Barlow Condensed', sans-serif);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 1);
+}
+
+.loader-sponsor-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  align-items: center;
+  max-height: none;
+}
+
+.loader-sponsor-item {
+  display: grid;
+  place-items: center;
+  height: 76px;
+  padding: 10px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s var(--expo, cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.loader-sponsor-item img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.loader-sponsor-grid.is-visible .loader-sponsor-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.loader-progress {
+  position: relative;
+  width: 100%;
+  height: 3px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.loader-progress-bar {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--red, #e8001d);
+  transform-origin: left;
+  transition: width 0.2s ease-out;
+}
+
+.loader-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: var(--display, 'Barlow Condensed', sans-serif);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 1);
+}
+
+#loader-percent {
+  color: rgba(164, 34, 34, 0.72);
+}
+
+@media (max-width: 560px) {
+  .loader-sponsor-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .loader-sponsor-item {
+    height: 62px;
+  }
+  .loader-brand {
+    gap: 10px;
+  }
+  .loader-ashwa {
+    font-size: clamp(2.4rem, 12vw, 3.5rem);
+  }
+  .loader-racing {
+    font-size: clamp(1.2rem, 6vw, 1.7rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #site-loader,
+  .loader-sponsor-item,
+  .loader-progress-bar {
+    transition: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .loader-sponsor-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

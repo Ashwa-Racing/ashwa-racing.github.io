@@ -1,0 +1,240 @@
+{
+  "executive": [
+    {
+      "name": "RV College of Engineering",
+      "logo": "rvce.svg",
+      "url": "https://rvce.edu.in",
+      "description": "Established in 1963, RVCE now offers 13 undergraduate and 13 master's degree programmes. Rated among the top ten self-financing engineering institutions in India with an annual intake of over 2,000 students."
+    },
+    {
+      "name": "Infineon Technologies",
+      "logo": "infineon.svg",
+      "url": "https://www.infineon.com",
+      "description": "Semiconductor solutions supporting power electronics, sensor integration, and microcontroller systems — powering Ashwa's electrical and testing programme."
+    },
+    {
+      "name": "Adani Group",
+      "logo": "adani.svg",
+      "url": "https://www.adani.com/",
+      "description": "Market leader in transport logistics and energy utility portfolio businesses. Adani Group supports Ashwa Racing's infrastructure and logistics capabilities across competition seasons."
+    },
+    {
+      "name": "Dynamatic Technologies",
+      "logo": "dynamatics.svg",
+      "url": "https://dynamatics.com/",
+      "description": "Delivers precision-engineered products for Metallurgy, Aerospace, and Hydraulics applications — pioneering Indian private sector manufacture of complex aerostructures for global OEMs."
+    }
+  ],
+
+  "platinum": [
+    {
+      "name": "SKF",
+      "logo": "skf.svg",
+      "url": "https://www.skf.com/in"
+    },
+    {
+      "name": "Analog Devices",
+      "logo": "analogdevices.svg",
+      "url": "https://www.analog.com/en/index.html"
+    },
+    {
+      "name": "Sansera Engineering",
+      "logo": "sansera.png",
+      "url": "https://sansera.in/"
+    },
+    {
+      "name": "VRL Logistics",
+      "logo": "vrl.svg",
+      "url": "https://vrlgroup.in/vrl_group_home.aspx"
+    },
+    {
+      "name": "Pegasys Systems",
+      "logo": "pegasyssystemspvtltd.png",
+      "url": "https://pegasyssystems.com/"
+    },
+    {
+      "name": "Motul",
+      "logo": "motul.svg",
+      "url": "https://www.motul.com/en-IN"
+    },
+    {
+      "name": "LAPP",
+      "logo": "lapp.svg",
+      "url": "https://www.lapp.com/en_US/us/"
+    },
+    {
+      "name": "Henkel",
+      "logo": "henkel.svg",
+      "url": "https://www.henkel.in/"
+    }
+  ],
+
+  "gold": [
+    {
+      "name": "TIA Technology India",
+      "logo": "tia.png",
+      "url": "https://tiatechnology.in/"
+    },
+    {
+      "name": "Delhivery",
+      "logo": "delhivery.svg",
+      "url": "https://www.delhivery.com"
+    },
+    {
+      "name": "Aruani Grid",
+      "logo": "aruanigrid.png",
+      "url": "https://aruanigrid.com/"
+    }
+  ],
+
+  "silver": [
+    {
+      "name": "Fastolex",
+      "logo": "fastolex.png",
+      "url": "https://www.tatanexarc.com/company/fastolex-products-utn3938fas42bno/"
+    },
+    {
+      "name": "Speedworks",
+      "logo": "speedworks.png",
+      "url": "https://www.speedworks.cc/"
+    },
+    {
+      "name": "Progressive Engineers",
+      "logo": "progressive-engineers.png",
+      "url": "https://www.progressiveengineers.co.in/"
+    }
+  ],
+
+  "technical": [
+    {
+      "name": "Uniflex",
+      "logo": "uniflex.svg",
+      "url": "https://myuniflex.com/"
+    },
+    {
+      "name": "Royal Brothers",
+      "logo": "royalbrothers.svg",
+      "url": "https://www.royalbrothers.com/bangalore/bike-rentals"
+    },
+    {
+      "name": "Barrel Exhaust",
+      "logo": "barrelexhaust.webp",
+      "url": "https://www.barrelexhaust.com/"
+    },
+    {
+      "name": "BMC Air Filter",
+      "logo": "bmcairfilter.png",
+      "url": "https://www.bmcairfilters.com/en"
+    },
+    {
+      "name": "Bender",
+      "logo": "bender.svg",
+      "url": "https://www.bender-in.com/"
+    },
+    {
+      "name": "Elcoats",
+      "logo": "elcoats.png",
+      "url": "https://elcoats.com/"
+    },
+    {
+      "name": "Mercedes-Benz",
+      "logo": "mercedes.png",
+      "url": "https://www.akshayamotors.mercedes-benz.co.in/passengercars/about-us.html"
+    },
+    {
+      "name": "Endless Customs",
+      "logo": "endlesscustoms.png",
+      "url": "https://www.instagram.com/endlesscustomsblr/?hl=en"
+    },
+    {
+      "name": "Ansys",
+      "logo": "ansys.svg",
+      "url": "https://www.ansys.com/en-in"
+    },
+    {
+      "name": "ICP India",
+      "logo": "icp.jpg",
+      "url": "http://www.icp-india.com/"
+    },
+    {
+      "name": "Impulse Power",
+      "logo": "impulsepower.jpg",
+      "url": "https://impulse-power.com/"
+    },
+    {
+      "name": "Motousher",
+      "logo": "motousher.png",
+      "url": "https://www.motousher.com/"
+    },
+    {
+      "name": "Lion Circuits",
+      "logo": "lioncircuits.svg",
+      "url": "https://www.lioncircuits.com/"
+    },
+    {
+      "name": "Pankaj",
+      "logo": "pankaj.png",
+      "url": "https://pankaj.com/"
+    },
+    {
+      "name": "Magod Laser",
+      "logo": "magodlaser.png",
+      "url": "https://www.magodlaser.in/"
+    },
+    {
+      "name": "United Rubber Industries (I) Pvt. Ltd.",
+      "logo": "unitedrubber.png",
+      "url": "https://unitedrubber.com/"
+    },
+    {
+      "name": "PCBWay",
+      "logo": "pcbway.svg",
+      "url": "https://www.pcbway.com/"
+    },
+    {
+      "name": "Powerhaus",
+      "logo": "powerhaus.jpg",
+      "url": "https://www.powerhaus.in/MainPageFiles/index.htm"
+    },
+    {
+      "name": "PC Process",
+      "logo": "pcprocess.png",
+      "url": "https://www.pcprocess.in/"
+    },
+    {
+      "name": "Triumph Laser",
+      "logo": "triumphlaser.png",
+      "url": "https://www.justdial.com/Bangalore/Triumph-Laser-Peenya-2nd-Stage/080PXX80-XX80-180307235407-G2Q7_BZDET"
+    },
+    {
+      "name": "SolidWorks",
+      "logo": "solidworks.svg",
+      "url": "https://www.solidworks.com/"
+    },
+    {
+      "name": "SVE",
+      "logo": "sve.png",
+      "url": "#"
+    },
+    {
+      "name": "ND",
+      "logo": "nd.png",
+      "url": "#"
+    },
+    {
+      "name": "BTPL",
+      "logo": "btpl.png",
+      "url": "#"
+    },
+    {
+      "name": "Objectify Technologies",
+      "logo": "objectify.png",
+      "url": "https://objectify.co.in/"
+    },
+    {
+      "name": "Realis Simulation",
+      "logo": "realissimulation.svg",
+      "url": "https://www.realis-simulation.com/"
+    }
+  ]
+}

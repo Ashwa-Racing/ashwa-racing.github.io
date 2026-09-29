@@ -3,12 +3,109 @@
    ============================================================ */
 "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderOrgChart();
+// ─── Data sources ─────────────────────────────────────────────
+const ORG_URL  = "/assets/data/org-structure.json";
+const TEAM_URL = "/assets/data/team.json";
+
+// Alumni cards + testimonials are derived from team.json:
+// anyone whose year is before the current calendar year is an alumnus.
+// true  → only alumni with a testimony are shown (matches the old hand-picked list)
+// false → every past member is shown
+const REQUIRE_TESTIMONY = true;
+
+const ALUMNI_PHOTO_BASE = "https://assets.ashwaracing.org/images/team/members/";
+const DEFAULT_PHOTO     = "https://assets.ashwaracing.org/images/team/default.webp";
+
+const ROLE_PRIORITY = ["Team Captain", "Chief Engineer", "Project Manager", "Subsystem Lead", "Member"];
+const PROTOTYPE_TO_PROGRAMME = {
+  Combustion: "cv", Hybrid: "hybrid", Electric: "ev", Hyperloop: "hyperloop", Driverless: "dv"
+};
+
+// Filled once the JSON files have loaded
+let ORG_STRUCTURE = null;
+let ALUMNI = [];
+
+async function loadJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
+  return response.json();
+}
+
+// Team data comes from a public form, so escape it before using innerHTML.
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
+  ));
+}
+
+function splitJob(currentJob) {
+  if (!currentJob) return ["", ""];
+  const i = currentJob.indexOf(",");
+  return i === -1
+    ? [currentJob.trim(), ""]
+    : [currentJob.slice(0, i).trim(), currentJob.slice(i + 1).trim()];
+}
+
+// team.json entries → the card shape the renderers below expect
+function buildAlumni(team) {
+  const thisYear = new Date().getFullYear();
+
+  return team
+    .filter(m => Number(m.year) < thisYear)
+    .filter(m => !REQUIRE_TESTIMONY || (m.testimony && m.testimony.trim()))
+    .map(m => {
+      const social = m.social || {};
+      const roles  = m.roles && m.roles.length ? m.roles : ["Member"];
+      const [jobPosition, jobCompany] = splitJob(m.currentJob);
+      const firstPrototype = Object.keys(m.prototypes || {})[0];
+
+      return {
+        name:      m.name,
+        role:      ROLE_PRIORITY.find(r => roles.includes(r)) || roles[0],
+        batch:     String(m.year),
+        photo:     m.photo || `${ALUMNI_PHOTO_BASE}${m.year}/${m.name}.webp`,
+        company:   m.company  || jobCompany,
+        position:  m.position || jobPosition,
+        linkedin:  social.linkedin || null,
+        programme: m.programme || PROTOTYPE_TO_PROGRAMME[firstPrototype] || "",
+        testimony: m.testimony || ""
+      };
+    })
+    .sort((a, b) =>
+      Number(b.batch) - Number(a.batch) ||
+      ROLE_PRIORITY.indexOf(a.role) - ROLE_PRIORITY.indexOf(b.role)
+    );
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const [orgResult, teamResult] = await Promise.allSettled([
+    loadJSON(ORG_URL),
+    loadJSON(TEAM_URL)
+  ]);
+
+  // The two sections are independent: one failing shouldn't take down the other.
+  if (orgResult.status === "fulfilled") {
+    ORG_STRUCTURE = orgResult.value;
+    renderOrgChart();
+  } else {
+    console.error(orgResult.reason);
+  }
+
+  if (teamResult.status === "fulfilled") {
+    ALUMNI = buildAlumni(teamResult.value);
+  } else {
+    console.error(teamResult.reason);
+  }
+
   initFilters();
   renderAlumniCards();
   renderTestimonials();
   initReveal();
+
+  if (teamResult.status === "rejected") {
+    const grid = document.getElementById("al-grid");
+    if (grid) grid.innerHTML = `<p class="al-empty">Alumni couldn't be loaded right now.</p>`;
+  }
 });
 
 const PROG_COLOR_MAP = {
@@ -26,7 +123,7 @@ const PROG_COLORS = {
 
 function renderOrgChart() {
   const container = document.getElementById("org-chart");
-  if (!container || typeof ORG_STRUCTURE === "undefined") return;
+  if (!container || !ORG_STRUCTURE) return;
   const d = ORG_STRUCTURE;
 
   /* ── All programmes in order: CV first, then the rest ── */
@@ -122,7 +219,7 @@ function orgBox(node, color, isRoot = false) {
 
 function renderAlumniCards(filter = "all") {
   const grid = document.getElementById("al-grid");
-  if (!grid || typeof ALUMNI === "undefined") return;
+  if (!grid) return;
   const list = filter === "all" ? ALUMNI : ALUMNI.filter(a => a.programme === filter);
   if (!list.length) {
     grid.innerHTML = `<p class="al-empty">No alumni found for this filter.</p>`;
@@ -131,10 +228,10 @@ function renderAlumniCards(filter = "all") {
   grid.innerHTML = list.map(a => {
     const ini = a.name.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
     const avatar = a.photo
-      ? `<img src="${a.photo}" alt="${a.name}" class="al-card-photo" loading="lazy">`
-      : `<div class="al-card-initials">${ini}</div>`;
+      ? `<img src="${esc(a.photo)}" alt="${esc(a.name)}" class="al-card-photo" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_PHOTO}'">`
+      : `<div class="al-card-initials">${esc(ini)}</div>`;
     const linkedin = a.linkedin
-      ? `<a href="${a.linkedin}" class="al-card-linkedin" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>`
+      ? `<a href="${esc(a.linkedin)}" class="al-card-linkedin" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>`
       : "";
     const badge = PROG_LABELS[a.programme]
       ? `<span class="al-card-badge" style="--bc:${PROG_COLORS[a.programme]}">${PROG_LABELS[a.programme]}</span>`
@@ -144,14 +241,14 @@ function renderAlumniCards(filter = "all") {
         <div class="al-card-top">${avatar}${linkedin}</div>
         <div class="al-card-body">
           ${badge}
-          <h3 class="al-card-name">${a.name}</h3>
-          <p class="al-card-role">${a.role}</p>
+          <h3 class="al-card-name">${esc(a.name)}</h3>
+          <p class="al-card-role">${esc(a.role)}</p>
           <div class="al-card-divider"></div>
           <div class="al-card-current">
-            <span class="al-card-position">${a.position}</span>
-            <span class="al-card-company">${a.company}</span>
+            <span class="al-card-position">${esc(a.position)}</span>
+            <span class="al-card-company">${esc(a.company)}</span>
           </div>
-          ${a.batch ? `<span class="al-card-batch">Batch of ${a.batch}</span>` : ""}
+          ${a.batch ? `<span class="al-card-batch">Batch of ${esc(a.batch)}</span>` : ""}
         </div>
       </article>`;
   }).join("");
@@ -160,7 +257,7 @@ function renderAlumniCards(filter = "all") {
 
 function initFilters() {
   const bar = document.getElementById("al-filters");
-  if (!bar || typeof ALUMNI === "undefined") return;
+  if (!bar) return;
   const progs = [...new Set(ALUMNI.map(a => a.programme).filter(Boolean))];
   progs.forEach(prog => {
     if (!PROG_LABELS[prog]) return;
@@ -185,7 +282,7 @@ let testiTimer = null;
 function renderTestimonials() {
   const track = document.getElementById("al-testi-track");
   const dots  = document.getElementById("al-testi-dots");
-  if (!track || !dots || typeof ALUMNI === "undefined") return;
+  if (!track || !dots) return;
   const list = ALUMNI.filter(a => a.testimony && a.testimony.trim());
   if (!list.length) {
     const sec = track.closest(".al-testimonials");
@@ -195,17 +292,18 @@ function renderTestimonials() {
   track.innerHTML = list.map((a, i) => {
     const ini = a.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
     const ava = a.photo
-      ? `<img src="${a.photo}" alt="${a.name}" class="testi-avatar-img" loading="lazy">`
-      : `<div class="testi-avatar-initials">${ini}</div>`;
+      ? `<img src="${esc(a.photo)}" alt="${esc(a.name)}" class="testi-avatar-img" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_PHOTO}'">`
+      : `<div class="testi-avatar-initials">${esc(ini)}</div>`;
+    const where = [a.position, a.company].filter(Boolean).map(esc).join(" . ");
     return `
       <div class="testi-slide ${i===0?"active":""}" data-index="${i}">
-        <blockquote class="testi-quote">"${a.testimony}"</blockquote>
+        <blockquote class="testi-quote">"${esc(a.testimony)}"</blockquote>
         <div class="testi-author">
           <div class="testi-avatar">${ava}</div>
           <div class="testi-meta">
-            <span class="testi-name">${a.name}</span>
-            <span class="testi-role">${a.role}</span>
-            <span class="testi-company">${a.position} . ${a.company}</span>
+            <span class="testi-name">${esc(a.name)}</span>
+            <span class="testi-role">${esc(a.role)}</span>
+            <span class="testi-company">${where}</span>
           </div>
         </div>
       </div>`;

@@ -1,14 +1,18 @@
 """
-Ashwa Racing — Team Data Sync Script
+Ashwa Racing — Team Data Sync Script (JSON output)
 
-- Reads existing team.js + alumni-data.js (never wipes manual entries)
+- Reads existing team.json (never wipes manual entries)
+  * First run only: if team.json doesn't exist yet, team.js (and any
+    alumni-only people in alumni-data.js) are imported once, so nothing
+    manual is lost.
 - Reads "Parsed Team Data" sheet (form submissions)
 - Merges by name — updates only form fields, preserves manual fields
-- Everyone goes into team.js (teamData array)
-- Alumni only (year below current year) also go into alumni-data.js (ALUMNI array)
-- Alumni logic: current year + next 2 = current team, rest = alumni
-  e.g. 2026 → 2026, 2027, 2028 = current | 2025 and below = alumni
+- Everyone goes into team.json (one array). Alumni are just entries whose
+  year has passed; the site works that out in the browser.
 - Downloads new photos from Drive (folder must be public)
+
+Optional manual fields on an entry (never touched by the sheet):
+  company, position, photo, programme, easterEgg
 """
 
 import os
@@ -17,21 +21,24 @@ import re
 import csv
 import json
 import requests
-from datetime import datetime
 
 # ─── Config ───────────────────────────────────────────────────
 SHEET_CSV_URL        = os.environ["SHEET_CSV_URL"]
 DRIVE_ROOT_FOLDER_ID = os.environ["DRIVE_ROOT_FOLDER_ID"]
 
-TEAM_JS_PATH   = "assets/js/pages/team.js"
-ALUMNI_JS_PATH = "assets/js/pages/alumni-data.js"
+TEAM_JSON_PATH = "assets/data/team.json"
 
-# Manual flags preserved in JS — never overwritten by sync
+# Legacy sources — only read (never written), and only when team.json
+# doesn't exist yet
+LEGACY_TEAM_JS_PATH   = "assets/js/pages/team.js"
+LEGACY_ALUMNI_JS_PATH = "assets/js/pages/alumni-data.js"
+
+# Manual flags preserved — never overwritten by sync
 MANUAL_FLAGS = {
     "Vibin": {"easterEgg": True}
 }
 
-# Prototype key → programme id (for alumni-data.js renderer)
+# Prototype key → programme id (used to spot redundant migrated values)
 PROGRAMME_MAP = {
     "Combustion": "cv",
     "Hybrid":     "hybrid",
@@ -39,11 +46,6 @@ PROGRAMME_MAP = {
     "Hyperloop":  "hyperloop",
     "Driverless": "dv"
 }
-
-# ─── Alumni Year Logic ────────────────────────────────────────
-def get_current_years():
-    base = datetime.now().year
-    return {str(base), str(base + 1), str(base + 2)}
 
 # ─── Helpers ──────────────────────────────────────────────────
 def clean_url(url):
@@ -56,49 +58,94 @@ def clean_text(text):
     val = (text or "").strip()
     return val if val and val.lower() not in ["na", "n/a", "-", ""] else None
 
-def js_val(val):
-    if val is None:
-        return "null"
-    if isinstance(val, bool):
-        return "true" if val else "false"
-    if isinstance(val, (list, dict)):
-        return json.dumps(val, ensure_ascii=False)
-    escaped = str(val).replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
-    return f'"{escaped}"'
-
 def parse_current_job(current_job):
-    """
-    Parses 'Position, Company' or 'Degree, Institute' into (position, company).
-    e.g. 'Software Engineer, Google' → ('Software Engineer', 'Google')
-         'MBA, IIM Bangalore'        → ('MBA', 'IIM Bangalore')
-         'MBA'                       → ('MBA', '')
-    """
+    """'Position, Company' → (position, company). 'MBA' → ('MBA', '')."""
     if not current_job:
         return "", ""
     parts = [p.strip() for p in current_job.split(",", 1)]
-    position = parts[0]
-    company  = parts[1] if len(parts) > 1 else ""
-    return position, company
+    return parts[0], (parts[1] if len(parts) > 1 else "")
 
 def get_programme(prototypes):
-    """Returns the programme id from the first prototype key."""
     if not prototypes:
         return ""
-    first_key = list(prototypes.keys())[0]
-    return PROGRAMME_MAP.get(first_key, "")
+    return PROGRAMME_MAP.get(list(prototypes.keys())[0], "")
 
-def get_top_role(roles):
-    """Returns the most senior role from a list."""
-    priority = ["Team Captain", "Chief Engineer", "Project Manager", "Subsystem Lead", "Member"]
-    for p in priority:
-        if p in roles:
-            return p
-    return roles[0] if roles else "Member"
+def normalize(e):
+    """Fill defaults so merge/write code can rely on every key existing."""
+    e.setdefault("name", "")
+    e.setdefault("year", "")
+    e.setdefault("experience", "")
+    e.setdefault("roles", None)
+    if not e["roles"]:
+        e["roles"] = ["Member"]
+    e.setdefault("subsystem", [])
+    e.setdefault("prototypes", {})
+    for k in ("linkedin", "github", "gmail", "testimony", "currentJob",
+              "role", "batch", "photo", "company", "position", "programme"):
+        e.setdefault(k, None)
+    e["easterEgg"] = bool(e.get("easterEgg"))
+    # legacy alumni entries store the year as "batch"
+    if not e["year"] and e.get("batch"):
+        e["year"] = e["batch"]
+    return e
 
-# ─── Extract array blocks from JS file ───────────────────────
+# ─── team.json read / write ───────────────────────────────────
+def read_team_json(filepath):
+    with open(filepath, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    entries = []
+    for item in data:
+        e = dict(item)
+        # team.json nests socials; flatten for merging
+        social = e.pop("social", None) or {}
+        for k in ("linkedin", "github", "gmail"):
+            if e.get(k) is None:
+                e[k] = social.get(k)
+        entries.append(normalize(e))
+
+    entries = [e for e in entries if e["name"]]
+    print(f"  ✅ Read {len(entries)} entries from {filepath}")
+    return entries
+
+def team_json_entry(e):
+    out = {
+        "name":       e.get("name", ""),
+        "roles":      e.get("roles") or ["Member"],
+        "subsystem":  e.get("subsystem") or [],
+        "year":       e.get("year", ""),
+        "experience": e.get("experience", ""),
+        "social": {
+            "linkedin": e.get("linkedin"),
+            "github":   e.get("github"),
+            "gmail":    e.get("gmail"),
+        },
+    }
+
+    for key in ("prototypes", "testimony", "currentJob",
+                "company", "position", "photo", "programme"):
+        if e.get(key):
+            out[key] = e[key]
+
+    flags = dict(MANUAL_FLAGS.get(e.get("name", ""), {}))
+    if e.get("easterEgg"):
+        flags["easterEgg"] = True
+    out.update(flags)
+
+    return out
+
+def write_team_json(filepath, entries):
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    tmp = filepath + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump([team_json_entry(e) for e in entries], f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp, filepath)
+    print(f"  ✅ {filepath} updated — {len(entries)} entries")
+
+# ─── LEGACY: read entries out of a JS file (one-time migration) ─
 def extract_entry_blocks(content, array_name):
-    pattern = rf'const\s+{array_name}\s*=\s*\['
-    m = re.search(pattern, content)
+    m = re.search(rf'const\s+{array_name}\s*=\s*\[', content)
     if not m:
         print(f"  ⚠️ Could not find 'const {array_name} = [' in file")
         return []
@@ -127,10 +174,8 @@ def extract_entry_blocks(content, array_name):
             if depth == 0 and start != -1:
                 blocks.append(array_content[start:j+1])
                 start = -1
-
     return blocks
 
-# ─── Parse a JS object block ──────────────────────────────────
 def parse_js_block(block):
     entry = {}
 
@@ -149,7 +194,7 @@ def parse_js_block(block):
         m = re.search(rf'{key}:\s*(\[[^\]]*\])', block)
         try:
             return json.loads(m.group(1)) if m else []
-        except:
+        except Exception:
             return []
 
     entry["name"]       = get_str("name")       or ""
@@ -167,34 +212,92 @@ def parse_js_block(block):
     m = re.search(r'prototypes:\s*(\{[^}]*\})', block)
     try:
         entry["prototypes"] = json.loads(m.group(1)) if m else {}
-    except:
+    except Exception:
         entry["prototypes"] = {}
 
-    # Alumni-specific fields (from alumni-data.js ALUMNI array)
+    # Alumni-specific fields
     entry["role"]      = get_str("role")
     entry["batch"]     = get_str("batch")
     entry["photo"]     = get_str("photo")
     entry["company"]   = get_str("company")
     entry["position"]  = get_str("position")
     entry["programme"] = get_str("programme")
-
     return entry
 
-# ─── Read JS file ─────────────────────────────────────────────
-def read_js_entries(filepath, array_name):
+def read_legacy_js_entries(filepath, array_name):
     if not os.path.exists(filepath):
-        print(f"  ⚠️ {filepath} not found.")
-        return [], ""
+        print(f"  ⚠️ {filepath} not found — nothing to import.")
+        return []
 
     with open(filepath, "r", encoding="utf-8") as f:
         content = f.read()
 
-    blocks  = extract_entry_blocks(content, array_name)
-    entries = [parse_js_block(b) for b in blocks]
-    entries = [e for e in entries if e.get("name")]
+    entries = [normalize(parse_js_block(b)) for b in extract_entry_blocks(content, array_name)]
+    entries = [e for e in entries if e["name"]]
+    print(f"  ✅ Imported {len(entries)} entries from legacy {filepath}")
+    return entries
 
-    print(f"  ✅ Read {len(entries)} entries from {filepath}")
-    return entries, content
+def fold_alumni_into_team(team, alumni):
+    """
+    One-time: bring alumni-data.js into the team list.
+    - Alumni already in the team list: copy over the manual fields
+      (company, position, photo, programme) and a real role, if set.
+    - Alumni-only people: added as new team entries.
+    Values that the site can derive anyway (company/position from currentJob,
+    programme from prototypes, the standard CDN photo URL) are dropped so
+    team.json stays clean.
+    """
+    lookup = {e["name"].lower().strip(): e for e in team}
+
+    for a in alumni:
+        key = a["name"].lower().strip()
+        e = lookup.get(key)
+        if e is None:
+            e = normalize({
+                "name":      a["name"],
+                "year":      a.get("batch") or a.get("year") or "",
+                "roles":     [a["role"]] if a.get("role") else ["Member"],
+                "linkedin":  a.get("linkedin"),
+                "testimony": a.get("testimony"),
+            })
+            team.append(e)
+            lookup[key] = e
+            print(f"  ➕ Alumni-only: {a['name']}")
+        else:
+            if a.get("role") and e["roles"] == ["Member"]:
+                e["roles"] = [a["role"]]
+            for k in ("linkedin", "testimony"):
+                if not e.get(k) and a.get(k):
+                    e[k] = a[k]
+
+        for k in ("company", "position", "photo", "programme"):
+            if a.get(k) and not e.get(k):
+                e[k] = a[k]
+
+    # Drop values the site can derive on its own
+    for e in team:
+        pos, comp = parse_current_job(e.get("currentJob") or "")
+        if e.get("position") and e["position"] == pos:
+            e["position"] = None
+        if e.get("company") and e["company"] == comp:
+            e["company"] = None
+        if e.get("programme") and e["programme"] == get_programme(e.get("prototypes")):
+            e["programme"] = None
+        std_photo = f'https://assets.ashwaracing.org/images/team/members/{e["year"]}/{e["name"]}.webp'
+        if e.get("photo") and (e["photo"] == std_photo or "default.webp" in e["photo"]):
+            e["photo"] = None
+
+    return team
+
+def load_team():
+    """team.json if it exists, otherwise a one-time import from the legacy JS."""
+    if os.path.exists(TEAM_JSON_PATH):
+        return read_team_json(TEAM_JSON_PATH)
+
+    print(f"  ℹ️ {TEAM_JSON_PATH} not found — importing from legacy JS.")
+    team   = read_legacy_js_entries(LEGACY_TEAM_JS_PATH,   "teamData")
+    alumni = read_legacy_js_entries(LEGACY_ALUMNI_JS_PATH, "ALUMNI")
+    return fold_alumni_into_team(team, alumni)
 
 # ─── Read Sheet ───────────────────────────────────────────────
 def read_sheet():
@@ -212,13 +315,12 @@ def parse_row(row):
     subsystems = [s.strip() for s in row.get("Subsystems", "").split(",")        if s.strip()]
     try:
         prototypes = json.loads(row.get("Prototype Roles", "{}") or "{}")
-    except:
+    except Exception:
         prototypes = {}
 
-    return {
+    return normalize({
         "name":       row.get("Name",  "").strip(),
         "year":       row.get("Year",  "").strip(),
-        "batch":      row.get("Batch", "").strip(),
         "roles":      roles or ["Member"],
         "subsystem":  subsystems,
         "prototypes": prototypes,
@@ -228,8 +330,7 @@ def parse_row(row):
         "gmail":      clean_text(row.get("Email",       "")),
         "testimony":  clean_text(row.get("Testimony",   "")),
         "currentJob": clean_text(row.get("Current Job", "")),
-        "photo_id":   row.get("Photo File ID", "").strip(),
-    }
+    })
 
 # ─── Merge ────────────────────────────────────────────────────
 def merge(existing, sheet_rows):
@@ -258,6 +359,7 @@ def merge(existing, sheet_rows):
             print(f"  ✏️  Updated: {sheet['name']}")
         else:
             existing.append(sheet)
+            lookup[key] = len(existing) - 1
             print(f"  ➕ Added:   {sheet['name']}")
 
     return existing
@@ -289,107 +391,9 @@ def sync_photos(sheet_rows):
                 f.write(chunk)
         print(f"  ✅ Downloaded: {name}.webp")
 
-# ─── Write teamData array into team.js ───────────────────────
-def write_team_js(filepath, original_content, entries):
-    lines = []
-    for e in entries:
-        manual = MANUAL_FLAGS.get(e.get("name", ""), {})
-
-        social = (
-            f'linkedin: {js_val(e.get("linkedin"))}, '
-            f'github: {js_val(e.get("github"))}, '
-            f'gmail: {js_val(e.get("gmail"))}'
-        )
-
-        lines.append("  {")
-        lines.append(f'    name: {js_val(e.get("name", ""))},')
-        lines.append(f'    roles: {js_val(e.get("roles", ["Member"]))},')
-        lines.append(f'    subsystem: {js_val(e.get("subsystem", []))},')
-        lines.append(f'    year: {js_val(e.get("year", ""))},')
-        lines.append(f'    experience: {js_val(e.get("experience", ""))},')
-        lines.append(f'    social: {{ {social} }},')
-
-        if e.get("prototypes"):
-            lines.append(f'    prototypes: {js_val(e["prototypes"])},')
-        if e.get("testimony"):
-            lines.append(f'    testimony: {js_val(e["testimony"])},')
-        if e.get("currentJob"):
-            lines.append(f'    currentJob: {js_val(e["currentJob"])},')
-        for flag, val in manual.items():
-            lines.append(f'    {flag}: {js_val(val)},')
-
-        lines.append("  },")
-
-    _write_array(filepath, original_content, "teamData", "\n".join(lines))
-    print(f"  ✅ {filepath} updated — {len(entries)} entries")
-
-# ─── Write ALUMNI array into alumni-data.js ──────────────────
-def write_alumni_js(filepath, original_content, entries):
-    lines = []
-    for e in entries:
-        position, company = parse_current_job(e.get("currentJob", "") or "")
-        programme         = get_programme(e.get("prototypes", {}))
-        top_role          = get_top_role(e.get("roles", ["Member"]))
-        year              = e.get("year", "")
-        photo             = f'https://assets.ashwaracing.org/images/team/members/{year}/{e.get("name", "")}.webp'
-
-        # Preserve existing photo if already set and not default
-        existing_photo = e.get("photo", "")
-        if existing_photo and "default.webp" not in existing_photo:
-            photo = existing_photo
-
-        lines.append("  {")
-        lines.append(f'    name: {js_val(e.get("name", ""))},')
-        lines.append(f'    role: {js_val(top_role)},')
-        lines.append(f'    batch: {js_val(year)},')
-        lines.append(f'    photo: {js_val(photo)},')
-        lines.append(f'    company: {js_val(company)},')
-        lines.append(f'    position: {js_val(position)},')
-        lines.append(f'    linkedin: {js_val(e.get("linkedin"))},')
-        lines.append(f'    programme: {js_val(programme)},')
-        lines.append(f'    testimony: {js_val(e.get("testimony", "") or "")},')
-        lines.append("  },")
-
-    _write_array(filepath, original_content, "ALUMNI", "\n".join(lines))
-    print(f"  ✅ {filepath} updated — {len(entries)} entries")
-
-# ─── Write array back into file (surgical replace) ───────────
-def _write_array(filepath, original_content, array_name, new_array_content):
-    pattern = rf'const\s+{array_name}\s*=\s*\['
-    m = re.search(pattern, original_content)
-    if not m:
-        print(f"  ❌ Could not find array {array_name} in {filepath}")
-        return
-
-    array_start = m.end()
-    depth = 1
-    i = array_start
-    while i < len(original_content) and depth > 0:
-        if original_content[i] == '[':
-            depth += 1
-        elif original_content[i] == ']':
-            depth -= 1
-        i += 1
-    array_end = i - 1
-
-    new_content = (
-        original_content[:array_start]
-        + "\n"
-        + new_array_content
-        + "\n"
-        + original_content[array_end:]
-    )
-
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(new_content)
-
 # ─── Main ─────────────────────────────────────────────────────
 def main():
     print("🚀 Ashwa Racing sync starting...\n")
-
-    current_years = get_current_years()
-    print(f"📅 Current team years: {sorted(current_years)}")
-    print(f"📅 Alumni = anything below {min(current_years)}\n")
 
     # 1. Read sheet
     sheet_rows = read_sheet()
@@ -400,28 +404,18 @@ def main():
     # 2. Sync photos
     sync_photos(sheet_rows)
 
-    # 3. Read existing JS files
-    print("\n📖 Reading existing JS files...")
-    team_entries,   team_content   = read_js_entries(TEAM_JS_PATH,   "teamData")
-    alumni_entries, alumni_content = read_js_entries(ALUMNI_JS_PATH, "ALUMNI")
+    # 3. Read existing data (team.json, or legacy JS on first run)
+    print("\n📖 Reading existing data...")
+    team_entries = load_team()
 
-    # 4. Merge — everyone goes into team.js
+    # 4. Merge
     print("\n🔀 Merging team data...")
     team_entries = merge(team_entries, sheet_rows)
+    print(f"\n👥 Total entries: {len(team_entries)}")
 
-    # 5. Merge — only alumni go into alumni-data.js
-    sheet_alumni = [r for r in sheet_rows if r.get("Year", "") not in current_years]
-    if sheet_alumni:
-        print("\n🔀 Merging alumni data...")
-        alumni_entries = merge(alumni_entries, sheet_alumni)
-
-    print(f"\n👥 Total team entries: {len(team_entries)}")
-    print(f"🎓 Total alumni entries: {len(alumni_entries)}")
-
-    # 6. Write JS files
-    print("\n📝 Writing JS files...")
-    write_team_js  (TEAM_JS_PATH,   team_content,   team_entries)
-    write_alumni_js(ALUMNI_JS_PATH, alumni_content, alumni_entries)
+    # 5. Write
+    print("\n📝 Writing JSON...")
+    write_team_json(TEAM_JSON_PATH, team_entries)
 
     print("\n🎉 Sync complete!")
 

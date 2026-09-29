@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home | Ashwa Racing</title>
   <meta name="description"
-    content="Ashwa Racing is the Formula Student team of RV College of Engineering — 22 years, three powertrain types, and two international hybrid championships.">
+    content="Ashwa Racing is the Formula Student team of RV College of Engineering — 22 years, four powertrain types, and two times international hybrid champions.">
 
   <link rel="canonical" href="https://ashwaracing.org/" />
 
@@ -15,7 +15,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://assets.ashwaracing.org" crossorigin>
+  <!-- Images and video are plain (no-CORS) requests, so no crossorigin attribute here -->
+  <link rel="preconnect" href="https://assets.ashwaracing.org">
 
   <link rel="preload" as="style"
     href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap">
@@ -27,12 +28,10 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap">
   </noscript>
 
+  <link rel="stylesheet" href="assets/css/components/loader.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/pages/index.css">
   <link rel="stylesheet" href="assets/css/components/footer.css">
-
-  <!-- Start page JS download early. It remains deferred so DOM parsing is never blocked. -->
-  <link rel="preload" as="script" href="assets/js/pages/index.js">
 </head>
 
 <body>
@@ -41,35 +40,30 @@
 
   <main>
 
-    <!-- ============================================================
-         HERO
-         ============================================================ -->
     <section class="hero" aria-label="Ashwa Racing hero">
       <picture>
         <source media="(max-width: 768px)"
-          srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=768,format=avif,quality=50/images/heroimg/hero-mobile.png"
-          width="768" height="1024">
+          srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=828,format=auto,quality=85/images/heroimg/hero-mobile.png 828w,
+                  https://assets.ashwaracing.org/cdn-cgi/image/width=1170,format=auto,quality=85/images/heroimg/hero-mobile.png 1170w"
+          sizes="100vw" width="768" height="1024">
         <img
-          src="https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif,quality=50/images/heroimg/hero-desktop.jpg"
-          class="hero-img" alt="Ashwa Racing Formula Student car RZ-XX6-C on track at Formula Bharat 2026" width="1440"
-          height="860" fetchpriority="low" decoding="sync">
+          src="https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/heroimg/hero-desktop.jpg"
+          srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=auto,quality=85/images/heroimg/hero-desktop.jpg 1440w,
+                  https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/heroimg/hero-desktop.jpg 1920w,
+                  https://assets.ashwaracing.org/cdn-cgi/image/width=2560,format=auto,quality=85/images/heroimg/hero-desktop.jpg 2560w"
+          sizes="100vw" class="hero-img"
+          alt="Ashwa Racing Formula Student car RZ-XX6-C on track at Formula Bharat 2026" width="1440"
+          height="860" fetchpriority="high" decoding="async">
       </picture>
 
-        <!-- Video sits above the poster img but starts invisible. JS adds
-       .is-loaded once the browser reports enough data buffered to
-       play through without stalling — that's the "fully loaded" gate.
-       Poster stays underneath permanently as the fallback. -->
-      <video class="hero-video" id="hero-video"
-            autoplay
-            muted
-            loop
-            playsinline
-            poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif,quality=50/images/heroimg/hero-desktop.jpg"
-            preload="none"
-            aria-hidden="true">
-        <source src="assets/videos/hero_vid.mp4" type="video/mp4">
+      <!-- Sits above the poster image but starts invisible; index.js adds
+           .is-loaded once enough data is buffered, and starts playback
+           (skipped entirely for prefers-reduced-motion). -->
+      <video class="hero-video" id="hero-video" muted loop playsinline preload="none"
+        poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/heroimg/hero-desktop.jpg"
+        aria-hidden="true">
+        <source src="https://assets.ashwaracing.org/videos/hero_vid_1080p30.mp4"  type="video/mp4">
       </video>
-
 
       <div class="hero-overlay" aria-hidden="true"></div>
 
@@ -79,7 +73,7 @@
           Racing</h1>
 
         <p class="hero-para">
-          Two international hybrid championships. A combustion legacy two decades
+          Two time international hybrid champions. A combustion legacy two decades
           deep. A hyperloop project under the belt. A flagship EV project. This is Ashwa Racing.
         </p>
 
@@ -96,10 +90,6 @@
       </div>
     </section>
 
-    <!-- ============================================================
-         STAT BAR — sits directly under hero, dark strip, no separate
-         section wrapper. Numbers count up on scroll into view.
-         ============================================================ -->
     <section class="stat-bar" aria-label="Ashwa Racing by the numbers">
       <div class="container stat-bar-grid">
         <div class="stat">
@@ -111,11 +101,11 @@
           <span class="stat-label">Powertrains</span>
         </div>
         <div class="stat">
-          <span class="stat-num" data-count="2">0</span>
-          <span class="stat-label">Hybrid Championships</span>
+          <span class="stat-num" data-count="2" data-suffix="X">0</span>
+          <span class="stat-label">Hybrid Champions</span>
         </div>
         <div class="stat">
-          <span class="stat-num" data-count="25" data-suffix="+">0</span>
+          <span class="stat-num" data-count="28" data-suffix="">0</span>
           <span class="stat-label">Prototypes</span>
         </div>
       </div>
@@ -128,20 +118,32 @@
     <section class="spotlight spotlight--ev" aria-label="Current car spotlight" id="car-spotlight" data-active="ev">
 
       <div class="spotlight-bg-layer is-active" data-car="ev">
-        <img class="spotlight-bg" data-src="assets/images/prototypes/RZ-XX6-E/preevent/1.png" alt="RZ-XX6-E">
-        <video class="spotlight-bg-video" autoplay muted loop playsinline
-          data-poster="assets/images/prototypes/RZ-XX6-E/preevent/1.png"
-          preload="none" aria-hidden="true">
+        <img class="spotlight-bg"
+          src="https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-XX6-E/preevent/1.png"
+          srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-XX6-E/preevent/1.png 1280w,
+                  https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-XX6-E/preevent/1.png 1920w,
+                  https://assets.ashwaracing.org/cdn-cgi/image/width=2560,format=auto,quality=85/images/prototypes/RZ-XX6-E/preevent/1.png 2560w"
+          sizes="100vw" alt="RZ-XX6-E" loading="lazy" decoding="async">
+        <video class="spotlight-bg-video" muted loop playsinline preload="none"
+          poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-XX6-E/preevent/1.png"
+          aria-hidden="true">
+          <source src="https://assets.ashwaracing.org/videos/ev_spotlight.mp4"
+            type="video/mp4">
         </video>
       </div>
 
       <div class="spotlight-bg-layer" data-car="cv">
         <img class="spotlight-bg"
-          data-src="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif,quality=50/images/prototypes/RZ-XX6-C/postevent/1.jpg"
-          alt="Ashwa Racing RZ-XX6-C Formula Student car">
-        <video class="spotlight-bg-video" autoplay muted loop playsinline
-          data-poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif,quality=50/images/prototypes/RZ-XX6-C/postevent/1.jpg"
-          preload="none" aria-hidden="true">
+          src="https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-XX6-C/postevent/1.jpg"
+          srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-XX6-C/postevent/1.jpg 1280w,
+                  https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-XX6-C/postevent/1.jpg 1920w,
+                  https://assets.ashwaracing.org/cdn-cgi/image/width=2560,format=auto,quality=85/images/prototypes/RZ-XX6-C/postevent/1.jpg 2560w"
+          sizes="100vw" alt="Ashwa Racing RZ-XX6-C Formula Student car" loading="lazy" decoding="async">
+        <video class="spotlight-bg-video" muted loop playsinline preload="none"
+          poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-XX6-C/postevent/1.jpg"
+          aria-hidden="true">
+          <source src="https://assets.ashwaracing.org/videos/cv_spotlight.mp4"
+            type="video/mp4">
         </video>
       </div>
 
@@ -161,8 +163,8 @@
 
             <div class="spotlight-specs">
               <div>
-                <span class="spotlight-spec-num">75kW</span>
-                <span class="spotlight-spec-label">Power</span>
+                <span class="spotlight-spec-num">5.55kWh</span>
+                <span class="spotlight-spec-label">Energy</span>
               </div>
               <div>
                 <span class="spotlight-spec-num">4.8s</span>
@@ -170,14 +172,14 @@
               </div>
               <div>
                 <span class="spotlight-spec-num">235kg</span>
-                <span class="spotlight-spec-label">Dry Weight</span>
+                <span class="spotlight-spec-label">Weight</span>
               </div>
             </div>
 
-            <p class="spotlight-tags">Emrax 208 MV Motor &middot; 252V Pack &middot; New Chassis &middot; Rebuilt DAQ Stack</p>
+            <p class="spotlight-tags">Emrax 208 MV Motor &middot; 252V Pack &middot; Carbon Fiber bodyworks</p>
 
             <p class="spotlight-text">
-              Our first fully electric prototype — built from the ground up. Designed, manufactured and raced by the students of Ashwa Racing.
+              Our first fully electric prototype.
             </p>
 
             <a href="projects.html" class="btn-line">
@@ -194,24 +196,23 @@
 
             <div class="spotlight-specs">
               <div>
-                <span class="spotlight-spec-num">4</span>
-                <span class="spotlight-spec-label">Cylinders</span>
+                <span class="spotlight-spec-num">P6</span>
+                <span class="spotlight-spec-label">FB 26</span>
               </div>
               <div>
-                <span class="spotlight-spec-num">3.2s</span>
+                <span class="spotlight-spec-num">4.5s</span>
                 <span class="spotlight-spec-label">0–100 km/h</span>
               </div>
               <div>
-                <span class="spotlight-spec-num">185kg</span>
-                <span class="spotlight-spec-label">Dry Weight</span>
+                <span class="spotlight-spec-num">250kg</span>
+                <span class="spotlight-spec-label">Weight</span>
               </div>
             </div>
 
-            <p class="spotlight-tags">Redesigned Electrical Architecture &middot; Lighter Wiring Harness &middot; Rebuilt DAQ Stack</p>
+            <p class="spotlight-tags">GSX-R600 K9 engine with a custom Dry Sump system</p>
 
             <p class="spotlight-text">
-              Our combustion prototype for the 2026–27 season. Designed,
-              manufactured and raced by the students of Ashwa Racing.
+              Our combustion prototype for the 2026–27 season.
             </p>
 
             <a href="projects.html" class="btn-line">
@@ -227,26 +228,24 @@
 
     </section>
 
-    <!-- ============================================================
-         LATEST NEWS — one uniform card style (RennTeam pattern)
-         ============================================================ -->
     <section class="news" aria-label="Latest news">
       <div class="container">
         <p class="label">LATEST</p>
         <h2>From the <em>Team</em></h2>
 
         <div class="news-grid">
+          <!-- Text + cover here are the no-JS fallback; index.js keeps them in sync with the latest newsletter -->
           <a id="blog-card" href="newsletters.html" class="news-card">
             <div class="news-card-img-wrap">
               <img id="blog-thumb"
-                data-src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/newsletters/2026/2026-03.png"
-                alt="Ashwa Racing newsletter cover" loading="lazy" width="600" height="400">
+                src="https://assets.ashwaracing.org/cdn-cgi/image/width=1000,format=auto,quality=80/images/newsletters/2026/2026-06.png"
+                alt="Ashwa Racing newsletter cover" loading="lazy" decoding="async" width="600" height="400">
             </div>
             <div class="news-card-body">
-              <p id="blog-date" class="news-meta">March-May 2026</p>
-              <h3 id="blog-title">March-May 2026 — General Newsletter</h3>
-              <p id="blog-excerpt" class="news-excerpt">Post season training, manufacturing and engineering highlights
-              </p>
+              <p id="blog-date" class="news-meta">June 2026</p>
+              <h3 id="blog-title">June 2026 — General Newsletter</h3>
+              <p id="blog-excerpt" class="news-excerpt">Electrical redesign, EV simulation targets, expenses, sponsor roster
+                and team directory.</p>
               <span class="btn-line">Read More</span>
             </div>
           </a>
@@ -254,8 +253,8 @@
           <a href="smp.html" class="news-card">
             <div class="news-card-img-wrap">
               <img
-                data-src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/gallery/Panoramic-2024.jpg"
-                alt="Ashwa Racing at Formula Bharat 2026" loading="lazy" width="600" height="400">
+                src="https://assets.ashwaracing.org/cdn-cgi/image/width=1000,format=auto,quality=80/images/gallery/Panoramic-2024.jpg"
+                alt="Ashwa Racing at Formula Bharat 2026" loading="lazy" decoding="async" width="600" height="400">
             </div>
             <div class="news-card-body">
               <p class="news-meta">Formula Bharat 2026</p>
@@ -269,8 +268,8 @@
           <a href="recruitment.html" class="news-card">
             <div class="news-card-img-wrap">
               <img
-                data-src="https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/team/fullteam/2026-C.JPG"
-                alt="Ashwa Racing team 2026" loading="lazy" width="600" height="400">
+                src="https://assets.ashwaracing.org/cdn-cgi/image/width=1000,format=auto,quality=80/images/team/fullteam/2026-C.JPG"
+                alt="Ashwa Racing team 2026" loading="lazy" decoding="async" width="600" height="400">
             </div>
             <div class="news-card-body">
               <p class="news-meta">Recruitment</p>
@@ -295,93 +294,39 @@
   </main>
 
   <footer id="main-footer"></footer>
-  <!-- JS is downloaded early via preload, then executes after DOM parsing. -->
+
   <script src="assets/js/pages/index.js" defer></script>
   <script src="assets/js/components/header.js" defer></script>
+  <script src="assets/js/components/loader.js" defer></script>
 
-  <script>
-    /*
-     * Media loading policy:
-     * - The critical hero poster/image is available immediately.
-     * - Videos and non-critical images have no src/source during parsing.
-     * - They are activated only after the page DOM has parsed.
-     * - Spotlight/news images are additionally lazy-loaded when near viewport.
-     */
-    (() => {
-      const activateMedia = () => {
-        // Hero video: deliberately delayed until after initial HTML parsing.
-        const heroVideo = document.getElementById('hero-video');
-        if (heroVideo && !heroVideo.querySelector('source')) {
-          const source = document.createElement('source');
-          source.src = 'assets/videos/hero_vid.mp4';
-          source.type = 'video/mp4';
-          heroVideo.appendChild(source);
-          heroVideo.load();
-
-          const startHeroVideo = () => {
-            heroVideo.play().catch(() => {});
-          };
-
-          if (heroVideo.readyState >= 3) {
-            startHeroVideo();
-          } else {
-            heroVideo.addEventListener('canplay', startHeroVideo, { once: true });
-          }
-        }
-
-        // Spotlight images/videos.
-        document.querySelectorAll('.spotlight-bg[data-src]').forEach(img => {
-          if (!img.src) img.src = img.dataset.src;
-        });
-
-        document.querySelectorAll('.spotlight-bg-video[data-poster]').forEach(video => {
-          video.poster = video.dataset.poster;
-
-          if (!video.querySelector('source')) {
-            const source = document.createElement('source');
-            source.src = video.closest('[data-car]')?.dataset.car === 'cv'
-              ? 'assets/videos/cv_spotlight.mp4'
-              : 'assets/videos/ev_spotlight.mp4';
-            source.type = 'video/mp4';
-            video.appendChild(source);
-            video.load();
-          }
-        });
-
-        // News images: only activate when near the viewport.
-        const lazyImages = document.querySelectorAll('img[data-src]:not(.spotlight-bg)');
-
-        if ('IntersectionObserver' in window) {
-          const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-              if (!entry.isIntersecting) return;
-              const img = entry.target;
-              img.src = img.dataset.src;
-              img.removeAttribute('data-src');
-              obs.unobserve(img);
-            });
-          }, {
-            rootMargin: '300px 0px'
-          });
-
-          lazyImages.forEach(img => observer.observe(img));
-        } else {
-          lazyImages.forEach(img => {
-            img.src = img.dataset.src;
-            img.removeAttribute('data-src');
-          });
-        }
-      };
-
-      // Run after parsing, before the browser needs below-fold media.
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', activateMedia, { once: true });
-      } else {
-        activateMedia();
-      }
-    })();
-  </script>
-  
 </body>
+
+<div id="site-loader" aria-hidden="true">
+  <div class="loader-inner">
+
+    <div class="loader-brand">
+      <span class="loader-ashwa">Ashwa</span>
+      <span class="loader-racing">Racing</span>
+    </div>
+
+    <div class="loader-sponsor">
+      <div class="loader-sponsor-tier" id="loader-sponsor-tier">
+        INITIALIZING
+      </div>
+
+      <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
+    </div>
+
+    <div class="loader-progress">
+      <span class="loader-progress-bar"></span>
+    </div>
+
+    <div class="loader-meta">
+      <span id="loader-status">INITIALIZING</span>
+      <span id="loader-percent">00%</span>
+    </div>
+
+  </div>
+</div>
 
 </html>
