@@ -16,9 +16,9 @@
   display: grid;
   grid-template-columns: 280px 1fr;
   gap: 80px;
-  padding: 80px 6% 64px;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  padding: 80px 0 64px;
+  margin-inline: auto;
 }
 
 /* ─── Brand column ──────────────────────────────────────────── */
@@ -240,8 +240,8 @@
 .footer-divider {
   height: 1px;
   background: rgba(255,255,255,0.06);
-  max-width: 1400px;
-  margin: 0 6%;
+  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  margin-inline: auto;
 }
 
 /* ─── Bottom bar ────────────────────────────────────────────── */
@@ -251,9 +251,9 @@
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
-  padding: 24px 6%;
-  max-width: 1400px;
-  margin: 0 auto;
+  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  padding: 24px 0;
+  margin-inline: auto;
 }
 
 /* FIX: .footer-copy and .footer-credit had identical declarations —
@@ -282,16 +282,12 @@
   .footer-col-label {
     justify-content: center;
     text-align: center;
-
     width: 100%;
   }
 
   .footer-col-label::after {
     display: none;
   }
-}
-
-@media (max-width: 860px) {
 
   .footer-top {
     grid-template-columns: 1fr;
@@ -299,7 +295,7 @@
     justify-items: center;
 
     gap: 48px;
-    padding: 64px 6% 48px;
+    padding: 64px 0 48px;
   }
 
   .footer-brand-col {
@@ -357,7 +353,7 @@
 
   .footer-top {
     gap: 40px;
-    padding: 56px 5% 40px;
+    padding: 56px 0 40px;
   }
 
   .footer-nav-cols {
@@ -386,7 +382,7 @@
 @media (max-width: 380px) {
 
   .footer-top {
-    padding: 48px 5% 36px;
+    padding: 48px 0 36px;
   }
 
   .footer-nav-cols {

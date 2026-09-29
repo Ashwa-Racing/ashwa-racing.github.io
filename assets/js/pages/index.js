@@ -339,7 +339,7 @@ function initStatCounters() {
       return;
     }
 
-    const duration = 1200;
+    const duration = 3600;
     const start = performance.now();
 
     function step(now) {

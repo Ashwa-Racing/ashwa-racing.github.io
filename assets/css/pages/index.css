@@ -32,6 +32,22 @@
   line-gap-override: 0%;
 }
 
+@font-face {
+    font-family: "Samarkan";
+    src: url("/assets/fonts/SAMAN.TTF") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Xenotron";
+    src: url("/assets/fonts/XENOTRON.TTF") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 /* ── Tokens — defined ONCE, here only ── */
@@ -62,10 +78,10 @@
   --body:          'Barlow', Arial, sans-serif;
   --expo:         cubic-bezier(0.16, 1, 0.3, 1);
 
-  --pad:          clamp(30px, 4vw, 240px);
+  --site-gutter:  clamp(20px, 5vw, 72px);
+  --section-pad:  clamp(56px, 7vw, 112px);
   --nav-h:        68px;
-  --content-width: 1320px;
-  --radius:       0px;
+  --content-width: 1080px;
   --rule:          rgba(10,10,10,0.14);
 }
 
@@ -85,7 +101,7 @@ body {
 #main-header { min-height: var(--nav-h); contain: layout; position: relative; z-index: 1000; }
 
 .container {
-  width: min(100% - (var(--pad) * 2), var(--content-width));
+  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
   margin-inline: auto;
 }
 
@@ -103,7 +119,7 @@ body {
   align-items: center;
   gap: 10px;
 }
-.label::before { content: ''; width: 24px; height: 2px; background: var(--red); flex-shrink: 0; }
+.label::before { content: ''; width: 34px; height: 3px; background: var(--red); flex-shrink: 0; }
 
 h2 {
   font-family: var(--display);
@@ -183,7 +199,7 @@ h2 em { font-style: italic; color: var(--red); }
   100% { transform: scale(1.45) translate(-4%, -8%); }
 }
 
-.hero-overlay {
+/* .hero-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -191,20 +207,18 @@ h2 em { font-style: italic; color: var(--red); }
     linear-gradient(90deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.42) 46%, rgba(0,0,0,0.10) 78%, rgba(0,0,0,0) 100%),
     linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.05) 62%),
     linear-gradient(135deg, rgba(232,0,29,0.10), transparent 42%);
-}
+} */
 
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 0 var(--pad);
-  width: min(100%, 760px);
-  max-width: 760px;
-  margin: 0;
+  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  margin-inline: auto;
   padding-bottom: clamp(60px, 9vh, 120px);
-  text-align: left;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .hero-content h1 {
@@ -215,18 +229,29 @@ h2 em { font-style: italic; color: var(--red); }
   line-height: 0.95;
   color: var(--white);
   margin-bottom: 22px;
+  max-width: 10ch;
+  text-wrap: balance;
   text-shadow: 0 4px 40px rgba(0,0,0,0.5);
 }
+
 .hero-content h1 em { color: var(--red); font-style: italic; }
+
+.ashwa {
+    font-family: "Samarkan", sans-serif;
+    color: red;
+}
+
+.racing {
+    font-family: "Xenotron", sans-serif;
+    color: white;
+}
 
 .hero-para {
   font-size: clamp(0.88rem, 1.5vw, 1.05rem);
   line-height: 1.7;
-  color: rgba(255,255,255,0.62);
+  color: rgba(255,255,255,1);
   margin-bottom: 30px;
   max-width: 480px;
-  margin-left: 0;
-  margin-right: 0;
 }
 
 .hero-ctas { display: flex; align-items: center; justify-content: flex-start; gap: 24px; flex-wrap: wrap; }
@@ -247,7 +272,7 @@ h2 em { font-style: italic; color: var(--red); }
   transition: opacity 0.6s ease;
   pointer-events: none;
   z-index: 0; /* same stacking layer as .hero-img, sits above it once loaded */
-  filter: brightness(0.85) saturate(1.1)
+  filter: brightness(0.45) saturate(1.1)
 }
 
 .hero-video.is-loaded {
@@ -266,7 +291,9 @@ h2 em { font-style: italic; color: var(--red); }
 .stat-bar-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 30px var(--pad);
+  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  margin-inline: auto;
+  padding: 30px 0;
 }
 .stat { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; position: relative; }
 .stat + .stat::before {
@@ -277,7 +304,7 @@ h2 em { font-style: italic; color: var(--red); }
   background: var(--hairline);
 }
 .stat-num {
-  font-family: var(--display);
+  font-family: var(--racing);
   font-size: clamp(2.4rem, 4vw, 3.6rem);
   font-weight: 800;
   color: var(--white);
@@ -342,7 +369,8 @@ h2 em { font-style: italic; color: var(--red); }
     border-radius: 0;
     overflow: hidden;
     border: 1px solid rgba(0,0,0,0.12);
-    margin: 64px var(--pad) 8px;
+    width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  margin: 64px auto 8px;
     background: #000;
 }
 
@@ -399,10 +427,11 @@ h2 em { font-style: italic; color: var(--red); }
     margin: 0 0 22px;
 }
 .spotlight h2 em {
+    font-family: var(--racing);
     font-style: normal;
-    white-space: nowrap; /* keeps "RZ-XX6-C" as one unbroken unit */
+    color: var(--red);
+    white-space: nowrap;
 }
-.spotlight h2 em { color: var(--red); }
 
 /* Numbers float, no box — matches the reference's stat-block look */
 .spotlight-specs {
@@ -448,15 +477,6 @@ h2 em { font-style: italic; color: var(--red); }
 
 .spotlight .btn-line { color: white; }
 .spotlight .btn-line:hover { color: var(--red); }
-
-@media (max-width: 900px) {
-    .spotlight { max-height: none; }
-    .spotlight::after {
-        background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.82));
-    }
-    .spotlight-overlay { padding: 220px 28px 40px; }
-    .spotlight-specs { flex-wrap: wrap; row-gap: 16px; }
-}
 
 .spotlight-bg-video {
   position: absolute;
@@ -561,7 +581,7 @@ h2 em { font-style: italic; color: var(--red); }
   }
 }
 
-.news { padding: var(--pad) 0; background: var(--off-white); }
+.news { padding: var(--section-pad) 0; background: var(--off-white); }
 .news-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -584,14 +604,52 @@ h2 em { font-style: italic; color: var(--red); }
 .news-card-img-wrap { height: 220px; overflow: hidden; }
 .news-card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s var(--expo); }
 .news-card:hover .news-card-img-wrap img { transform: scale(1.06); }
-.news-card-body { padding: 22px 24px 26px; display: flex; flex-direction: column; gap: 8px; }
+.news-card-body {
+  padding: 22px 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 3px solid var(--red);
+}
 .news-meta { font-family: var(--display); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
-.news-card-body h3 { font-family: var(--display); font-size: 1.25rem; font-weight: 700; text-transform: uppercase; line-height: 1.15; }
+.news-card-body h3 {
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
 .news-excerpt { font-size: 0.87rem; color: #666; line-height: 1.6; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; margin-bottom: 4px; }
 .news-card .btn-line { font-size: 0.82rem; align-self: flex-start; }
 .view-all { display: flex; justify-content: center; }
 
-@media (max-width: 900px) { .news-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-content {
+    padding-bottom: 48px;
+  }
+
+  .spotlight {
+    max-height: none;
+  }
+
+  .spotlight::after {
+    background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.82));
+  }
+
+  .spotlight-overlay {
+    padding: 200px 32px 40px;
+  }
+
+  .spotlight-specs {
+    flex-wrap: wrap;
+    row-gap: 16px;
+  }
+}
 
 /* ============================================================
    SCROLL REVEAL (used by index.js)
@@ -615,31 +673,11 @@ h2 em { font-style: italic; color: var(--red); }
   will-change: transform;
 }
 .reveal-mask.reveal-visible .reveal-mask-inner { transform: translateY(0); }
-
-/* ============================================================
-   ASHWA MOTORSPORT FINISH
-   Hard edges, technical typography, race-derived rules.
-   ============================================================ */
-
-.label,
-.stat-label,
-.news-meta,
-.btn-line,
-.btn-solid {
-  font-family: var(--display);
-  font-weight: 700;
+.reveal-mask-inner em {
+  font-family: var(--ashwa);
 }
 
-.label::before {
-  width: 34px;
-  height: 3px;
-}
-
-.hero-content h1 {
-  max-width: 10ch;
-  text-wrap: balance;
-}
-
+/* MOTORSPORT DETAIL */
 .hero-content h1::after {
   content: '';
   display: block;
@@ -660,37 +698,9 @@ h2 em { font-style: italic; color: var(--red); }
   background: var(--red);
 }
 
-.news-card-body {
-  border-top: 3px solid var(--red);
-}
-
-.news-card-body h3 {
-  font-family: var(--display);
-  font-weight: 800;
-  letter-spacing: -0.015em;
-}
-
-.stat + .stat::before {
-  background: rgba(255,255,255,0.18);
-}
-
-@media (max-width: 900px) {
-  .hero-content {
-    padding-bottom: 48px;
-  }
-
-  .spotlight-overlay {
-    padding: 200px 32px 40px;
-  }
-}
-
 @media (max-width: 600px) {
   .hero-content h1 {
     font-size: clamp(2.8rem, 14vw, 5rem);
-  }
-
-  .spotlight {
-    margin-inline: 20px;
   }
 
   .spotlight-overlay {
