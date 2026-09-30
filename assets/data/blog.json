@@ -1,0 +1,58 @@
+{
+  "posts": [
+    {
+      "slug": "june-2026-general-newsletter",
+      "title": "June 2026 — General Newsletter",
+      "date": "2026-06",
+      "author": "Ashwa Racing",
+      "category": "Newsletter",
+      "readTime": 3,
+      "featured": true,
+      "cover": "https://assets.ashwaracing.org/cdn-cgi/image/width=1000,format=auto,quality=80/images/newsletters/2026/2026-06.png",
+      "coverAlt": "Ashwa Racing June 2026 newsletter cover",
+      "excerpt": "Electrical redesign, EV simulation targets, expenses, sponsor roster and team directory.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "The June 2026 general newsletter covers current team work, including electrical redesign, EV simulation targets, expenses, the sponsor roster and the team directory."
+        }
+      ]
+    },
+    {
+      "slug": "formula-bharat-2026-engineering-design",
+      "title": "Top 5 in Engineering Design",
+      "date": "2026",
+      "author": "Ashwa Racing",
+      "category": "Competition",
+      "readTime": 2,
+      "featured": false,
+      "cover": "https://assets.ashwaracing.org/cdn-cgi/image/width=1000,format=auto,quality=80/images/gallery/Panoramic-2024.jpg",
+      "coverAlt": "Ashwa Racing at Formula Bharat 2026",
+      "excerpt": "RZ-XX6-C placed top 5 in Engineering Design and 2nd in Business Presentation at Formula Bharat 2026.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "RZ-XX6-C placed top 5 in Engineering Design and 2nd in Business Presentation at Formula Bharat 2026."
+        }
+      ]
+    },
+    {
+      "slug": "applications-open-2026-27-season",
+      "title": "Applications Open — 2026–27 Season",
+      "date": "2026",
+      "author": "Ashwa Racing",
+      "category": "Recruitment",
+      "readTime": 2,
+      "featured": false,
+      "cover": "https://assets.ashwaracing.org/cdn-cgi/image/width=1000,format=auto,quality=80/images/team/fullteam/2026-C.JPG",
+      "coverAlt": "Ashwa Racing team 2026",
+      "excerpt": "Ashwa Racing is recruiting across all electrical, mechanical, and business subsystems.",
+      "content": [
+        {
+          "type": "paragraph",
+          "text": "Ashwa Racing is recruiting across all electrical, mechanical, and business subsystems for the 2026–27 season."
+        }
+      ]
+    }
+  ]
+}

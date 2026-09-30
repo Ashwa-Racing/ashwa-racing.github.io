@@ -225,7 +225,7 @@ async function initHome() {
 
     initReveal();
     initMaskReveal();
-    initNewsletterPreview();
+    initBlogPreview();
     initStatCounters();
     initSpotlightToggle();
 }
@@ -302,25 +302,164 @@ function initMaskReveal() {
   targets.forEach(el => io.observe(el));
 }
 
-/* ── Newsletter preview (unchanged) ── */
-function initNewsletterPreview() {
-  const card  = document.getElementById("blog-card");
-  const thumb = document.getElementById("blog-thumb");
-  if (!card || !thumb) return;
+/* ── Homepage blog preview ──────────────────────────────────── */
 
-  const latest = {
-    title:   "June 2026 — General Newsletter",
-    cover:   "https://assets.ashwaracing.org/cdn-cgi/image/width=600,format=avif,quality=80/images/newsletters/2026/2026-06.png",
-    pdf:     "https://assets.ashwaracing.org/pdfs/newsletters/2026/2026-06-general.pdf",
-    date:    "June 2026",
-    excerpt: "RZ-XX7C electrical redesign consolidation; RZ-XX8E simulation work sets FDR and energy targets for the EV prototype; plus May expenses, sponsor roster, and team directory."
-  };
+const BLOG_URL = "/assets/data/blog.json";
 
-  thumb.src = latest.cover;
-  document.getElementById("blog-title").textContent   = latest.title;
-  document.getElementById("blog-excerpt").textContent = latest.excerpt;
-  document.getElementById("blog-date").textContent    = latest.date;
-  card.href = latest.pdf;
+function parseBlogDate(date) {
+  if (!date) return null;
+
+  const value = String(date).trim();
+
+  if (/^\d{4}$/.test(value)) {
+    return new Date(`${value}-01-01T00:00:00`);
+  }
+
+  if (/^\d{4}-\d{2}$/.test(value)) {
+    return new Date(`${value}-01T00:00:00`);
+  }
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    return new Date(`${value}T00:00:00`);
+  }
+
+  return null;
+}
+
+function formatBlogDate(date) {
+  const value = String(date || "").trim();
+
+  if (/^\d{4}$/.test(value)) {
+    return value;
+  }
+
+  const parsed = parseBlogDate(value);
+
+  if (!parsed) {
+    return value;
+  }
+
+  const options = /^\d{4}-\d{2}$/.test(value)
+    ? {
+        month: "long",
+        year: "numeric"
+      }
+    : {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      };
+
+  return new Intl.DateTimeFormat("en-IN", options).format(parsed);
+}
+
+function blogDateValue(date) {
+  const parsed = parseBlogDate(date);
+  return parsed ? parsed.getTime() : 0;
+}
+
+function escapeBlogHTML(value = "") {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#039;"
+  }[char]));
+}
+
+async function initBlogPreview() {
+  const grid = document.getElementById("home-blog-grid");
+
+  if (!grid) return;
+
+  try {
+    const response = await fetch(BLOG_URL, {
+      cache: "no-cache"
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!Array.isArray(data.posts)) {
+      throw new Error("Invalid blog data.");
+    }
+
+    const posts = data.posts
+      .filter(
+        post =>
+          post &&
+          post.slug &&
+          post.title
+      )
+      .sort(
+        (a, b) =>
+          blogDateValue(b.date) -
+          blogDateValue(a.date)
+      )
+      .slice(0, 3);
+
+    if (!posts.length) {
+      grid.innerHTML = "";
+      return;
+    }
+
+    grid.innerHTML = posts.map(post => `
+      <a
+        href="blog-post.html?post=${encodeURIComponent(post.slug)}"
+        class="news-card">
+
+        <div class="news-card-img-wrap">
+          <img
+            src="${escapeBlogHTML(post.cover || "")}"
+            alt="${escapeBlogHTML(
+              post.coverAlt || post.title
+            )}"
+            loading="lazy"
+            decoding="async"
+            width="600"
+            height="400">
+        </div>
+
+        <div class="news-card-body">
+
+          <p class="news-meta">
+            ${escapeBlogHTML(post.category || "")}
+            ${
+              post.date
+                ? ` · ${escapeBlogHTML(formatBlogDate(post.date))}`
+                : ""
+            }
+          </p>
+
+          <h3>
+            ${escapeBlogHTML(post.title)}
+          </h3>
+
+          <p class="news-excerpt">
+            ${escapeBlogHTML(post.excerpt || "")}
+          </p>
+
+          <span class="btn-line">
+            Read More
+          </span>
+
+        </div>
+
+      </a>
+    `).join("");
+
+  } catch (error) {
+    console.error(
+      "Ashwa Blog: failed to load homepage articles.",
+      error
+    );
+
+    grid.innerHTML = "";
+  }
 }
 
 /* ── Stat bar count-up (unchanged) ── */

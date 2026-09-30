@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Blog | Ashwa Racing</title>
+  <meta name="description"
+    content="News, engineering stories, competition updates, and technical insights from Ashwa Racing.">
+
+  <link rel="canonical" href="https://ashwaracing.org/blog.html">
+
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://assets.ashwaracing.org">
+
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&display=swap">
+  </noscript>
+
+  <link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
+  <link rel="stylesheet" href="assets/css/pages/blog.css">
+  <link rel="stylesheet" href="assets/css/components/footer.css">
+</head>
+
+<body>
+
+  <div id="main-header"></div>
+
+  <main>
+    <section class="blog-hero" aria-labelledby="blog-title">
+      <div class="container">
+        <p class="label">FROM THE TEAM</p>
+        <h1 id="blog-title">Ashwa <em>Blog</em></h1>
+        <p class="blog-intro">
+          Engineering, competition, projects, and stories from Ashwa Racing.
+        </p>
+      </div>
+    </section>
+
+    <section class="blog-content" aria-label="Blog articles">
+      <div class="container">
+
+        <div class="blog-featured" id="blog-featured">
+          <!-- Populated by blog.js -->
+        </div>
+
+        <div class="blog-toolbar">
+          <div class="blog-filter" id="blog-filter" aria-label="Filter articles">
+            <!-- Populated by blog.js -->
+          </div>
+        </div>
+
+        <div class="blog-grid" id="blog-grid">
+          <!-- Populated by blog.js -->
+        </div>
+
+        <div class="blog-empty" id="blog-empty" hidden>
+          <p>No articles found.</p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer id="main-footer"></footer>
+
+  <script src="assets/js/pages/blog.js" defer></script>
+  <script src="assets/js/components/header.js" defer></script>
+  <script src="assets/js/components/loader.js" defer></script>
+
+</body>
+
+<div id="site-loader" aria-hidden="true">
+  <div class="loader-inner">
+
+    <div class="loader-brand">
+      <span class="loader-ashwa">Ashwa</span>
+      <span class="loader-racing">Racing</span>
+    </div>
+
+    <div class="loader-sponsor">
+      <div class="loader-sponsor-tier" id="loader-sponsor-tier">
+        INITIALIZING
+      </div>
+
+      <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
+    </div>
+
+    <div class="loader-progress">
+      <span class="loader-progress-bar"></span>
+    </div>
+
+    <div class="loader-meta">
+      <span id="loader-status">INITIALIZING</span>
+      <span id="loader-percent">00%</span>
+    </div>
+
+  </div>
+</div>
+
+</html>
