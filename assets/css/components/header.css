@@ -16,6 +16,22 @@
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@font-face {
+    font-family: "Samarkan";
+    src: url("https://assets.ashwaracing.org/fonts/SAMAN.TTF") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Xenotron";
+    src: url("https://assets.ashwaracing.org/fonts/XENOTRON.TTF") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 .navbar {
   position: sticky;
   top: 0;

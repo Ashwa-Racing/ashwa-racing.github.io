@@ -2,6 +2,22 @@
    ASHWA RACING — GLOBAL LOADER
    ============================================================ */
 
+@font-face {
+    font-family: "Samarkan";
+    src: url("https://assets.ashwaracing.org/fonts/SAMAN.TTF") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Xenotron";
+    src: url("https://assets.ashwaracing.org/fonts/XENOTRON.TTF") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 #site-loader {
   position: fixed;
   inset: 0;
