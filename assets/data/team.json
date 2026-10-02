@@ -2,10 +2,12 @@
   {
     "name": "Ananth Krishna",
     "roles": [
-      "Member"
+      "Member",
+      "Chief Engineer"
     ],
     "subsystem": [
-      "Chassis & Workshop Management"
+      "Chassis & Workshop Management",
+      "Leads"
     ],
     "year": "2028",
     "experience": "Member of the Chassis & Workshop Management team.",
@@ -13,6 +15,9 @@
       "linkedin": "https://www.linkedin.com/in/ananth-krishna-679060243",
       "github": null,
       "gmail": "ananth.ashwa@gmail.com"
+    },
+    "prototypes": {
+      "Electric": "Chief Engineer"
     }
   },
   {
@@ -25,7 +30,7 @@
       "Marketing & Public Relations"
     ],
     "year": "2028",
-    "experience": "Newsletter Drafting Sponsor Outreach Launch Event and Student Induction Program Graphic Design Social Media",
+    "experience": "Newsletter Drafting\nSponsor Outreach\nLaunch Event and Student Induction Program\nGraphic Design\nSocial Media",
     "social": {
       "linkedin": "https://www.linkedin.com/in/dilan-da-silva-a8297b32a",
       "github": null,
@@ -856,7 +861,7 @@
       "Electrical & Testing"
     ],
     "year": "2026",
-    "experience": "Developed a data-centric vehicle system architecture on a modular DAQ and telemetry system. Designed DAQ, Power Unit, AMS Master, Precharge, and TSSI systems, among others. Contributed to the development of Electric Test Vehicle, Hyperloop, FS-XX6E and FS-XX6C prototypes.",
+    "experience": "Developed a data-centric vehicle system architecture on a modular DAQ and telemetry system.\nDesigned DAQ, Power Unit, AMS Master, Precharge, and TSSI systems, among others.\nContributed to the development of Electric Test Vehicle, Hyperloop, FS-XX6E and FS-XX6C prototypes.",
     "social": {
       "linkedin": null,
       "github": null,
