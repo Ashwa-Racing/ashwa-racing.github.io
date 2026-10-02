@@ -3,10 +3,10 @@ name: Sync Team Data
 on:
   schedule:
     - cron: '30 18 * * *'  # Runs at 00:00 IST (18:30 UTC) every night
-  workflow_dispatch:        # Can also be triggered manually from Actions tab
+  workflow_dispatch:       # Can also be triggered manually from Actions
 
 permissions:
-  contents: write           # Needed to commit and push changes
+  contents: write
 
 jobs:
   sync:
@@ -30,13 +30,19 @@ jobs:
         env:
           SHEET_CSV_URL:        ${{ secrets.SHEET_CSV_URL }}
           DRIVE_ROOT_FOLDER_ID: ${{ secrets.DRIVE_ROOT_FOLDER_ID }}
+          R2_ACCOUNT_ID:        ${{ secrets.R2_ACCOUNT_ID }}
+          R2_ACCESS_KEY_ID:     ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_BUCKET_NAME:       ${{ secrets.R2_BUCKET_NAME }}
         run: python scripts/sync.py
 
       - name: Commit and push
         run: |
-          git config user.name  "Ashwa Sync Bot"
+          git config user.name "Ashwa Sync Bot"
           git config user.email "sync@ashwaracing.com"
-          git add assets/js/pages/team.js assets/js/pages/alumni-data.js assets/images/team/members/
+
+          git add assets/data/team.json
+
           git diff --staged --quiet \
             && echo "Nothing changed, skipping commit." \
             || (git commit -m "🔄 Auto-sync team data $(date +'%Y-%m-%d')" && git pull --rebase && git push)
