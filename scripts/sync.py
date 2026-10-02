@@ -21,6 +21,7 @@ import re
 import csv
 import json
 import requests
+import boto3
 
 # ─── Config ───────────────────────────────────────────────────
 SHEET_CSV_URL        = os.environ["SHEET_CSV_URL"]
@@ -35,7 +36,7 @@ LEGACY_ALUMNI_JS_PATH = "assets/js/pages/alumni-data.js"
 
 # Manual flags preserved — never overwritten by sync
 MANUAL_FLAGS = {
-    "Vibin": {"easterEgg": True}
+    "Vibin": {"easterEgg": False}
 }
 
 # Prototype key → programme id (used to spot redundant migrated values)
@@ -364,32 +365,70 @@ def merge(existing, sheet_rows):
 
     return existing
 
-# ─── Download Photos ──────────────────────────────────────────
+# ─── Sync Photos to Cloudflare R2 ────────────────────────────
 def sync_photos(sheet_rows):
-    print("\n📸 Syncing photos...")
+    print("\n📸 Syncing photos to Cloudflare R2...")
+
+    R2_ACCOUNT_ID = os.environ["R2_ACCOUNT_ID"]
+    R2_ACCESS_KEY_ID = os.environ["R2_ACCESS_KEY_ID"]
+    R2_SECRET_ACCESS_KEY = os.environ["R2_SECRET_ACCESS_KEY"]
+    R2_BUCKET_NAME = os.environ["R2_BUCKET_NAME"]
+
+    r2 = boto3.client(
+        "s3",
+        endpoint_url=f"https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com",
+        aws_access_key_id=R2_ACCESS_KEY_ID,
+        aws_secret_access_key=R2_SECRET_ACCESS_KEY,
+        region_name="auto",
+    )
+
     for row in sheet_rows:
-        name    = row.get("Name",          "").strip()
-        year    = row.get("Year",          "").strip()
+        name = row.get("Name", "").strip()
+        year = row.get("Year", "").strip()
         file_id = row.get("Photo File ID", "").strip()
-        dest    = f"assets/images/team/members/{year}/{name}.webp"
 
         if not file_id or not name or not year:
             continue
-        if os.path.exists(dest):
+
+        # R2 object key
+        key = f"images/team/members/{year}/{name}.webp"
+
+        # Check whether the image already exists in R2
+        try:
+            r2.head_object(
+                Bucket=R2_BUCKET_NAME,
+                Key=key
+            )
             print(f"  ⏭️  Exists: {name}.webp")
             continue
 
+        except Exception:
+            # Object doesn't exist, so continue with upload.
+            pass
+
+        # Download image from Google Drive
         url = f"https://drive.google.com/uc?export=download&id={file_id}&confirm=t"
-        r   = requests.get(url, stream=True, timeout=30)
+
+        r = requests.get(url, timeout=30)
+
         if r.status_code != 200 or "text/html" in r.headers.get("Content-Type", ""):
-            print(f"  ❌ Failed: {name}")
+            print(f"  ❌ Failed to download: {name}")
             continue
 
-        os.makedirs(os.path.dirname(dest), exist_ok=True)
-        with open(dest, "wb") as f:
-            for chunk in r.iter_content(8192):
-                f.write(chunk)
-        print(f"  ✅ Downloaded: {name}.webp")
+        # Upload directly to R2
+        try:
+            r2.put_object(
+                Bucket=R2_BUCKET_NAME,
+                Key=key,
+                Body=r.content,
+                ContentType="image/webp",
+                CacheControl="public, max-age=31536000, immutable",
+            )
+
+            print(f"  ✅ Uploaded: {name}.webp")
+
+        except Exception as e:
+            print(f"  ❌ R2 upload failed for {name}: {e}")
 
 # ─── Main ─────────────────────────────────────────────────────
 def main():
