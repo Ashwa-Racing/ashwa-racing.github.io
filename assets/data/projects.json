@@ -707,7 +707,7 @@
           "assets/images/prototypes/RZ-XX-HY/IMG_4019.JPG"
         ],
         "changes": [
-          "RZ-XXH — Fifth generation hybrid prototype",
+          "RZ-XXH — Sixth generation hybrid prototype",
           "Overall 1st Place Champion at Formula Hybrid 2020 (USA)",
           "1st Place in Project Management (Perfect 150/150 score)",
           "3rd Place in Design Presentation (164/200 score)",
@@ -734,19 +734,19 @@
     "years": {
       "2026": {
         "images": [
-          "assets/images/prototypes/RZ-XX6-E/preevent/1.png"
+          "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-XX6-E/preevent/1.png"
         ],
         "changes": [
           "RZ-XX6-E — Ashwa Racing's first fully electric prototype",
-          "Clean-sheet chassis and electrical architecture, not a converted combustion platform",
-          "New powertrain: Emrax 208 MV motor, 252V/200A HV battery pack"
+          "Clean sheet chassis and electrical architecture",
+          "Emrax 208 MV motor, 252V/200A HV custom battery pack"
         ],
         "desc": "RZ-XX6-E is Ashwa Racing's first fully electric prototype, built from the ground up with a new chassis, electrical architecture, and data acquisition stack.",
         "specs": {
           "weight": "235 kg",
           "power": "75 kW",
           "acceleration": "4.8s",
-          "topSpeed": "-"
+          "topSpeed": "120 kmph"
         },
         "achievements": [],
         "badge": "First fully electric prototype"
@@ -771,15 +771,11 @@
         "changes": [
           "First prototype — competed at ETH Zurich"
         ],
-        "desc": "Ashwa's entry into the Hyperloop space — a full pod prototype developed and tested for international-level competition at ETH Zurich.",
+        "desc": "Ashwa's entry into the Hyperloop space. A fully student built pod prototype developed for Hyperloop week at ETH Zurich.",
         "specs": {
-          "weight": "220 kg",
-          "power": "Electric Linear Drive",
-          "acceleration": "High-G Launch",
-          "topSpeed": "Subsonic Test"
         },
         "achievements": [
-          "Finalist & Competitor — European Hyperloop Week 2023 (ETH Zurich, Switzerland)",
+          "Finalist at European Hyperloop Week 2023 (ETH Zurich, Switzerland)",
           "First Student Hyperloop Pod Prototype from Karnataka"
         ]
       }

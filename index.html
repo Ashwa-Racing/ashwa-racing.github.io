@@ -28,6 +28,14 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap">
   </noscript>
 
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+
   <link rel="stylesheet" href="assets/css/components/loader.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/pages/index.css">
@@ -36,7 +44,45 @@
 
 <body>
 
+  <div id="site-loader" aria-hidden="true">
+    <div class="loader-inner">
+
+      <div class="loader-brand">
+        <span class="loader-ashwa">Ashwa</span>
+        <span class="loader-racing">Racing</span>
+      </div>
+
+      <div class="loader-sponsor">
+        <div class="loader-sponsor-tier" id="loader-sponsor-tier">
+          INITIALIZING
+        </div>
+
+        <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
+      </div>
+
+      <div class="loader-progress">
+        <span class="loader-progress-bar"></span>
+      </div>
+
+      <div class="loader-meta">
+        <span id="loader-status">INITIALIZING</span>
+        <span id="loader-percent">00%</span>
+      </div>
+
+    </div>
+  </div>
+
   <div id="main-header"></div>
+
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" />
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+  </button>
 
   <main>
 
@@ -62,10 +108,8 @@
       <video class="hero-video" id="hero-video" muted loop playsinline preload="none"
         poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/heroimg/hero-desktop.jpg"
         aria-hidden="true">
-        <source src="https://assets.ashwaracing.org/videos/hero_vid_1080p30.mp4"  type="video/mp4">
+        <source src="https://assets.ashwaracing.org/videos/hero_vid_1080p30.mp4" type="video/mp4">
       </video>
-
-      <div class="hero-overlay" aria-hidden="true"></div>
 
       <div class="hero-content">
 
@@ -75,7 +119,7 @@
         </h1>
 
         <p class="hero-para">
-          Two time international hybrid champions. A combustion legacy two decades
+          Two-time international hybrid champions. A combustion legacy two decades
           deep. A hyperloop project under the belt. A flagship EV project. This is Ashwa Racing.
         </p>
 
@@ -95,19 +139,19 @@
     <section class="stat-bar" aria-label="Ashwa Racing by the numbers">
       <div class="container stat-bar-grid">
         <div class="stat">
-          <span class="stat-num" data-count="22">0</span>
+          <span class="stat-num" data-count="22">22</span>
           <span class="stat-label">Years Racing</span>
         </div>
         <div class="stat">
-          <span class="stat-num" data-count="4">0</span>
+          <span class="stat-num" data-count="4">4</span>
           <span class="stat-label">Powertrains</span>
         </div>
         <div class="stat">
-          <span class="stat-num" data-count="2" data-suffix="X">0</span>
+          <span class="stat-num" data-count="2" data-suffix="X">2X</span>
           <span class="stat-label">Hybrid Champions</span>
         </div>
         <div class="stat">
-          <span class="stat-num" data-count="28" data-suffix="">0</span>
+          <span class="stat-num" data-count="28">28</span>
           <span class="stat-label">Prototypes</span>
         </div>
       </div>
@@ -129,8 +173,7 @@
         <video class="spotlight-bg-video" muted loop playsinline preload="none"
           poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-XX6-E/preevent/1.png"
           aria-hidden="true">
-          <source src="https://assets.ashwaracing.org/videos/ev_spotlight.mp4"
-            type="video/mp4">
+          <source src="https://assets.ashwaracing.org/videos/ev_spotlight.mp4" type="video/mp4">
         </video>
       </div>
 
@@ -144,16 +187,15 @@
         <video class="spotlight-bg-video" muted loop playsinline preload="none"
           poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-XX6-C/postevent/1.jpg"
           aria-hidden="true">
-          <source src="https://assets.ashwaracing.org/videos/cv_spotlight.mp4"
-            type="video/mp4">
+          <source src="https://assets.ashwaracing.org/videos/cv_spotlight.mp4" type="video/mp4">
         </video>
       </div>
 
       <div class="spotlight-overlay">
 
-        <div class="spotlight-toggle" role="tablist" aria-label="Choose powertrain">
-          <button class="spotlight-toggle-btn is-active" data-car="ev" role="tab" aria-selected="true">EV</button>
-          <button class="spotlight-toggle-btn" data-car="cv" role="tab" aria-selected="false">CV</button>
+        <div class="spotlight-toggle" role="group" aria-label="Choose powertrain">
+          <button class="spotlight-toggle-btn is-active" data-car="ev" type="button" aria-pressed="true">EV</button>
+          <button class="spotlight-toggle-btn" data-car="cv" type="button" aria-pressed="false">CV</button>
           <span class="spotlight-toggle-thumb" aria-hidden="true"></span>
         </div>
 
@@ -186,13 +228,13 @@
 
             <a href="projects.html" class="btn-line">
               Full Specs
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" width="16" height="16">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
           </div>
 
-          <div class="spotlight-content" data-car="cv">
+          <div class="spotlight-content" data-car="cv" inert>
             <p class="label">Current Competition Car</p>
             <h2>Meet <em>RZ-XX6-C</em></h2>
 
@@ -219,7 +261,7 @@
 
             <a href="projects.html" class="btn-line">
               Full Specs
-              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" width="16" height="16">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" width="16" height="16">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
               </svg>
             </a>
@@ -255,33 +297,5 @@
   <script src="assets/js/components/loader.js" defer></script>
 
 </body>
-
-<div id="site-loader" aria-hidden="true">
-  <div class="loader-inner">
-
-    <div class="loader-brand">
-      <span class="loader-ashwa">Ashwa</span>
-      <span class="loader-racing">Racing</span>
-    </div>
-
-    <div class="loader-sponsor">
-      <div class="loader-sponsor-tier" id="loader-sponsor-tier">
-        INITIALIZING
-      </div>
-
-      <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
-    </div>
-
-    <div class="loader-progress">
-      <span class="loader-progress-bar"></span>
-    </div>
-
-    <div class="loader-meta">
-      <span id="loader-status">INITIALIZING</span>
-      <span id="loader-percent">00%</span>
-    </div>
-
-  </div>
-</div>
 
 </html>

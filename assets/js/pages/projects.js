@@ -4,26 +4,43 @@
    PROGRAMME IDENTITY
 ──────────────────────────────────────────────────────────── */
 const PROGRAMMES = {
-  cv:  { code: "CV",  tag: "Combustion Vehicle",   accent: "#e8001d", cssVar: "--cv-accent"  },
-  ev:  { code: "EV",  tag: "Electric Vehicle",     accent: "#3b82f6", cssVar: "--ev-accent"  },
-  hyb: { code: "HYB", tag: "Hybrid Vehicle",       accent: "#f59e0b", cssVar: "--hyb-accent" },
-  hyp: { code: "HYL", tag: "Hyperloop",            accent: "#7c3aed", cssVar: "--hyp-accent" },
-  dv:  { code: "DRV", tag: "Driverless Vehicle",   accent: "#3b82f6", cssVar: "--dv-accent"  }
+  cv:  { code: "CV",  tag: "Combustion Vehicle", accent: "#e8001d", cssVar: "--cv-accent" },
+  ev:  { code: "EV",  tag: "Electric Vehicle",   accent: "#3b82f6", cssVar: "--ev-accent" },
+  hyb: { code: "HYB", tag: "Hybrid Vehicle",     accent: "#f59e0b", cssVar: "--hyb-accent" },
+  hyp: { code: "HYL", tag: "Hyperloop",          accent: "#7c3aed", cssVar: "--hyp-accent" },
+  dv:  { code: "DRV", tag: "Driverless Vehicle", accent: "#3b82f6", cssVar: "--dv-accent" }
 };
+
 
 /* ────────────────────────────────────────────────────────────
    DATA
-   projectData is filled by init() after projects.json loads.
 ──────────────────────────────────────────────────────────── */
 const PROJECTS_URL = "/assets/data/projects.json";
 
-/* If image paths in projects.json are relative to the CDN, set this
-   to e.g. "https://assets.ashwaracing.org/". Leave "" to use paths as-is.
-   Absolute URLs (http/https) are never modified. */
+const siteReady = new Promise(resolve => {
+  if (window.__siteReady) return resolve();
+
+  document.addEventListener("site:ready", resolve, { once: true });
+
+  setTimeout(resolve, 12000);
+});
+
+/*
+  If projects.json contains relative image paths that point to the CDN,
+  set IMAGE_BASE to:
+
+  https://assets.ashwaracing.org/
+
+  Absolute URLs are never modified.
+*/
 const IMAGE_BASE = "";
 
 let projectData = {};
 
+
+/* ────────────────────────────────────────────────────────────
+   DATA LOADING
+──────────────────────────────────────────────────────────── */
 async function loadProjects() {
   const response = await fetch(PROJECTS_URL);
 
@@ -34,222 +51,403 @@ async function loadProjects() {
   return response.json();
 }
 
+
 function resolveImage(path) {
-  if (!path || !IMAGE_BASE || /^(https?:)?\/\//.test(path)) return path;
+  if (!path || !IMAGE_BASE || /^(https?:)?\/\//.test(path)) {
+    return path;
+  }
+
   return IMAGE_BASE + path.replace(/^\/+/, "");
 }
 
-/* ════════════════════════════════════════════════════════════
+
+/* ────────────────────────────────────────────────────────────
    RUNTIME STATE
-════════════════════════════════════════════════════════════ */
+──────────────────────────────────────────────────────────── */
 let activeProgKey = "cv";
-let activeYear    = null;
+let activeYear = null;
 let slideshowTimer = null;
-let renderToken   = 0;
-let slideIndex    = 0;
-let validImages   = [];
+let renderToken = 0;
+let slideIndex = 0;
+let validImages = [];
 
-/* ── DOM refs ─────────────────────────────────────────────── */
-const viewer         = document.getElementById("prog-viewer");
-const progCodeEl     = document.getElementById("prog-code");
-const progCodeBgEl   = document.getElementById("prog-code-bg");
-const progTagEl      = document.getElementById("prog-tag");
-const progTitleEl    = document.getElementById("prog-title");
-const progYears      = document.getElementById("prog-years");
-const progImage      = document.getElementById("prog-image");
-const progContent    = document.getElementById("prog-content");
+
+/* ────────────────────────────────────────────────────────────
+   DOM REFERENCES
+──────────────────────────────────────────────────────────── */
+const viewer = document.getElementById("prog-viewer");
+const progCodeEl = document.getElementById("prog-code");
+const progCodeBgEl = document.getElementById("prog-code-bg");
+const progTagEl = document.getElementById("prog-tag");
+const progTitleEl = document.getElementById("prog-title");
+const progYears = document.getElementById("prog-years");
+const progImage = document.getElementById("prog-image");
+const progContent = document.getElementById("prog-content");
 const progImageAccent = document.getElementById("prog-image-accent");
-const progYearBadge  = document.getElementById("prog-year-badge");
+const progYearBadge = document.getElementById("prog-year-badge");
 const slideCurrentEl = document.getElementById("slide-current");
-const slideTotalEl   = document.getElementById("slide-total");
-const heroStripe     = document.getElementById("proj-hero-stripe");
-const heroRule       = document.querySelector(".proj-hero-rule");
+const slideTotalEl = document.getElementById("slide-total");
+const heroStripe = document.getElementById("proj-hero-stripe");
+const heroRule = document.querySelector(".proj-hero-rule");
 
-progImage.style.transition = "opacity 0.28s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.4s ease";
+if (progImage) {
+  progImage.style.transition =
+    "opacity 0.28s ease, transform 0.7s cubic-bezier(0.16,1,0.3,1), filter 0.4s ease";
+}
 
 
-/* ════════════════════════════════════════════════════════════
+/* ────────────────────────────────────────────────────────────
    HELPERS
-════════════════════════════════════════════════════════════ */
-function pad2(n) { return n < 10 ? "0" + n : String(n); }
+──────────────────────────────────────────────────────────── */
+function pad2(number) {
+  return number < 10 ? `0${number}` : String(number);
+}
+
 
 function preloadImages(paths) {
   return Promise.all(
-    paths.map(p => new Promise(resolve => {
+    paths.map(path => new Promise(resolve => {
       const img = new Image();
-      img.onload  = () => resolve(p);
+
+      img.onload = () => resolve(path);
       img.onerror = () => resolve(null);
-      img.src = p;
+
+      img.src = path;
     }))
-  ).then(r => r.filter(Boolean));
+  ).then(results => results.filter(Boolean));
 }
 
-function updateSlideCounter(idx, total) {
-  if (slideCurrentEl) slideCurrentEl.textContent = pad2(idx + 1);
-  if (slideTotalEl)   slideTotalEl.textContent   = pad2(total);
-}
 
-function swapImage(src, alt, token, idx, total) {
-  if (token !== renderToken) return;
-  progImage.style.opacity = "0";
-  setTimeout(() => {
-    if (token !== renderToken) return;
-    progImage.src = src;
-    progImage.alt = alt;
-    progImage.style.opacity = "1";
-    updateSlideCounter(idx, total);
-  }, 280);
-}
+function updateSlideCounter(index, total) {
+  if (slideCurrentEl) {
+    slideCurrentEl.textContent = pad2(index + 1);
+  }
 
-/* Update all accent-driven elements when programme changes */
-function applyAccent(accent) {
-  document.documentElement.style.setProperty("--prog-accent", accent);
-  if (heroStripe) heroStripe.style.background = accent;
-  if (progImageAccent) progImageAccent.style.background = accent;
-  if (heroRule) {
-    heroRule.style.background = `linear-gradient(to right,
-      transparent 0%, rgba(255,255,255,0.06) 20%,
-      ${accent} 50%, rgba(255,255,255,0.06) 80%, transparent 100%)`;
+  if (slideTotalEl) {
+    slideTotalEl.textContent = pad2(total);
   }
 }
 
 
-/* ════════════════════════════════════════════════════════════
+function swapImage(src, alt, token, index, total) {
+  if (token !== renderToken || !progImage) return;
+
+  progImage.style.opacity = "0";
+
+  setTimeout(() => {
+    if (token !== renderToken) return;
+
+    progImage.src = src;
+    progImage.alt = alt;
+    progImage.style.opacity = "1";
+
+    updateSlideCounter(index, total);
+  }, 280);
+}
+
+
+/* ────────────────────────────────────────────────────────────
+   PROGRAMME ACCENT
+──────────────────────────────────────────────────────────── */
+function applyAccent(accent) {
+  document.documentElement.style.setProperty("--prog-accent", accent);
+
+  if (heroStripe) {
+    heroStripe.style.background = accent;
+  }
+
+  if (progImageAccent) {
+    progImageAccent.style.background = accent;
+  }
+
+  if (heroRule) {
+    heroRule.style.background = `
+      linear-gradient(
+        to right,
+        transparent 0%,
+        rgba(255,255,255,0.06) 20%,
+        ${accent} 50%,
+        rgba(255,255,255,0.06) 80%,
+        transparent 100%
+      )
+    `;
+  }
+}
+
+
+/* ────────────────────────────────────────────────────────────
    RENDER YEAR
-════════════════════════════════════════════════════════════ */
+──────────────────────────────────────────────────────────── */
 function renderYear(progKey, year) {
-  const data     = projectData[progKey].years[year];
+  const data = projectData[progKey].years[year];
   const identity = PROGRAMMES[progKey];
 
   renderToken += 1;
-  const myToken = renderToken;
+
+  const currentToken = renderToken;
+
   slideIndex = 0;
   validImages = [];
 
-  if (slideshowTimer) { clearInterval(slideshowTimer); slideshowTimer = null; }
+  if (slideshowTimer) {
+    clearInterval(slideshowTimer);
+    slideshowTimer = null;
+  }
 
-  /* ── Update year badge ── */
-  if (progYearBadge) progYearBadge.textContent = year;
 
-  /* ── Text content (synchronous) ── */
-  const spec = data.specs || {};
-  const hasRealSpecs = Object.values(spec).some(
-    v => v && v !== "—" && v !== "-" && v !== ""
+  /* Year badge */
+  if (progYearBadge) {
+    progYearBadge.textContent = year;
+  }
+
+
+  /* Specifications */
+  const specs = data.specs || {};
+
+  const hasRealSpecs = Object.values(specs).some(
+    value =>
+      value &&
+      value !== "—" &&
+      value !== "-" &&
+      value !== ""
   );
 
-  const specHTML = hasRealSpecs ? `
-    <div class="prog-specs">
-      <div class="prog-spec"><span>Weight</span><strong>${spec.weight || "—"}</strong></div>
-      <div class="prog-spec"><span>Power</span><strong>${spec.power || "—"}</strong></div>
-      <div class="prog-spec"><span>0–100</span><strong>${spec.acceleration || "—"}</strong></div>
-      <div class="prog-spec"><span>Top Speed</span><strong>${spec.topSpeed || "—"}</strong></div>
-    </div>` : "";
+  const specHTML = hasRealSpecs
+    ? `
+      <div class="prog-specs">
+        <div class="prog-spec">
+          <span>Weight</span>
+          <strong>${specs.weight || "—"}</strong>
+        </div>
 
+        <div class="prog-spec">
+          <span>Power</span>
+          <strong>${specs.power || "—"}</strong>
+        </div>
+
+        <div class="prog-spec">
+          <span>0–100</span>
+          <strong>${specs.acceleration || "—"}</strong>
+        </div>
+
+        <div class="prog-spec">
+          <span>Top Speed</span>
+          <strong>${specs.topSpeed || "—"}</strong>
+        </div>
+      </div>
+    `
+    : "";
+
+
+  /* Badge */
   const badgeHTML = data.badge
-    ? `<div class="prog-badge">${data.badge}</div>` : "";
+    ? `<div class="prog-badge">${data.badge}</div>`
+    : "";
 
-  const changeItems = (data.changes || []).map(c => `<li>${c}</li>`).join("");
-  const achItems    = (data.achievements || []).map(a => `<li>${a}</li>`).join("");
 
-  progContent.innerHTML = `
-    <div>
-      <div class="prog-section-label">Updates · ${year}</div>
-      <ul class="prog-changes">${changeItems}</ul>
-    </div>
-    <p class="prog-desc">${data.desc}</p>
-    ${specHTML}
-    ${badgeHTML}
-    <div>
-      <div class="prog-section-label">Achievements</div>
-      <ul class="prog-achievements">${achItems}</ul>
-    </div>`;
+  /* Lists */
+  const changeItems = (data.changes || [])
+    .map(change => `<li>${change}</li>`)
+    .join("");
 
-  /* ── Activate year button ── */
-  progYears.querySelectorAll(".year-btn").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.year === String(year));
-    btn.setAttribute("aria-selected", btn.dataset.year === String(year));
+  const achievementItems = (data.achievements || [])
+    .map(achievement => `<li>${achievement}</li>`)
+    .join("");
+
+
+  /* Content */
+  if (progContent) {
+    progContent.innerHTML = `
+      <div>
+        <div class="prog-section-label">
+          Updates · ${year}
+        </div>
+
+        <ul class="prog-changes">
+          ${changeItems}
+        </ul>
+      </div>
+
+      <p class="prog-desc">
+        ${data.desc || ""}
+      </p>
+
+      ${specHTML}
+
+      ${badgeHTML}
+
+      <div>
+        <div class="prog-section-label">
+          Achievements
+        </div>
+
+        <ul class="prog-achievements">
+          ${achievementItems}
+        </ul>
+      </div>
+    `;
+  }
+
+
+  /* Activate year */
+  progYears?.querySelectorAll(".year-btn").forEach(button => {
+    const active = button.dataset.year === String(year);
+
+    button.classList.toggle("active", active);
+    button.setAttribute("aria-selected", active ? "true" : "false");
   });
+
   window._scrollYearToActive?.();
 
   activeYear = year;
 
-  /* ── Images (async, token-guarded) ── */
-  const rawImages = (data.images || (data.image ? [data.image] : [])).map(resolveImage);
-  progImage.style.opacity = "0";
+
+  /* Images */
+  const rawImages = (
+    data.images ||
+    (data.image ? [data.image] : [])
+  ).map(resolveImage);
+
+  if (progImage) {
+    progImage.style.opacity = "0";
+  }
 
   preloadImages(rawImages).then(valid => {
-    if (myToken !== renderToken) return;
+    if (currentToken !== renderToken) return;
 
     validImages = valid;
 
     if (!valid.length) {
-      progImage.src = "";
-      progImage.style.opacity = "1";
+      if (progImage) {
+        progImage.src = "";
+        progImage.style.opacity = "1";
+      }
+
       updateSlideCounter(0, 0);
       return;
     }
 
     slideIndex = 0;
-    swapImage(valid[0], `${identity.tag} — ${year}`, myToken, 0, valid.length);
 
+    swapImage(
+      valid[0],
+      `${identity.tag} — ${year}`,
+      currentToken,
+      0,
+      valid.length
+    );
+
+
+    /* Start slideshow only when multiple images exist */
     if (valid.length > 1) {
       slideshowTimer = setInterval(() => {
-        if (myToken !== renderToken) {
-          clearInterval(slideshowTimer); slideshowTimer = null; return;
+        if (currentToken !== renderToken) {
+          clearInterval(slideshowTimer);
+          slideshowTimer = null;
+          return;
         }
+
         slideIndex = (slideIndex + 1) % valid.length;
-        swapImage(valid[slideIndex], `${identity.tag} — ${year}`, myToken, slideIndex, valid.length);
+
+        swapImage(
+          valid[slideIndex],
+          `${identity.tag} — ${year}`,
+          currentToken,
+          slideIndex,
+          valid.length
+        );
       }, 3500);
     }
   });
 }
 
 
-/* ════════════════════════════════════════════════════════════
+/* ────────────────────────────────────────────────────────────
    SWITCH PROGRAMME
-════════════════════════════════════════════════════════════ */
+──────────────────────────────────────────────────────────── */
 function switchProgramme(progKey) {
   const identity = PROGRAMMES[progKey];
-  const proto    = projectData[progKey];
-  const years    = Object.keys(proto.years).map(Number).sort((a, b) => b - a);
+  const programme = projectData[progKey];
+
+  if (!identity || !programme || !viewer) return;
+
+  const years = Object.keys(programme.years)
+    .map(Number)
+    .sort((a, b) => b - a);
+
+  if (!years.length) return;
 
   activeProgKey = progKey;
 
   viewer.style.transition = "opacity 0.18s ease";
-  viewer.style.opacity    = "0";
+  viewer.style.opacity = "0";
+
 
   setTimeout(() => {
     applyAccent(identity.accent);
 
-    progCodeEl.textContent  = identity.code;
-    if (progCodeBgEl) progCodeBgEl.textContent = identity.code;
-    progTagEl.textContent   = identity.tag;
-    progTitleEl.textContent = proto.title;
+    if (progCodeEl) {
+      progCodeEl.textContent = identity.code;
+    }
 
-    /* Rebuild year buttons */
-    progYears.innerHTML = "";
-    years.forEach(year => {
-      const btn = document.createElement("button");
-      btn.className  = "year-btn";
-      btn.textContent = year;
-      btn.dataset.year = year;
-      btn.setAttribute("role", "tab");
-      btn.setAttribute("aria-selected", "false");
-      btn.addEventListener("click", () => renderYear(progKey, year));
-      progYears.appendChild(btn);
-    });
+    if (progCodeBgEl) {
+      progCodeBgEl.textContent = identity.code;
+    }
 
-    /* Update programme index active state */
-    document.querySelectorAll(".prog-index-item").forEach(item => {
-      item.classList.toggle("active", item.dataset.prog === progKey);
-    });
+    if (progTagEl) {
+      progTagEl.textContent = identity.tag;
+    }
 
-    /* Update index count */
+    if (progTitleEl) {
+      progTitleEl.textContent = programme.title;
+    }
+
+
+    /* Rebuild year selector */
+    if (progYears) {
+      progYears.innerHTML = "";
+
+      years.forEach(year => {
+        const button = document.createElement("button");
+
+        button.className = "year-btn";
+        button.textContent = year;
+        button.dataset.year = year;
+
+        button.setAttribute("role", "tab");
+        button.setAttribute("aria-selected", "false");
+
+        button.addEventListener("click", () => {
+          renderYear(progKey, year);
+        });
+
+        progYears.appendChild(button);
+      });
+    }
+
+
+    /* Programme index active state */
+    document
+      .querySelectorAll(".prog-index-item")
+      .forEach(item => {
+        item.classList.toggle(
+          "active",
+          item.dataset.prog === progKey
+        );
+      });
+
+
+    /* Programme count */
     const countEl = document.getElementById("prog-index-count");
     const keys = Object.keys(projectData);
-    const idx  = keys.indexOf(progKey);
-    if (countEl) countEl.textContent = `${idx + 1} / ${keys.length}`;
+    const index = keys.indexOf(progKey);
 
+    if (countEl) {
+      countEl.textContent = `${index + 1} / ${keys.length}`;
+    }
+
+
+    /* Render newest year */
     renderYear(progKey, years[0]);
 
     viewer.style.opacity = "1";
@@ -257,327 +455,680 @@ function switchProgramme(progKey) {
 }
 
 
-/* ════════════════════════════════════════════════════════════
-   BUILD PROGRAMME INDEX  (horizontal strips replacing nav)
-════════════════════════════════════════════════════════════ */
+/* ────────────────────────────────────────────────────────────
+   BUILD PROGRAMME INDEX
+──────────────────────────────────────────────────────────── */
 function buildProgIndex() {
   const list = document.getElementById("prog-index-list");
+
   if (!list) return;
+
+  list.innerHTML = "";
 
   const keys = Object.keys(projectData);
 
   const countEl = document.getElementById("prog-index-count");
-  if (countEl) countEl.textContent = `1 / ${keys.length}`;
+
+  if (countEl) {
+    countEl.textContent = `1 / ${keys.length}`;
+  }
+
 
   keys.forEach(key => {
     const identity = PROGRAMMES[key];
-    const proto    = projectData[key];
-    const years    = Object.keys(proto.years).map(Number).sort((a, b) => b - a);
-    const yearRange = years.length > 1
-      ? `${years[years.length - 1]} – ${years[0]}`
-      : String(years[0]);
+    const programme = projectData[key];
+
+    const years = Object.keys(programme.years)
+      .map(Number)
+      .sort((a, b) => b - a);
+
+    if (!years.length) return;
+
+    const yearRange =
+      years.length > 1
+        ? `${years[years.length - 1]} – ${years[0]}`
+        : String(years[0]);
+
 
     const item = document.createElement("div");
+
     item.className = "prog-index-item";
     item.dataset.prog = key;
+
     item.setAttribute("role", "button");
     item.setAttribute("tabindex", "0");
-    item.setAttribute("aria-label", `${identity.tag} programme`);
-    item.style.setProperty("--item-accent", identity.accent);
+    item.setAttribute(
+      "aria-label",
+      `${identity.tag} programme`
+    );
+
+    item.style.setProperty(
+      "--item-accent",
+      identity.accent
+    );
+
 
     item.innerHTML = `
-      <div class="prog-index-item-bg-code" aria-hidden="true">${identity.code}</div>
-      <div class="prog-index-item-dot" aria-hidden="true"></div>
-      <div class="prog-index-item-code">${identity.code}</div>
-      <div class="prog-index-item-name">${proto.title}</div>
-      <div class="prog-index-item-meta">${yearRange} · ${years.length} season${years.length !== 1 ? "s" : ""}</div>`;
+      <div
+        class="prog-index-item-bg-code"
+        aria-hidden="true">
+        ${identity.code}
+      </div>
+
+      <div
+        class="prog-index-item-dot"
+        aria-hidden="true">
+      </div>
+
+      <div class="prog-index-item-code">
+        ${identity.code}
+      </div>
+
+      <div class="prog-index-item-name">
+        ${programme.title}
+      </div>
+
+      <div class="prog-index-item-meta">
+        ${yearRange} · ${years.length}
+        season${years.length !== 1 ? "s" : ""}
+      </div>
+    `;
+
 
     function activate() {
       switchProgramme(key);
-      viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      viewer?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
     }
 
+
     item.addEventListener("click", activate);
-    item.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); }
+
+    item.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        activate();
+      }
     });
+
 
     list.appendChild(item);
   });
 }
 
 
-/* ════════════════════════════════════════════════════════════
-   BUILD OVERVIEW CARDS  (bottom portfolio section)
-════════════════════════════════════════════════════════════ */
-function buildOverviewCards() {
-  const grid = document.getElementById("all-progs-grid");
-  if (!grid) return;
-
-  Object.entries(projectData).forEach(([key, proto]) => {
-    const identity = PROGRAMMES[key];
-    const years    = Object.keys(proto.years).sort((a, b) => b - a);
-
-    const card = document.createElement("div");
-    card.className = "prog-card";
-    card.style.setProperty("--card-accent", identity.accent);
-    card.setAttribute("role", "button");
-    card.setAttribute("tabindex", "0");
-    card.setAttribute("aria-label", `View ${identity.tag} programme`);
-
-    card.innerHTML = `
-      <div class="prog-card-code">${identity.code}</div>
-      <div class="prog-card-title">${proto.title}</div>
-      <div class="prog-card-years">
-        ${years.length > 1 ? `${years[years.length - 1]} – ${years[0]}` : years[0]}
-        · ${years.length} season${years.length !== 1 ? "s" : ""}
-      </div>
-      <i class="fas fa-arrow-up-right prog-card-arrow" aria-hidden="true"></i>`;
-
-    function activate() {
-      switchProgramme(key);
-      viewer.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    card.addEventListener("click", activate);
-    card.addEventListener("keydown", e => {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); activate(); }
-    });
-    grid.appendChild(card);
-  });
-}
-
-
-/* ════════════════════════════════════════════════════════════
-   YEAR SELECTOR — scroll / drag / keyboard
-════════════════════════════════════════════════════════════ */
+/* ────────────────────────────────────────────────────────────
+   YEAR SELECTOR
+   Scroll / drag / keyboard controls
+──────────────────────────────────────────────────────────── */
 function initYearScroll() {
   const wrapper = document.getElementById("prog-years-wrapper");
-  const track   = document.getElementById("prog-years");
+  const track = document.getElementById("prog-years");
+
   if (!wrapper || !track) return;
 
-  const arrowL = document.createElement("button");
-  const arrowR = document.createElement("button");
-  const fadeL  = document.createElement("div");
-  const fadeR  = document.createElement("div");
 
-  arrowL.className = "years-arrow hidden";
-  arrowL.innerHTML = "&#8249;";
-  arrowL.setAttribute("aria-label", "Scroll years left");
+  /* Controls */
+  const arrowLeft = document.createElement("button");
+  const arrowRight = document.createElement("button");
 
-  arrowR.className = "years-arrow hidden";
-  arrowR.innerHTML = "&#8250;";
-  arrowR.setAttribute("aria-label", "Scroll years right");
+  const fadeLeft = document.createElement("div");
+  const fadeRight = document.createElement("div");
 
-  fadeL.className  = "years-fade-edge left hidden";
-  fadeR.className  = "years-fade-edge right hidden";
 
-  wrapper.prepend(arrowL);
-  wrapper.appendChild(arrowR);
-  wrapper.appendChild(fadeR);
-  wrapper.prepend(fadeL);
+  arrowLeft.className = "years-arrow hidden";
+  arrowLeft.innerHTML = "&#8249;";
+  arrowLeft.setAttribute(
+    "aria-label",
+    "Scroll years left"
+  );
 
+  arrowRight.className = "years-arrow hidden";
+  arrowRight.innerHTML = "&#8250;";
+  arrowRight.setAttribute(
+    "aria-label",
+    "Scroll years right"
+  );
+
+
+  fadeLeft.className = "years-fade-edge left hidden";
+  fadeRight.className = "years-fade-edge right hidden";
+
+
+  wrapper.prepend(arrowLeft);
+  wrapper.appendChild(arrowRight);
+  wrapper.appendChild(fadeRight);
+  wrapper.prepend(fadeLeft);
+
+
+  /* Update arrows/fade edges */
   function syncUI() {
     const atStart = track.scrollLeft <= 2;
-    const atEnd   = track.scrollLeft >= track.scrollWidth - track.clientWidth - 2;
-    arrowL.classList.toggle("hidden", atStart);
-    arrowR.classList.toggle("hidden", atEnd);
-    fadeL.classList.toggle("hidden", atStart);
-    fadeR.classList.toggle("hidden", atEnd);
+
+    const atEnd =
+      track.scrollLeft >=
+      track.scrollWidth -
+      track.clientWidth -
+      2;
+
+    arrowLeft.classList.toggle("hidden", atStart);
+    arrowRight.classList.toggle("hidden", atEnd);
+
+    fadeLeft.classList.toggle("hidden", atStart);
+    fadeRight.classList.toggle("hidden", atEnd);
   }
 
-  let rafId = null;
+
+  let animationFrame = null;
+
+
+  /* Smooth scrolling */
   function momentumScroll(delta, duration) {
-    cancelAnimationFrame(rafId);
-    const start  = track.scrollLeft;
-    const target = Math.max(0, Math.min(start + delta, track.scrollWidth - track.clientWidth));
-    const t0     = performance.now();
-    const ease   = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+    cancelAnimationFrame(animationFrame);
+
+    const start = track.scrollLeft;
+
+    const target = Math.max(
+      0,
+      Math.min(
+        start + delta,
+        track.scrollWidth - track.clientWidth
+      )
+    );
+
+    const startTime = performance.now();
+
+
+    const ease = progress =>
+      progress < 0.5
+        ? 4 * progress * progress * progress
+        : 1 -
+          Math.pow(-2 * progress + 2, 3) / 2;
+
+
     function step(now) {
-      const p = Math.min((now - t0) / duration, 1);
-      track.scrollLeft = start + (target - start) * ease(p);
-      if (p < 1) rafId = requestAnimationFrame(step);
-      else { track.scrollLeft = target; syncUI(); }
+      const progress = Math.min(
+        (now - startTime) / duration,
+        1
+      );
+
+      track.scrollLeft =
+        start +
+        (target - start) *
+        ease(progress);
+
+
+      if (progress < 1) {
+        animationFrame =
+          requestAnimationFrame(step);
+      } else {
+        track.scrollLeft = target;
+        syncUI();
+      }
     }
-    rafId = requestAnimationFrame(step);
+
+
+    animationFrame =
+      requestAnimationFrame(step);
   }
 
+
+  /* Keep active year centred */
   window._scrollYearToActive = function () {
-    const active = track.querySelector(".year-btn.active");
+    const active =
+      track.querySelector(".year-btn.active");
+
     if (!active) return;
-    const tr    = track.getBoundingClientRect();
-    const br    = active.getBoundingClientRect();
-    const delta = br.left - tr.left - tr.width / 2 + br.width / 2;
+
+    const trackRect =
+      track.getBoundingClientRect();
+
+    const activeRect =
+      active.getBoundingClientRect();
+
+    const delta =
+      activeRect.left -
+      trackRect.left -
+      trackRect.width / 2 +
+      activeRect.width / 2;
+
     momentumScroll(delta, 280);
   };
 
-  arrowL.addEventListener("click", () => momentumScroll(-Math.max(track.clientWidth * 0.55, 140), 300));
-  arrowR.addEventListener("click", () => momentumScroll(+Math.max(track.clientWidth * 0.55, 140), 300));
-  track.addEventListener("scroll", syncUI, { passive: true });
-  window.addEventListener("resize", syncUI);
 
-  /* Drag to scroll */
-  let dragging = false, startX = 0, scrollX = 0, vel = 0, lastX = 0, lastT = 0;
-
-  track.addEventListener("mousedown", e => {
-    dragging = true; startX = e.clientX; scrollX = track.scrollLeft;
-    lastX = e.clientX; lastT = performance.now(); vel = 0;
-    track.classList.add("grabbing");
-    cancelAnimationFrame(rafId);
-    e.preventDefault();
+  arrowLeft.addEventListener("click", () => {
+    momentumScroll(
+      -Math.max(track.clientWidth * 0.55, 140),
+      300
+    );
   });
-  window.addEventListener("mousemove", e => {
+
+
+  arrowRight.addEventListener("click", () => {
+    momentumScroll(
+      Math.max(track.clientWidth * 0.55, 140),
+      300
+    );
+  });
+
+
+  track.addEventListener(
+    "scroll",
+    syncUI,
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "resize",
+    syncUI
+  );
+
+
+  /* ───────────────────────────────────────────────
+     Mouse drag
+  ─────────────────────────────────────────────── */
+  let dragging = false;
+  let startX = 0;
+  let scrollX = 0;
+  let velocity = 0;
+  let lastX = 0;
+  let lastTime = 0;
+
+
+  track.addEventListener("mousedown", event => {
+    dragging = true;
+
+    startX = event.clientX;
+    scrollX = track.scrollLeft;
+
+    lastX = event.clientX;
+    lastTime = performance.now();
+
+    velocity = 0;
+
+    track.classList.add("grabbing");
+
+    cancelAnimationFrame(animationFrame);
+
+    event.preventDefault();
+  });
+
+
+  window.addEventListener("mousemove", event => {
     if (!dragging) return;
-    const now = performance.now(), dt = now - lastT;
-    if (dt > 0) vel = (e.clientX - lastX) / dt;
-    lastX = e.clientX; lastT = now;
-    track.scrollLeft = scrollX - (e.clientX - startX);
+
+    const now = performance.now();
+    const deltaTime = now - lastTime;
+
+    if (deltaTime > 0) {
+      velocity =
+        (event.clientX - lastX) /
+        deltaTime;
+    }
+
+    lastX = event.clientX;
+    lastTime = now;
+
+    track.scrollLeft =
+      scrollX -
+      (event.clientX - startX);
+
     syncUI();
   });
+
+
   window.addEventListener("mouseup", () => {
     if (!dragging) return;
+
     dragging = false;
+
     track.classList.remove("grabbing");
-    if (Math.abs(vel) > 0.05) launchCoast(vel);
+
+    if (Math.abs(velocity) > 0.05) {
+      launchCoast(velocity);
+    }
   });
 
-  track.addEventListener("touchstart", e => {
-    dragging = true; startX = e.touches[0].clientX; scrollX = track.scrollLeft;
-    lastX = startX; lastT = performance.now(); vel = 0;
-    cancelAnimationFrame(rafId);
-  }, { passive: true });
-  track.addEventListener("touchmove", e => {
-    if (!dragging) return;
-    const x = e.touches[0].clientX, now = performance.now(), dt = now - lastT;
-    if (dt > 0) vel = (x - lastX) / dt;
-    lastX = x; lastT = now;
-    track.scrollLeft = scrollX - (x - startX);
-    syncUI();
-  }, { passive: true });
+
+  /* ───────────────────────────────────────────────
+     Touch drag
+  ─────────────────────────────────────────────── */
+  track.addEventListener(
+    "touchstart",
+    event => {
+      dragging = true;
+
+      startX = event.touches[0].clientX;
+      scrollX = track.scrollLeft;
+
+      lastX = startX;
+      lastTime = performance.now();
+
+      velocity = 0;
+
+      cancelAnimationFrame(animationFrame);
+    },
+    { passive: true }
+  );
+
+
+  track.addEventListener(
+    "touchmove",
+    event => {
+      if (!dragging) return;
+
+      const x = event.touches[0].clientX;
+      const now = performance.now();
+      const deltaTime = now - lastTime;
+
+      if (deltaTime > 0) {
+        velocity =
+          (x - lastX) /
+          deltaTime;
+      }
+
+      lastX = x;
+      lastTime = now;
+
+      track.scrollLeft =
+        scrollX -
+        (x - startX);
+
+      syncUI();
+    },
+    { passive: true }
+  );
+
+
   track.addEventListener("touchend", () => {
     dragging = false;
-    if (Math.abs(vel) > 0.05) launchCoast(vel);
+
+    if (Math.abs(velocity) > 0.05) {
+      launchCoast(velocity);
+    }
   });
 
-  function launchCoast(v) {
-    let m = v * 14;
+
+  /* Momentum after drag */
+  function launchCoast(initialVelocity) {
+    let momentum = initialVelocity * 14;
+
     function step() {
-      if (Math.abs(m) < 0.5) return;
-      track.scrollLeft -= m;
-      m *= 0.88;
+      if (Math.abs(momentum) < 0.5) {
+        return;
+      }
+
+      track.scrollLeft -= momentum;
+
+      momentum *= 0.88;
+
       syncUI();
-      rafId = requestAnimationFrame(step);
+
+      animationFrame =
+        requestAnimationFrame(step);
     }
-    rafId = requestAnimationFrame(step);
+
+    animationFrame =
+      requestAnimationFrame(step);
   }
 
-  /* Keyboard nav */
+
+  /* ───────────────────────────────────────────────
+     Keyboard navigation
+  ─────────────────────────────────────────────── */
   track.setAttribute("tabindex", "0");
-  track.addEventListener("keydown", e => {
-    const btns = [...track.querySelectorAll(".year-btn")];
-    const idx  = btns.findIndex(b => b.classList.contains("active"));
-    if (e.key === "ArrowLeft"  && idx > 0)              { btns[idx - 1].click(); e.preventDefault(); }
-    if (e.key === "ArrowRight" && idx < btns.length - 1){ btns[idx + 1].click(); e.preventDefault(); }
-    if (e.key === "Home") { btns[0].click(); e.preventDefault(); }
-    if (e.key === "End")  { btns[btns.length - 1].click(); e.preventDefault(); }
+
+  track.addEventListener("keydown", event => {
+    const buttons = [
+      ...track.querySelectorAll(".year-btn")
+    ];
+
+    const activeIndex =
+      buttons.findIndex(
+        button =>
+          button.classList.contains("active")
+      );
+
+
+    if (
+      event.key === "ArrowLeft" &&
+      activeIndex > 0
+    ) {
+      buttons[activeIndex - 1].click();
+      event.preventDefault();
+    }
+
+
+    if (
+      event.key === "ArrowRight" &&
+      activeIndex < buttons.length - 1
+    ) {
+      buttons[activeIndex + 1].click();
+      event.preventDefault();
+    }
+
+
+    if (event.key === "Home") {
+      buttons[0]?.click();
+      event.preventDefault();
+    }
+
+
+    if (event.key === "End") {
+      buttons[buttons.length - 1]?.click();
+      event.preventDefault();
+    }
   });
+
 
   setTimeout(syncUI, 100);
 }
 
 
-/* ════════════════════════════════════════════════════════════
-   SCROLL REVEAL — cards only
-════════════════════════════════════════════════════════════ */
+/* ────────────────────────────────────────────────────────────
+   SCROLL REVEAL
+──────────────────────────────────────────────────────────── */
 function initReveal() {
-  const cards = document.querySelectorAll(".prog-card, .prog-index-item");
-  cards.forEach((el, i) => {
-    el.style.opacity   = "0";
-    el.style.transform = "translateY(16px)";
-    el.style.transition =
-      `opacity 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 0.055}s,
-       transform 0.5s cubic-bezier(0.16,1,0.3,1) ${i * 0.055}s`;
+  if (
+    matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches
+  ) {
+    return;
+  }
+
+
+  const elements = document.querySelectorAll(
+    ".prog-index-item"
+  );
+
+
+  elements.forEach((element, index) => {
+    element.classList.add("reveal");
+
+    element.style.transitionDelay =
+      `${Math.min(index * 0.08, 0.4)}s`;
   });
 
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      e.target.style.opacity   = "1";
-      e.target.style.transform = "translateY(0)";
-      obs.unobserve(e.target);
-    });
-  }, { threshold: 0.06 });
 
-  cards.forEach(el => obs.observe(el));
+  const observer =
+    new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add(
+            "reveal-visible"
+          );
+
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.06
+      }
+    );
+
+
+  elements.forEach(element =>
+    observer.observe(element)
+  );
 }
 
 
-/* ════════════════════════════════════════════════════════════
-   STAT COUNTER ANIMATION
-════════════════════════════════════════════════════════════ */
+/* ────────────────────────────────────────────────────────────
+   STAT COUNTERS
+──────────────────────────────────────────────────────────── */
 function initStatCounters() {
-  const statValues = document.querySelectorAll(".proj-stat-value[data-target]");
+  const statValues =
+    document.querySelectorAll(
+      ".proj-stat-value[data-target]"
+    );
+
   if (!statValues.length) return;
 
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      const el     = entry.target;
-      const target = parseInt(el.dataset.target, 10);
-      /* Don't animate "2005" — it's a year, not a count */
-      if (target > 1000) { el.textContent = target; obs.unobserve(el); return; }
 
-      const duration = 900;
-      const start    = performance.now();
-      function step(now) {
-        const p = Math.min((now - start) / duration, 1);
-        const ease = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(ease * target);
-        if (p < 1) requestAnimationFrame(step);
-        else el.textContent = target;
+  const observer =
+    new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          const element = entry.target;
+          const target =
+            parseInt(
+              element.dataset.target,
+              10
+            );
+
+
+          /* Years should not count up */
+          if (target > 1000) {
+            element.textContent = target;
+
+            observer.unobserve(element);
+            return;
+          }
+
+
+          const duration = 900;
+          const start = performance.now();
+
+
+          function step(now) {
+            const progress =
+              Math.min(
+                (now - start) /
+                duration,
+                1
+              );
+
+
+            const ease =
+              1 -
+              Math.pow(
+                1 - progress,
+                3
+              );
+
+
+            element.textContent =
+              Math.round(
+                ease * target
+              );
+
+
+            if (progress < 1) {
+              requestAnimationFrame(step);
+            } else {
+              element.textContent =
+                target;
+            }
+          }
+
+
+          requestAnimationFrame(step);
+
+          observer.unobserve(element);
+        });
+      },
+      {
+        threshold: 0.5
       }
-      requestAnimationFrame(step);
-      obs.unobserve(el);
-    });
-  }, { threshold: 0.5 });
+    );
 
-  statValues.forEach(el => obs.observe(el));
+
+  statValues.forEach(element =>
+    observer.observe(element)
+  );
 }
 
 
-/* ════════════════════════════════════════════════════════════
-   INIT
-════════════════════════════════════════════════════════════ */
+/* ────────────────────────────────────────────────────────────
+   INITIALIZATION
+──────────────────────────────────────────────────────────── */
 async function init() {
-  /* Stats don't depend on the project data, so start them right away */
-  initStatCounters();
-
   try {
     const raw = await loadProjects();
 
-    /* Keep only programmes we have an identity for, so a stray key
-       in the JSON can't crash the page. */
+    /*
+      Keep only programmes with a recognised identity
+      and valid year data.
+    */
     projectData = {};
+
     Object.keys(raw).forEach(key => {
-      if (PROGRAMMES[key] && raw[key] && raw[key].years) projectData[key] = raw[key];
+      if (
+        PROGRAMMES[key] &&
+        raw[key] &&
+        raw[key].years
+      ) {
+        projectData[key] = raw[key];
+      }
     });
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     return;
   }
+
 
   const keys = Object.keys(projectData);
+
+
   if (!keys.length) {
-    console.error("projects.json loaded but contained no recognised programmes (expected keys: " +
-      Object.keys(PROGRAMMES).join(", ") + ")");
+    console.error(
+      "projects.json loaded but contained no recognised programmes. " +
+      "Expected keys: " +
+      Object.keys(PROGRAMMES).join(", ")
+    );
+
     return;
   }
 
+
   buildProgIndex();
-  switchProgramme(keys.includes("cv") ? "cv" : keys[0]);
-  buildOverviewCards();
-  initReveal();
+
+  switchProgramme(
+    keys.includes("cv")
+      ? "cv"
+      : keys[0]
+  );
+
   initYearScroll();
+
+
+  /*
+    Wait for the global loader before starting
+    page animations.
+  */
+  await siteReady;
+
+  initStatCounters();
+  initReveal();
 }
+
 
 init();

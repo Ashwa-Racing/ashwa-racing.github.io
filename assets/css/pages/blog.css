@@ -18,7 +18,7 @@
   --body: 'Barlow', Arial, sans-serif;
   --expo: cubic-bezier(0.16, 1, 0.3, 1);
   --site-gutter: clamp(20px, 5vw, 72px);
-  --content-width: 1080px;
+  --content-width: 1150px;
   --section-pad: clamp(56px, 7vw, 112px);
 }
 

@@ -1,502 +1,433 @@
 "use strict";
 
-/* ── Sponsor data ──────────────────────────────────────────────
-   sponsors.json is grouped by tier; the home-page strip wants one
-   flat list, so tiers are concatenated in this order.
-   Fetch starts as soon as the script runs so it's usually done by
-   the time DOMContentLoaded fires.
-   ────────────────────────────────────────────────────────────── */
-const SPONSORS_URL      = "/assets/data/sponsors.json";
-const SPONSOR_LOGO_BASE = "https://assets.ashwaracing.org/images/sponsors/";
+/* ============================================================
+   CONFIG
+   ============================================================ */
+const SPONSORS_URL = "/assets/data/sponsors.json";
+const BLOG_URL     = "/assets/data/blog.json";
+
+// Logos are shown ~60px tall, so they're resized/re-encoded at the edge
+// (Cloudflare Images) instead of shipping the 360px originals.
+const SPONSOR_LOGO_BASE =
+  "https://assets.ashwaracing.org/cdn-cgi/image/height=120,format=auto,quality=85/images/sponsors/";
 const SPONSOR_TIER_ORDER = ["executive", "platinum", "gold", "silver", "technical"];
 
-async function loadSponsorList() {
-  const response = await fetch(SPONSORS_URL, {
-    signal: AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined
-  });
+const SITE_READY_TIMEOUT        = 12000;
+const COUNT_UP_MS               = 3600;
+const SPOTLIGHT_AUTO_ADVANCE_MS = 3000;
 
-  if (!response.ok) {
-    throw new Error(`Failed to load sponsors: ${response.status}`);
-  }
+const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// No autoplay video for reduced-motion or Data Saver visitors.
+const allowVideo = !prefersReducedMotion && !navigator.connection?.saveData;
 
-  const data = await response.json();
-  return SPONSOR_TIER_ORDER.flatMap(tier => data[tier] || []);
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function escapeHTML(value = "") {
+  return String(value).replace(/[&<>"']/g, c => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]
+  ));
 }
 
-const sponsorsReady = loadSponsorList().catch(err => {
-  console.error(err);
-  return [];
-});
+async function fetchJSON(url, options = {}) {
+  const response = await fetch(url, { ...options, signal: AbortSignal.timeout?.(5000) });
+  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+  return response.json();
+}
 
-// Resolves when loader.js releases the page (or after a fallback delay
-// in case loader.js is missing/broken), so animations don't run hidden
-// behind the loader overlay.
+/* Calls onEnter(el) once per element, the first time it scrolls into view. */
+function observeOnce(elements, onEnter, options) {
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      obs.unobserve(entry.target);
+      onEnter(entry.target);
+    });
+  }, options);
+  elements.forEach(el => io.observe(el));
+}
+
+/* Data fetches start immediately so they're usually done by init time. */
+const sponsorsReady = fetchJSON(SPONSORS_URL)
+  .then(data => SPONSOR_TIER_ORDER.flatMap(tier => data[tier] || []))
+  .catch(err => { console.error(err); return []; });
+
+/* Resolves when loader.js releases the page (or after a fallback delay if
+   loader.js is missing/broken) so animations don't run behind the overlay. */
 const siteReady = new Promise(resolve => {
   if (window.__siteReady) return resolve();
   document.addEventListener("site:ready", resolve, { once: true });
-  setTimeout(resolve, 12000);
+  setTimeout(resolve, SITE_READY_TIMEOUT);
 });
 
-function sponsorLogoUrl(sponsor) {
-  const logo = sponsor.logo || "";
-  return /^(https?:)?\/\//.test(logo) ? logo : SPONSOR_LOGO_BASE + logo;
+/* ============================================================
+   THEME
+   ============================================================ */
+function initThemeToggle() {
+  const button = document.getElementById("theme-toggle");
+  if (!button) return;
+
+  const root = document.documentElement;
+
+  function updateButton(theme) {
+    const isLight = theme === "light";
+    button.setAttribute("aria-pressed", String(isLight));
+    button.setAttribute("aria-label", isLight ? "Switch to dark mode" : "Switch to light mode");
+    updateBrandLogos();
+  }
+
+  updateButton(root.dataset.theme === "light" ? "light" : "dark");
+
+  button.addEventListener("click", () => {
+    const nextTheme = root.dataset.theme === "light" ? "dark" : "light";
+
+    // Restart the colour-transition class (void read forces a reflow).
+    root.classList.remove("theme-transition");
+    void root.offsetWidth;
+    root.classList.add("theme-transition");
+
+    root.dataset.theme = nextTheme;
+    try { localStorage.setItem("ashwa-theme", nextTheme); } catch (e) {}
+
+    updateButton(nextTheme);
+
+    // Don't leave the transition class on permanently, or every later
+    // hover/state change on the page inherits it.
+    setTimeout(() => root.classList.remove("theme-transition"), 500);
+  });
 }
 
-function escapeAttr(str) {
-  return String(str).replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+/* ── Theme-aware logos: foo.svg -> foo-light.svg in light mode ── */
+function getLightLogoUrl(url) {
+  return url ? url.replace(/(\.[^./?#]+)([?#].*)?$/, "-light$1$2") : url;
 }
 
-/* ── Background video init ─────────────────────────────────────
-   Top-level now (not IIFE-scoped) so initSpotlightToggle can also
-   call it on-demand when a spotlight layer becomes active.
-   ────────────────────────────────────────────────────────────── */
+function updateBrandLogos() {
+  const isLight = document.documentElement.dataset.theme === "light";
+
+  document.querySelectorAll(".brand-logo-img").forEach(logo => {
+    const darkLogo = logo.dataset.darkLogo || logo.getAttribute("src");
+    if (!darkLogo) return;
+    logo.dataset.darkLogo = darkLogo;
+
+    const useLight = isLight && !logo.dataset.lightMissing;
+    const wanted = useLight ? getLightLogoUrl(darkLogo) : darkLogo;
+
+    logo.onerror = useLight
+      ? () => {
+          logo.onerror = null;
+          logo.dataset.lightMissing = "1"; // don't retry the 404 on every update
+          logo.setAttribute("src", darkLogo);
+        }
+      : null;
+
+    // Re-setting an identical src would re-trigger an image load.
+    if (logo.getAttribute("src") !== wanted) logo.setAttribute("src", wanted);
+  });
+}
+
+/* Header and footer are injected by header.js; watch just those two
+   containers so their logos pick up the current theme when they appear. */
+function initBrandLogoObserver() {
+  const observer = new MutationObserver(updateBrandLogos);
+  ["main-header", "main-footer"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el, { childList: true, subtree: true });
+  });
+  updateBrandLogos();
+}
+
+/* ============================================================
+   BACKGROUND VIDEO
+   ============================================================ */
 function initBgVideo(video) {
-  if (!video) return;
+  if (!video || !allowVideo) return;
 
-  const reveal = () => video.classList.add('is-loaded');
+  const reveal = () => {
+    video.classList.add("is-loaded");
+    video.closest(".hero")?.classList.add("has-video"); // pauses the poster zoom
+  };
 
-  if (video.readyState >= 3) {
-    reveal();
-  } else {
-    video.addEventListener('canplay', reveal, { once: true });
-  }
+  if (video.readyState >= 3) reveal();
+  else video.addEventListener("canplay", reveal, { once: true });
 
-  const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.catch(() => {
-      video.removeEventListener('canplay', reveal);
-    });
-  }
+  video.play()?.catch(() => video.removeEventListener("canplay", reveal));
 }
 
-(function () {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-  // .spotlight-bg-video intentionally excluded here — initSpotlightToggle()
-  // starts the active EV layer's video on load, and lazily starts CV's
-  // only when the visitor toggles to it, so we're not decoding two loops
-  // in the background at once.
-  document
-    .querySelectorAll('.hero-video')
-    .forEach(initBgVideo);
-})();
-
-/* ── Car spotlight toggle (EV / CV) ────────────────────────────
-   Crossfades bg layers + content, lazily starts/stops the video
-   so only the visible car's video is ever decoding with 3s switch
-   ────────────────────────────────────────────────────────────── */
+/* ============================================================
+   CAR SPOTLIGHT (EV / CV)
+   Only the visible car's video decodes. Nothing starts until the
+   section scrolls into view.
+   ============================================================ */
 function initSpotlightToggle() {
-  const section = document.getElementById('car-spotlight');
+  const section = document.getElementById("car-spotlight");
   if (!section) return;
 
-  const toggleBtns = section.querySelectorAll('.spotlight-toggle-btn');
-  const bgLayers   = section.querySelectorAll('.spotlight-bg-layer');
-  const contents   = section.querySelectorAll('.spotlight-content');
+  const buttons  = section.querySelectorAll(".spotlight-toggle-btn");
+  const layers   = section.querySelectorAll(".spotlight-bg-layer");
+  const contents = section.querySelectorAll(".spotlight-content");
+
+  let autoAdvanceTimer = null;
+  let touched = false;
 
   function setActive(car) {
     section.dataset.active = car;
-    section.classList.toggle('spotlight--ev', car === 'ev');
+    section.classList.toggle("spotlight--ev", car === "ev");
 
-    toggleBtns.forEach(btn => {
-      const active = btn.dataset.car === car;
-      btn.classList.toggle('is-active', active);
-      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    buttons.forEach(btn => {
+      const on = btn.dataset.car === car;
+      btn.classList.toggle("is-active", on);
+      btn.setAttribute("aria-pressed", String(on));
     });
 
-    bgLayers.forEach(layer => {
-      const isActive = layer.dataset.car === car;
-      layer.classList.toggle('is-active', isActive);
-
-      const video = layer.querySelector('.spotlight-bg-video');
+    layers.forEach(layer => {
+      const on = layer.dataset.car === car;
+      layer.classList.toggle("is-active", on);
+      const video = layer.querySelector(".spotlight-bg-video");
       if (!video) return;
-      if (isActive) {
-        initBgVideo(video);
-      } else {
-        video.pause();
-      }
+      if (on) initBgVideo(video);
+      else video.pause();
     });
 
     contents.forEach(content => {
-      content.classList.toggle('is-active', content.dataset.car === car);
+      const on = content.dataset.car === car;
+      content.classList.toggle("is-active", on);
+      content.inert = !on; // keep the hidden panel's links out of the tab order
     });
   }
 
-  // ── One-time auto-advance to CV after 3s ──────────────────────
-  // Cancelled if the visitor touches the toggle themselves first,
-  // and never fires again after — this is a first-glance nudge,
-  // not a recurring carousel.
-  let autoAdvanceTimer = null;
-  let autoAdvanceFired = false;
-
-  function cancelAutoAdvance() {
-    if (autoAdvanceTimer) {
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      touched = true;
       clearTimeout(autoAdvanceTimer);
-      autoAdvanceTimer = null;
-    }
-  }
-
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    autoAdvanceTimer = setTimeout(() => {
-      autoAdvanceTimer = null;
-      if (autoAdvanceFired) return;
-      autoAdvanceFired = true;
-      // only advance if the visitor hasn't already moved off EV themselves
-      if (section.dataset.active === 'ev') setActive('cv');
-    }, 3000);
-  }
-
-  toggleBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      cancelAutoAdvance();
-      autoAdvanceFired = true; // manual interaction retires the nudge for good
       setActive(btn.dataset.car);
     });
   });
 
-  const cvVideo = section.querySelector('[data-car="cv"] .spotlight-bg-video');
-  if (cvVideo) cvVideo.pause();
+  // First time the section is actually seen: start the active video and
+  // give a one-off nudge over to CV (never if the visitor already toggled).
+  observeOnce([section], () => {
+    initBgVideo(section.querySelector(".spotlight-bg-layer.is-active .spotlight-bg-video"));
+    if (prefersReducedMotion || touched) return;
+    autoAdvanceTimer = setTimeout(() => {
+      if (section.dataset.active === "ev") setActive("cv");
+    }, SPOTLIGHT_AUTO_ADVANCE_MS);
+  }, { threshold: 0.4 });
+}
 
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    const evVideo = section.querySelector('[data-car="ev"] .spotlight-bg-video');
-    if (evVideo) initBgVideo(evVideo);
+/* ============================================================
+   SPONSOR STRIP
+   ============================================================ */
+function sponsorLogoUrl(sponsor) {
+  const logo = sponsor?.logo || "";
+  return /^(https?:)?\/\//i.test(logo) ? logo : SPONSOR_LOGO_BASE + logo;
+}
+
+function sponsorCardHTML(sponsor, isDuplicate) {
+  const dup = isDuplicate ? ' aria-hidden="true" data-dup' : "";
+
+  // Eager on purpose: the marquee width depends on every logo's size, and
+  // lazy-loading would make the loop jump as images arrive.
+  const img = `<img src="${escapeHTML(sponsorLogoUrl(sponsor))}" alt="${escapeHTML(sponsor.name)}" loading="eager" fetchpriority="low" decoding="async" width="360" height="360">`;
+
+  // No website (missing or "#") -> plain card instead of a dead link.
+  if (!sponsor.url || sponsor.url === "#") {
+    return `<div class="sp-card"${dup}>${img}</div>`;
   }
+
+  const tab = isDuplicate ? ' tabindex="-1"' : "";
+  return `<a href="${escapeHTML(sponsor.url)}" target="_blank" rel="noopener" class="sp-card"${dup}${tab}>${img}</a>`;
 }
 
 function renderSponsorStrip(sponsors) {
-    const track = document.getElementById('sponsor-track');
-    if (!track || !sponsors.length) return;
+  const track = document.getElementById("sponsor-track");
+  if (!track || !sponsors.length) return;
 
-    const cardsHtml = sponsors.map(s => {
-        const logo = `
-            <img
-                src="${escapeAttr(sponsorLogoUrl(s))}"
-                alt="${escapeAttr(s.name)}"
-                loading="lazy"
-                decoding="async"
-                width="360"
-                height="360">
-        `;
-
-        // Sponsors without a website (url "#" or missing) get a plain card
-        // instead of a link that would open a blank tab.
-        if (!s.url || s.url === "#") {
-            return `<div class="sp-card">${logo}</div>`;
-        }
-
-        return `<a href="${escapeAttr(s.url)}"
-                    target="_blank"
-                    rel="noopener"
-                    class="sp-card">${logo}</a>`;
-    }).join('');
-
-    track.innerHTML = cardsHtml + cardsHtml;
+  // The list is rendered twice for the seamless loop; the second copy is
+  // hidden from assistive tech and the tab order.
+  track.innerHTML =
+    sponsors.map(s => sponsorCardHTML(s, false)).join("") +
+    sponsors.map(s => sponsorCardHTML(s, true)).join("");
 }
 
-function preloadSponsorImages(sponsors) {
-    return Promise.all(
-        sponsors.map(s => new Promise(resolve => {
-            const img = new Image();
-            img.onload = resolve;
-            img.onerror = resolve;
-            img.src = sponsorLogoUrl(s);
-        }))
-    );
-}
-
-async function initHome() {
-    // Sponsors first: initReveal() looks for the strip's elements,
-    // so they need to be in the DOM before it runs.
-    const sponsors = await sponsorsReady;
-    renderSponsorStrip(sponsors);
-
-    // Non-blocking sponsor preloading.
-    preloadSponsorImages(sponsors);
-
-    // Hold reveals, counters and the 3s spotlight auto-advance until
-    // the loader has actually lifted, otherwise they play out (and the
-    // timer burns down) behind the overlay.
-    await siteReady;
-
-    // Restart hero loops from 0 so they start fresh as the loader lifts
-    // (they've been playing behind the overlay since script load).
-    document.querySelectorAll('.hero-video').forEach(v => {
-        try { v.currentTime = 0; } catch (e) {}
-    });
-
-    initReveal();
-    initMaskReveal();
-    initBlogPreview();
-    initStatCounters();
-    initSpotlightToggle();
-}
-
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initHome, { once: true });
-} else {
-    initHome();
-}
-
-/* ── Scroll reveal ────────────────────────────────────────────
-   Runs per-section groups (not one flat list) so each group's
-   stagger restarts from 0 — cards cascade in together as their
-   own section enters view, instead of inheriting a running delay
-   from earlier sections on the page.
-   ────────────────────────────────────────────────────────────── */
+/* ============================================================
+   SCROLL REVEAL
+   Each group staggers from 0, and reveal styles are removed once
+   finished so they don't leave transition delays on hover states.
+   ============================================================ */
 function initReveal() {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (prefersReducedMotion) return;
 
   const groups = [
-    document.querySelectorAll(".stat-bar-grid .stat"),
-    document.querySelectorAll(".sponsors-grid img"),
-    document.querySelectorAll(".spotlight-toggle, .spotlight-content > *:not(h2)"),
-    document.querySelectorAll(".news-grid .news-card"),
-    document.querySelectorAll(".launch-teaser-content > *:not(.launch-teaser-heading)"),
+    ".stat-bar-grid .stat",
+    ".spotlight-toggle, .spotlight-content > *:not(h2)",
+    ".news-grid .news-card"
   ];
 
-  const io = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("reveal-visible");
-      obs.unobserve(entry.target);
-    });
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px" });
-
-  groups.forEach(list => {
-    list.forEach((el, i) => {
+  const items = groups.flatMap(selector =>
+    [...document.querySelectorAll(selector)].map((el, i) => {
       el.classList.add("reveal");
       el.style.transitionDelay = `${Math.min(i * 0.08, 0.4)}s`;
-      io.observe(el);
-    });
-  });
+      return el;
+    })
+  );
+
+  observeOnce(items, el => {
+    const delay = parseFloat(el.style.transitionDelay) || 0;
+    el.classList.add("reveal-visible");
+    setTimeout(() => {
+      el.classList.remove("reveal", "reveal-visible");
+      el.style.transitionDelay = "";
+    }, (delay + 0.7) * 1000 + 50);
+  }, { threshold: 0.12, rootMargin: "0px 0px -40px" });
 }
 
-/* ── Heading line-mask reveal ─────────────────────────────────
-   Wraps each target heading's existing markup in a clipped span
-   so the text slides up from behind a hard edge on scroll-in,
-   rather than a flat fade — the "premium studio" heading move.
-   Runs once per element (innerHTML rewrite), safe with the <em>/
-   <br> already inside these headings since it just wraps around
-   them.
-   ────────────────────────────────────────────────────────────── */
+/* Heading line-mask reveal: text slides up from behind a hard edge. */
 function initMaskReveal() {
-  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (prefersReducedMotion) return;
 
-  const targets = document.querySelectorAll(
-    ".spotlight-content h2, .launch-teaser-heading, .news .container > h2"
-  );
-  if (!targets.length) return;
+  const targets = document.querySelectorAll(".spotlight-content h2, .news .container > h2");
 
   targets.forEach(el => {
     el.classList.add("reveal-mask");
     el.innerHTML = `<span class="reveal-mask-inner">${el.innerHTML}</span>`;
   });
 
-  const io = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("reveal-visible");
-      obs.unobserve(entry.target);
-    });
-  }, { threshold: 0.3, rootMargin: "0px 0px -60px" });
-
-  targets.forEach(el => io.observe(el));
+  observeOnce(targets, el => el.classList.add("reveal-visible"),
+    { threshold: 0.3, rootMargin: "0px 0px -60px" });
 }
 
-/* ── Homepage blog preview ──────────────────────────────────── */
+/* ============================================================
+   STAT COUNTERS
+   The HTML holds the real numbers (works without JS); they're zeroed
+   while the loader is still up, then counted up when scrolled into view.
+   ============================================================ */
+function prepareStatCounters() {
+  if (prefersReducedMotion) return;
+  document.querySelectorAll(".stat-num[data-count]").forEach(el => { el.textContent = "0"; });
+}
 
-const BLOG_URL = "/assets/data/blog.json";
+function initStatCounters() {
+  if (prefersReducedMotion) return;
 
+  observeOnce(document.querySelectorAll(".stat-num[data-count]"), el => {
+    const target = parseInt(el.dataset.count, 10) || 0;
+    const suffix = el.dataset.suffix || "";
+    const start = performance.now();
+
+    (function step(now) {
+      const progress = Math.min((now - start) / COUNT_UP_MS, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    })(start);
+  }, { threshold: 0.5 });
+}
+
+/* ============================================================
+   HOMEPAGE BLOG PREVIEW
+   ============================================================ */
 function parseBlogDate(date) {
-  if (!date) return null;
-
-  const value = String(date).trim();
-
-  if (/^\d{4}$/.test(value)) {
-    return new Date(`${value}-01-01T00:00:00`);
-  }
-
-  if (/^\d{4}-\d{2}$/.test(value)) {
-    return new Date(`${value}-01T00:00:00`);
-  }
-
-  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    return new Date(`${value}T00:00:00`);
-  }
-
-  return null;
+  // Accepts YYYY, YYYY-MM or YYYY-MM-DD.
+  const m = String(date || "").trim().match(/^(\d{4})(?:-(\d{2}))?(?:-(\d{2}))?$/);
+  if (!m) return null;
+  const [, year, month = "01", day = "01"] = m;
+  const parsed = new Date(`${year}-${month}-${day}T00:00:00`);
+  return isNaN(parsed) ? null : parsed;
 }
 
 function formatBlogDate(date) {
   const value = String(date || "").trim();
-
-  if (/^\d{4}$/.test(value)) {
-    return value;
-  }
-
   const parsed = parseBlogDate(value);
-
-  if (!parsed) {
-    return value;
-  }
+  if (!parsed || /^\d{4}$/.test(value)) return value;
 
   const options = /^\d{4}-\d{2}$/.test(value)
-    ? {
-        month: "long",
-        year: "numeric"
-      }
-    : {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      };
+    ? { month: "long", year: "numeric" }
+    : { day: "numeric", month: "long", year: "numeric" };
 
   return new Intl.DateTimeFormat("en-IN", options).format(parsed);
 }
 
 function blogDateValue(date) {
-  const parsed = parseBlogDate(date);
-  return parsed ? parsed.getTime() : 0;
+  return parseBlogDate(date)?.getTime() ?? 0;
 }
 
-function escapeBlogHTML(value = "") {
-  return String(value).replace(/[&<>"']/g, char => ({
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#039;"
-  }[char]));
+function blogCardHTML(post) {
+  const meta = [post.category, post.date && formatBlogDate(post.date)]
+    .filter(Boolean)
+    .map(escapeHTML)
+    .join(" · ");
+
+  return `
+    <a href="blog-post.html?post=${encodeURIComponent(post.slug)}" class="news-card">
+      <div class="news-card-img-wrap">
+        <img src="${escapeHTML(post.cover || "")}" alt="${escapeHTML(post.coverAlt || post.title)}" loading="lazy" decoding="async" width="600" height="400">
+      </div>
+      <div class="news-card-body">
+        <p class="news-meta">${meta}</p>
+        <h3>${escapeHTML(post.title)}</h3>
+        <p class="news-excerpt">${escapeHTML(post.excerpt || "")}</p>
+        <span class="btn-line">Read More</span>
+      </div>
+    </a>`;
 }
 
 async function initBlogPreview() {
   const grid = document.getElementById("home-blog-grid");
-
   if (!grid) return;
 
   try {
-    const response = await fetch(BLOG_URL, {
-      cache: "no-cache"
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    if (!Array.isArray(data.posts)) {
-      throw new Error("Invalid blog data.");
-    }
+    const data = await fetchJSON(BLOG_URL, { cache: "no-cache" });
+    if (!Array.isArray(data.posts)) throw new Error("Invalid blog data.");
 
     const posts = data.posts
-      .filter(
-        post =>
-          post &&
-          post.slug &&
-          post.title
-      )
-      .sort(
-        (a, b) =>
-          blogDateValue(b.date) -
-          blogDateValue(a.date)
-      )
+      .filter(post => post && post.slug && post.title)
+      .sort((a, b) => blogDateValue(b.date) - blogDateValue(a.date))
       .slice(0, 3);
 
-    if (!posts.length) {
-      grid.innerHTML = "";
-      return;
-    }
-
-    grid.innerHTML = posts.map(post => `
-      <a
-        href="blog-post.html?post=${encodeURIComponent(post.slug)}"
-        class="news-card">
-
-        <div class="news-card-img-wrap">
-          <img
-            src="${escapeBlogHTML(post.cover || "")}"
-            alt="${escapeBlogHTML(
-              post.coverAlt || post.title
-            )}"
-            loading="lazy"
-            decoding="async"
-            width="600"
-            height="400">
-        </div>
-
-        <div class="news-card-body">
-
-          <p class="news-meta">
-            ${escapeBlogHTML(post.category || "")}
-            ${
-              post.date
-                ? ` · ${escapeBlogHTML(formatBlogDate(post.date))}`
-                : ""
-            }
-          </p>
-
-          <h3>
-            ${escapeBlogHTML(post.title)}
-          </h3>
-
-          <p class="news-excerpt">
-            ${escapeBlogHTML(post.excerpt || "")}
-          </p>
-
-          <span class="btn-line">
-            Read More
-          </span>
-
-        </div>
-
-      </a>
-    `).join("");
-
+    grid.innerHTML = posts.map(blogCardHTML).join("");
   } catch (error) {
-    console.error(
-      "Ashwa Blog: failed to load homepage articles.",
-      error
-    );
-
+    console.error("Ashwa Blog: failed to load homepage articles.", error);
     grid.innerHTML = "";
   }
 }
 
-/* ── Stat bar count-up (unchanged) ── */
-function initStatCounters() {
-  const nums = document.querySelectorAll(".stat-num[data-count]");
-  if (!nums.length) return;
+/* ============================================================
+   INIT
+   ============================================================ */
+async function initHome() {
+  prepareStatCounters();
 
-  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Fetch the blog now, but only render/reveal once the loader lifts.
+  const blogReady = initBlogPreview();
 
-  const animate = (el) => {
-    const target = parseInt(el.dataset.count, 10) || 0;
-    const suffix = el.dataset.suffix || "";
+  renderSponsorStrip(await sponsorsReady);
 
-    if (reduceMotion) {
-      el.textContent = target + suffix;
-      return;
-    }
+  await siteReady;
 
-    const duration = 3600;
-    const start = performance.now();
+  // Hero loops have been playing behind the overlay; restart them.
+  document.querySelectorAll(".hero-video").forEach(video => {
+    try { video.currentTime = 0; } catch (e) {}
+  });
 
-    function step(now) {
-      const progress = Math.min((now - start) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.round(target * eased) + suffix;
-      if (progress < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  };
+  // Blog cards must exist before initReveal() goes looking for them.
+  await blogReady;
 
-  const io = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      animate(entry.target);
-      obs.unobserve(entry.target);
-    });
-  }, { threshold: 0.5 });
+  initReveal();
+  initMaskReveal();
+  initStatCounters();
+  initSpotlightToggle();
+}
 
-  nums.forEach(el => io.observe(el));
+function start() {
+  initThemeToggle();
+  initBrandLogoObserver();
+  document.querySelectorAll(".hero-video").forEach(initBgVideo);
+  initHome();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", start, { once: true });
+} else {
+  start();
 }

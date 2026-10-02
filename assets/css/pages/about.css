@@ -24,7 +24,7 @@
   --expo: cubic-bezier(.16,1,.3,1);
   --site-gutter: clamp(20px,5vw,72px);
   --section-pad: clamp(56px,7vw,112px);
-  --content-width: 1080px;
+  --content-width: 1150px;
   --nav-h: 68px;
 }
 

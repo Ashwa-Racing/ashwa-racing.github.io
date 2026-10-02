@@ -1,36 +1,4 @@
-@font-face {
-  font-family: 'Barlow Condensed';
-  font-style: normal;
-  font-weight: 700;
-  font-display: swap;
-  src: local('Barlow Condensed Bold');
-  size-adjust: 100%;
-  ascent-override: 95%;
-  descent-override: 22%;
-  line-gap-override: 0%;
-}
-@font-face {
-  font-family: 'Barlow Condensed';
-  font-style: normal;
-  font-weight: 800;
-  font-display: swap;
-  src: local('Barlow Condensed ExtraBold');
-  size-adjust: 100%;
-  ascent-override: 95%;
-  descent-override: 22%;
-  line-gap-override: 0%;
-}
-@font-face {
-  font-family: 'Barlow';
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-  src: local('Barlow Regular');
-  size-adjust: 100%;
-  ascent-override: 90%;
-  descent-override: 22%;
-  line-gap-override: 0%;
-}
+/* Barlow / Barlow Condensed come from Google Fonts (see index.html). */
 
 @font-face {
     font-family: "Samarkan";
@@ -55,13 +23,14 @@
   --red:          #e8001d;
   --red-dark:     #b5001a;
   --red-glow:     rgba(232, 0, 29, 0.28);
+  --ev-blue:      #2E6FF2;
 
   /* Dark surfaces: a small ramp instead of one flat black, so panels
      can sit on top of each other with visible depth. */
-  --ink:          #08090c;   /* deepest — page-level dark bg */
-  --ink-2:        #101218;   /* section bg one step up */
-  --panel:        #191b22;   /* card/panel bg, sits on ink-2 */
-  --panel-hi:     #22242d;   /* hovered/elevated panel */
+  --ink:          #08090c;
+  --ink-2:        #101218;
+  --panel:        #191b22;
+  --panel-hi:     #22242d;
   --hairline:     rgba(255,255,255,0.08);
   --hairline-hi:  rgba(255,255,255,0.16);
 
@@ -81,16 +50,140 @@
   --site-gutter:  clamp(20px, 5vw, 72px);
   --section-pad:  clamp(56px, 7vw, 112px);
   --nav-h:        68px;
-  --content-width: 1080px;
+  --content-width: 1150px;
+  --wrap:          min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
   --rule:          rgba(10,10,10,0.14);
 }
 
+/* ── Theme system ─────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+
+  --page-bg: #08090c;
+  --section-bg: #101218;
+  --surface: #191b22;
+  --surface-hi: #22242d;
+  --text: #f7f6f4;
+  --text-strong: #ffffff;
+  --text-muted: #767676;
+  --text-soft: rgba(255,255,255,0.68);
+  --border: rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.16);
+  --shadow: rgba(0,0,0,0.35);
+  --shadow-hi: rgba(0,0,0,0.45);
+  --sponsor-bg: #141414;
+  --card-bg: #191b22;
+  --card-text: #f7f6f4;
+  --card-muted: #9a9a9a;
+}
+
+/* Explicit light theme. The toggle/JS can set data-theme on <html>. */
+html[data-theme="light"] {
+  color-scheme: light;
+
+  --page-bg: #ffffff;
+  --section-bg: #ffffff;
+  --surface: #eeece9;
+  --surface-hi: #e5e2de;
+  --text: #111216;
+  --text-strong: #08090c;
+  --text-muted: #686868;
+  --text-soft: rgba(17,18,22,0.68);
+  --border: rgba(10,10,10,0.10);
+  --border-strong: rgba(10,10,10,0.18);
+  --shadow: rgba(0,0,0,0.14);
+  --shadow-hi: rgba(0,0,0,0.20);
+  --sponsor-bg: #ffffff;
+  --card-bg: #ffffff;
+  --card-text: #111216;
+  --card-muted: #686868;
+
+  /* Existing component tokens */
+  --off-white: #f4f3f1;
+  --white: #ffffff;
+  --muted: #686868;
+  --text-nav: rgba(17,18,22,0.72);
+  --text-nav-h: #08090c;
+  --panel: #eeece9;
+  --panel-hi: #e5e2de;
+  --hairline: rgba(10,10,10,0.10);
+  --hairline-hi: rgba(10,10,10,0.18);
+  --charcoal: #e9e7e3;
+}
+
+/* Explicit dark theme. Kept separate so the JS toggle can switch
+   back to dark even when the user's system prefers light. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+/* ── Theme toggle ─────────────────────────────────────────── */
+.theme-toggle {
+  position: fixed;
+  top: calc(var(--nav-h) + 16px);
+  right: var(--site-gutter);
+  z-index: 1100;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: 0;
+  background: rgba(8,9,12,0.72);
+  color: var(--text-strong);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s var(--expo);
+}
+
+.theme-toggle:hover {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--red);
+  outline-offset: 3px;
+}
+
+.theme-toggle svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.theme-toggle .icon-sun { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+html[data-theme="light"] .theme-toggle {
+  background: rgba(255,255,255,0.86);
+  color: var(--text-strong);
+}
+
+html[data-theme="light"] .theme-toggle .icon-sun { display: block; }
+html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+@media (max-width: 768px) {
+  .theme-toggle {
+    top: calc(var(--nav-h) + 12px);
+    right: var(--site-gutter);
+    width: 38px;
+    height: 38px;
+  }
+}
+
 html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 body {
   font-family: var(--body);
-  background: var(--white);
-  color: var(--black, #0a0a0a);
+  background: var(--page-bg);
+  color: var(--text);
   overflow-x: hidden;
   font-size: 16px;
   line-height: 1.6;
@@ -101,7 +194,7 @@ body {
 #main-header { min-height: var(--nav-h); contain: layout; position: relative; z-index: 1000; }
 
 .container {
-  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  width: var(--wrap);
   margin-inline: auto;
 }
 
@@ -131,6 +224,7 @@ h2 {
   max-width: 12ch;
 }
 h2 em { font-style: italic; color: var(--red); }
+.news h2 em { font-family: var(--ashwa); }
 
 .btn-line {
   display: inline-flex;
@@ -164,10 +258,10 @@ h2 em { font-style: italic; color: var(--red); }
   padding: 14px 28px;
   border-radius: 0;
   border: 1px solid var(--red);
-  box-shadow: 4px 4px 0 rgba(0,0,0,0.35);
+  box-shadow: 4px 4px 0 var(--shadow);
   transition: transform 0.2s var(--expo), box-shadow 0.2s var(--expo);
 }
-.btn-solid:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 rgba(0,0,0,0.45); }
+.btn-solid:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--shadow-hi); }
 
 /* ============================================================
    HERO
@@ -175,6 +269,7 @@ h2 em { font-style: italic; color: var(--red); }
 .hero {
   position: relative;
   height: calc(100vh - var(--nav-h) - 140px);
+  height: calc(100svh - var(--nav-h) - 140px);
   min-height: 460px;
   background: var(--ink);
   overflow: hidden;
@@ -199,20 +294,10 @@ h2 em { font-style: italic; color: var(--red); }
   100% { transform: scale(1.45) translate(-4%, -8%); }
 }
 
-/* .hero-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(90deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.42) 46%, rgba(0,0,0,0.10) 78%, rgba(0,0,0,0) 100%),
-    linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.05) 62%),
-    linear-gradient(135deg, rgba(232,0,29,0.10), transparent 42%);
-} */
-
 .hero-content {
   position: relative;
   z-index: 2;
-  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  width: var(--wrap);
   margin-inline: auto;
   padding-bottom: clamp(60px, 9vh, 120px);
   text-align: center;
@@ -236,30 +321,23 @@ h2 em { font-style: italic; color: var(--red); }
 
 .hero-content h1 em { color: var(--red); font-style: italic; }
 
-.ashwa {
-    font-family: "Samarkan", sans-serif;
-    color: red;
-}
-
-.racing {
-    font-family: "Xenotron", sans-serif;
-    color: white;
-}
+.ashwa  { font-family: var(--ashwa);  color: var(--red); }
+.racing { font-family: var(--racing); color: var(--white); }
 
 .hero-para {
   font-size: clamp(0.88rem, 1.5vw, 1.05rem);
   line-height: 1.7;
-  color: rgba(255,255,255,1);
+  color: var(--white);
   margin-bottom: 30px;
   max-width: 480px;
 }
 
-.hero-ctas { display: flex; align-items: center; justify-content: flex-start; gap: 24px; flex-wrap: wrap; }
+.hero-ctas { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; }
 .hero-ctas .btn-line { color: var(--white); border-color: rgba(255,255,255,0.5); }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-img { animation: none; }
-  .hero-season-dot { animation: none; opacity: 1; }
+  .hero-video { display: none; } /* poster image stays as the hero, no motion */
 }
 
 .hero-video {
@@ -272,27 +350,26 @@ h2 em { font-style: italic; color: var(--red); }
   transition: opacity 0.6s ease;
   pointer-events: none;
   z-index: 0; /* same stacking layer as .hero-img, sits above it once loaded */
-  filter: brightness(0.45) saturate(1.1)
+  filter: brightness(0.45) saturate(1.1);
 }
 
 .hero-video.is-loaded {
   opacity: 1;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero-video { display: none; } /* poster image stays as the hero, no motion */
-}
+/* Once the video covers it, stop animating the poster underneath. */
+.hero.has-video .hero-img { animation-play-state: paused; }
+
 
 /* STAT BAR */
 .stat-bar {
-  background: linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%);
-  border-bottom: 1px solid var(--hairline);
+  background: linear-gradient(180deg, var(--section-bg) 0%, var(--surface) 100%);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
 }
 .stat-bar-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
-  margin-inline: auto;
   padding: 30px 0;
 }
 .stat { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; position: relative; }
@@ -301,31 +378,37 @@ h2 em { font-style: italic; color: var(--red); }
   position: absolute;
   left: 0; top: 10%; bottom: 10%;
   width: 1px;
-  background: var(--hairline);
+  background: var(--border);
 }
 .stat-num {
+  color: var(--text-strong);
   font-family: var(--racing);
   font-size: clamp(2.4rem, 4vw, 3.6rem);
   font-weight: 800;
-  color: var(--white);
   line-height: 1;
 }
 .stat-label {
+  color: var(--text-muted);
   font-family: var(--display);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.45);
 }
 
 @media (max-width: 720px) {
   .stat-bar-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 0; }
-  .stat:nth-child(3)::before, .stat + .stat::before { display: none; }
   .stat:nth-child(odd)::before { display: none; }
 }
 
 /* SPONSOR STRIP */
-.sponsor-strip { background: var(--white); padding: 32px 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.sponsor-strip {
+  background: var(--sponsor-bg);
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+          mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+}
 
 .sponsor-strip-track img { max-height: 60px; width: auto; object-fit: contain; }
 
@@ -340,12 +423,6 @@ h2 em { font-style: italic; color: var(--red); }
     will-change: transform;
 }
 
-.sponsor-strip {
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-          mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-}
-
 @keyframes sponsor-scroll {
     from {
         transform: translate3d(0,0,0);
@@ -355,11 +432,13 @@ h2 em { font-style: italic; color: var(--red); }
     }
 }
 
+.sponsor-strip:hover .sponsor-strip-track { animation-play-state: paused; }
+
+/* No marquee: let the strip itself scroll, and hide the duplicate loop copy. */
 @media (prefers-reduced-motion: reduce) {
-  .sponsor-strip-track {
-    animation: none;
-    overflow-x: auto;
-  }
+  .sponsor-strip-track { animation: none; }
+  .sponsor-strip-track [data-dup] { display: none; }
+  .sponsor-strip { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
 }
 
 /* CAR SPOTLIGHT */
@@ -368,8 +447,8 @@ h2 em { font-style: italic; color: var(--red); }
     max-height: 600px;
     border-radius: 0;
     overflow: hidden;
-    border: 1px solid rgba(0,0,0,0.12);
-    width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+    border: 1px solid var(--border-strong);
+    width: var(--wrap);
   margin: 64px auto 8px;
     background: #000;
 }
@@ -390,6 +469,8 @@ h2 em { font-style: italic; color: var(--red); }
     content: "";
     position: absolute;
     inset: 0;
+    z-index: 1; /* above the active bg layer, below the text overlay */
+    pointer-events: none;
     background: linear-gradient(
         90deg,
         rgba(0,0,0,.62) 0%,
@@ -488,7 +569,7 @@ h2 em { font-style: italic; color: var(--red); }
   transition: opacity 0.6s ease;
   pointer-events: none;
   z-index: 0;
-  filter: brightness(0.5)
+  filter: brightness(0.5);
 }
 .spotlight-bg-video.is-loaded { opacity: 1; }
 
@@ -497,9 +578,9 @@ h2 em { font-style: italic; color: var(--red); }
 }
 
 /* EV variant — blue accent instead of red */
-.spotlight--ev h2 em { color: var(--ev-blue, #2E6FF2); }
-.spotlight--ev .btn-line:hover { color: var(--ev-blue, #2E6FF2); }
-.spotlight--ev .label::before { background: var(--ev-blue, #2E6FF2); }
+.spotlight--ev h2 em { color: var(--ev-blue); }
+.spotlight--ev .btn-line:hover { color: var(--ev-blue); }
+.spotlight--ev .label::before { background: var(--ev-blue); }
 
 /* ===== merged spotlight: background crossfade ===== */
 .spotlight-bg-layer {
@@ -515,8 +596,8 @@ h2 em { font-style: italic; color: var(--red); }
    breathing room above the label instead of floating alone ===== */
 .spotlight-toggle {
   position: relative;
-  display: inline-flex;
-  align-items: center;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
   gap: 2px;
   padding: 2px;
   margin-bottom: 22px;
@@ -557,11 +638,10 @@ h2 em { font-style: italic; color: var(--red); }
 }
 .spotlight[data-active="cv"] .spotlight-toggle-thumb {
   transform: translateX(100%);
-  background: var(--red);
 }
 .spotlight[data-active="ev"] .spotlight-toggle-thumb {
   transform: translateX(0);
-  background: var(--ev-blue, #2E6FF2);
+  background: var(--ev-blue);
 }
 
 /* ===== content crossfade — grid overlap keeps height stable ===== */
@@ -581,7 +661,7 @@ h2 em { font-style: italic; color: var(--red); }
   }
 }
 
-.news { padding: var(--section-pad) 0; background: var(--off-white); }
+.news { padding: var(--section-pad) 0; background: var(--section-bg); color: var(--text); }
 .news-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -589,18 +669,18 @@ h2 em { font-style: italic; color: var(--red); }
   margin: 36px 0 40px;
 }
 .news-card {
-  background: var(--white);
+  background: var(--card-bg);
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  color: var(--black, #0a0a0a);
-  border: 1px solid rgba(0,0,0,0.14);
+  color: var(--card-text);
+  border: 1px solid var(--border-strong);
   border-radius: 0;
   overflow: hidden;
   position: relative;
   transition: transform 0.25s var(--expo), box-shadow 0.25s, border-color 0.25s;
 }
-.news-card:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 rgba(0,0,0,0.14); border-color: rgba(0,0,0,0.28); }
+.news-card:hover { transform: translate(-3px, -3px); box-shadow: 6px 6px 0 var(--shadow); border-color: var(--border-strong); }
 .news-card-img-wrap { height: 220px; overflow: hidden; }
 .news-card-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s var(--expo); }
 .news-card:hover .news-card-img-wrap img { transform: scale(1.06); }
@@ -613,6 +693,7 @@ h2 em { font-style: italic; color: var(--red); }
 }
 .news-meta { font-family: var(--display); font-size: 0.68rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
 .news-card-body h3 {
+  color: var(--card-text);
   font-family: var(--display);
   font-size: 1.25rem;
   font-weight: 800;
@@ -620,7 +701,7 @@ h2 em { font-style: italic; color: var(--red); }
   text-transform: uppercase;
   line-height: 1.15;
 }
-.news-excerpt { font-size: 0.87rem; color: #666; line-height: 1.6; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; margin-bottom: 4px; }
+.news-excerpt { font-size: 0.87rem; color: var(--card-muted); line-height: 1.6; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; margin-bottom: 4px; }
 .news-card .btn-line { font-size: 0.82rem; align-self: flex-start; }
 .view-all { display: flex; justify-content: center; }
 
@@ -673,9 +754,6 @@ h2 em { font-style: italic; color: var(--red); }
   will-change: transform;
 }
 .reveal-mask.reveal-visible .reveal-mask-inner { transform: translateY(0); }
-.reveal-mask-inner em {
-  font-family: var(--ashwa);
-}
 
 /* MOTORSPORT DETAIL */
 .hero-content h1::after {
@@ -684,7 +762,7 @@ h2 em { font-style: italic; color: var(--red); }
   width: 84px;
   height: 4px;
   background: var(--red);
-  margin-top: 22px;
+  margin: 22px auto 0;
 }
 
 .spotlight::before {
@@ -764,4 +842,142 @@ h2 em { font-style: italic; color: var(--red); }
   font-weight: 800;
   font-style: italic;
   text-transform: uppercase;
+}
+/* ============================================================
+   LIGHT THEME — SHARED HEADER + FOOTER
+   ============================================================ */
+
+html[data-theme="light"] .navbar {
+  background: var(--page-bg);
+  border-bottom-color: var(--red);
+  box-shadow:
+    0 1px 0 var(--border),
+    0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="light"] .navbar-bar::after {
+  background: var(--border);
+}
+
+html[data-theme="light"] .brand-racing {
+  color: var(--text-strong);
+}
+
+html[data-theme="light"] .nav-link,
+html[data-theme="light"] .nav-drop-btn {
+  color: var(--text-soft);
+}
+
+html[data-theme="light"] .nav-link:hover,
+html[data-theme="light"] .nav-link:focus-visible,
+html[data-theme="light"] .nav-link.active,
+html[data-theme="light"] .nav-drop-btn:hover,
+html[data-theme="light"] .nav-drop-btn:focus-visible {
+  color: var(--text-strong);
+}
+
+html[data-theme="light"] .mobile-menu {
+  background: var(--page-bg);
+  border-top-color: var(--border);
+}
+
+html[data-theme="light"] .mob-link {
+  color: var(--text);
+  border-bottom-color: var(--border);
+}
+
+html[data-theme="light"] .mob-link:hover {
+  color: var(--red);
+}
+
+html[data-theme="light"] .mob-accordion a {
+  color: var(--text-soft);
+  border-bottom-color: var(--border);
+}
+
+html[data-theme="light"] .mob-accordion a:hover {
+  color: var(--text-strong);
+}
+
+/* Footer */
+html[data-theme="light"] .footer {
+  background: var(--page-bg);
+  color: var(--text);
+  border-top-color: var(--red);
+}
+
+html[data-theme="light"] .footer-racing {
+  color: var(--text-strong);
+}
+
+html[data-theme="light"] .footer-tagline {
+  color: var(--text-muted);
+}
+
+html[data-theme="light"] .footer-socials a {
+  border-color: var(--border-strong);
+  color: var(--text-soft);
+}
+
+html[data-theme="light"] .footer-socials a:hover {
+  background: var(--surface);
+  border-color: var(--border-strong);
+  color: var(--text-strong);
+}
+
+html[data-theme="light"] .footer-socials a img {
+  filter: none;
+  opacity: 0.65;
+}
+
+html[data-theme="light"] .footer-col-label::after {
+  background: var(--border-strong);
+}
+
+html[data-theme="light"] .footer-col ul li a {
+  color: var(--text-soft);
+}
+
+html[data-theme="light"] .footer-link-soon {
+  color: var(--text-muted);
+}
+
+html[data-theme="light"] .footer-contact-link {
+  color: var(--text-soft);
+}
+
+html[data-theme="light"] .footer-contact-link:hover {
+  color: var(--text-strong);
+}
+
+html[data-theme="light"] .footer-contact-label,
+html[data-theme="light"] .footer-location {
+  color: var(--text-muted);
+}
+
+html[data-theme="light"] .footer-divider {
+  background: var(--border);
+}
+
+html[data-theme="light"] .footer-copy,
+html[data-theme="light"] .footer-credit {
+  color: var(--text-muted);
+}
+
+/* Light mode: original sponsor artwork */
+html[data-theme="light"] .sponsor-strip-track img {
+  filter: none;
+}
+
+/* Dark mode: monochrome + inverted */
+html[data-theme="dark"] .sponsor-strip-track img {
+  filter: grayscale(1) invert(1);
+}
+
+html[data-theme="dark"] .sponsor-strip {
+  background: #000;
+}
+
+html[data-theme="light"] .sponsor-strip {
+  background: #fff;
 }
