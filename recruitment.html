@@ -9,37 +9,70 @@
 
   <meta name="description" content="Join Ashwa Racing, RVCE's Formula Student team, and work on real-world motorsport engineering across design, manufacturing, electronics, software, testing, and race operations. Build race cars, gain industry experience, and compete globally." />
 
-  <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="assets/images/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="https://assets.ashwaracing.org/images/favicon/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg" />
+  <link rel="shortcut icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="https://assets.ashwaracing.org/images/favicon/apple-touch-icon.png" />
   <meta name="apple-mobile-web-app-title" content="Ashwa Racing" />
-  <link rel="manifest" href="assets/images/favicon/site.webmanifest" />
+  <link rel="manifest" href="https://assets.ashwaracing.org/images/favicon/site.webmanifest" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-  <link rel="stylesheet" href="assets/css/components/header.css?v=2">
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+
+  <link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/components/footer.css">
   <link rel="stylesheet" href="assets/css/pages/recruitment.css">
 </head>
 <body>
 
-<div id="main-header"></div>
+  <div id="site-loader" aria-hidden="true">
+    <div class="loader-inner">
+      <div class="loader-brand">
+        <span class="loader-ashwa">Ashwa</span>
+        <span class="loader-racing">Racing</span>
+      </div>
+      <div class="loader-sponsor">
+        <div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div>
+        <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
+      </div>
+      <div class="loader-progress"><span class="loader-progress-bar"></span></div>
+      <div class="loader-meta">
+        <span id="loader-status">INITIALIZING</span>
+        <span id="loader-percent">00%</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="main-header"></div>
+
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" />
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+  </button>
 
 <!-- ═══════════════════════════════════════
      HERO
 ════════════════════════════════════════ -->
-<section class="rc-hero">
-  <div class="rc-hero-bg"></div>
-  <div class="rc-hero-overlay"></div>
-  <div class="rc-hero-grid"></div>
-  <div class="rc-hero-stripe"></div>
-  <div class="rc-hero-stripe rc-hero-stripe--secondary"></div>
+<section class="rc-hero" aria-label="Ashwa Racing recruitment">
+  <div class="rc-hero-grid" aria-hidden="true"></div>
+  <div class="rc-hero-stripe" aria-hidden="true"></div>
+  <div class="rc-hero-stripe rc-hero-stripe--secondary" aria-hidden="true"></div>
 
-  <!-- Corner coordinates — telemetry-style annotation -->
   <div class="rc-hero-coords rc-hero-coords--tl" aria-hidden="true">
     <span>12°58'N</span>
     <span>77°33'E</span>
@@ -49,37 +82,66 @@
     <span>EST. 2003</span>
   </div>
 
-  <div class="rc-hero-content">
-    <div class="rc-status rc-status--open" id="rc-status-badge">
-      <span class="rc-status-dot"></span>
-      <span class="rc-status-text">Recruitment Open</span>
+  <div class="rc-hero-main">
+    <div class="rc-hero-content">
+      <div class="rc-status rc-status--open" id="rc-status-badge">
+        <span class="rc-status-dot"></span>
+        <span class="rc-status-text">Recruitment Open</span>
+      </div>
+
+      <div class="rc-eyebrow">
+        <span class="eyebrow-dash"></span>
+        <span>RV College of Engineering · Formula Student</span>
+      </div>
+
+      <h1 class="rc-hero-title">
+        JOIN THE<br><em>GRID.</em>
+      </h1>
+
+      <p class="rc-hero-desc">
+        Build the machine. Test the limits. Race with us.
+        Your next engineering experience starts here.
+      </p>
+
+      <div class="rc-hero-actions">
+        <button class="rc-btn-primary" id="rc-apply-btn" disabled>
+          Applications Open
+        </button>
+        <a href="subsystem.html" class="rc-btn-ghost">
+          Explore Subsystems
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            aria-hidden="true" width="16" height="16">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </a>
+      </div>
     </div>
 
-    <div class="rc-eyebrow">
-      <span class="eyebrow-dash"></span>
-      <span>RV College of Engineering · Formula Student</span>
-    </div>
+    <div class="rc-hero-media">
+      <div class="rc-hero-media-label">
+        <span class="label-dash"></span>
+        <span>Your Days Could Look Like This</span>
+      </div>
 
-    <h1 class="rc-hero-title">
-      JOIN THE<br><em>GRID.</em>
-    </h1>
+      <div class="rc-video-frame">
+        <iframe
+          src="https://www.youtube.com/embed/LFsJqttrivI?rel=0&modestbranding=1&playsinline=1"
+          title="A day with Ashwa Racing"
+          loading="lazy"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen>
+        </iframe>
+        <div class="rc-video-corner rc-video-corner--tl" aria-hidden="true"></div>
+        <div class="rc-video-corner rc-video-corner--br" aria-hidden="true"></div>
+      </div>
 
-    <p class="rc-hero-desc">
-      India's premier Formula Student team. Design. Build. Race.
-      Push the limits of automotive engineering and earn your place on the paddock.
-    </p>
-
-    <div class="rc-hero-actions">
-      <button class="rc-btn-primary" id="rc-apply-btn" disabled>
-        Applications Open
-      </button>
-      <a href="subsystem.html" class="rc-btn-ghost">
-        Explore Subsystems <i class="fas fa-arrow-right"></i>
-      </a>
+      <p class="rc-video-caption">
+        A look inside Ashwa Racing — the people, the workshop, and the days behind the car.
+      </p>
     </div>
   </div>
 
-  <!-- Stats bar anchored to bottom of hero -->
   <div class="rc-hero-stats">
     <div class="rhs">
       <span class="rhs-num" data-target="20">20<sup>+</sup></span>
@@ -272,7 +334,9 @@
       Ashwa Racing offers engineering and non-engineering roles across 9 subsystems.
     </p>
     <a href="subsystem.html" class="rc-subsystems-link">
-      Explore All Subsystems <i class="fas fa-arrow-right"></i>
+      Explore All Subsystems <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" width="16" height="16">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
     </a>
   </div>
 
@@ -304,8 +368,9 @@
 
 <footer id="main-footer"></footer>
 
-<script src="assets/js/components/header.js"></script>
-<script src="assets/js/pages/recruitment.js"></script>
+<script src="assets/js/components/header.js" defer></script>
+<script src="assets/js/components/loader.js" defer></script>
+<script src="assets/js/pages/recruitment.js" defer></script>
 
 </body>
 </html>

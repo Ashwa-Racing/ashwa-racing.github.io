@@ -8,6 +8,15 @@
 
   <link rel="canonical" href="https://ashwaracing.org/projects.html" />
 
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {}
+      document.documentElement.dataset.theme =
+        theme === "light" ? "light" : "dark";
+    })();
+  </script>
+
   <meta name="description" content="Explore Ashwa Racing's complete project portfolio spanning combustion, hybrid, hyperloop, and future autonomous platforms. Discover two decades of Formula Student prototypes, engineering evolution, and international competition achievements." />
 
   <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
@@ -24,11 +33,25 @@
   <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/components/footer.css">
   <link rel="stylesheet" href="assets/css/pages/projects.css">
+
+  <link rel="preload" as="script" href="assets/js/pages/projects.js">
 </head>
 
 <body>
 
   <div id="main-header"></div>
+
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" />
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+  </button>
+
+  <main>
 
   <!-- ═══════════════════════════
        HERO
@@ -43,6 +66,15 @@
 
     <!-- Horizontal rule at bottom of hero -->
     <div class="proj-hero-rule"></div>
+
+    <div class="proj-hero-coords proj-hero-coords--tl" aria-hidden="true">
+      <span>12°58'N</span>
+      <span>77°33'E</span>
+    </div>
+    <div class="proj-hero-coords proj-hero-coords--br" aria-hidden="true">
+      <span>RVCE · BENGALURU</span>
+      <span>EST. 2003</span>
+    </div>
 
     <div class="proj-hero-content container">
 
@@ -162,6 +194,8 @@
 
   </section>
 
+
+  </main>
 
   <footer id="main-footer"></footer>
 
