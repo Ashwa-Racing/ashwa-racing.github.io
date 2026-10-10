@@ -143,7 +143,7 @@ body {
   letter-spacing: -0.01em; text-transform: uppercase;
   color: var(--white); margin-bottom: 18px;
 }
-.rc-section-heading em { font-style: italic; color: var(--red); display: block; }
+.rc-section-heading em { font-style: italic; color: var(--red); display: block; font-family: "Samarkan", serif; }
 
 /* ─── Reveal ────────────────────────────────────────────────── */
 .reveal {
@@ -284,7 +284,7 @@ body {
   color: var(--white); margin-bottom: 24px;
   animation: slideUp 0.8s var(--expo) 0.1s both;
 }
-.rc-hero-title em { font-style: italic; color: var(--red); display: block; }
+.rc-hero-title em { font-style: italic; color: var(--red); display: block; font-family: "Samarkan", serif; }
 
 @keyframes slideUp {
   from { opacity: 0; transform: translateY(36px); }

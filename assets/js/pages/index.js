@@ -1,5 +1,9 @@
 "use strict";
 
+/* Shared helpers (components/utils.js) and theme code (components/theme.js)
+   are loaded before this file. */
+const { prefersReducedMotion, escapeHTML, fetchJSON, observeOnce } = window.Ashwa;
+
 /* ============================================================
    CONFIG
    ============================================================ */
@@ -13,39 +17,14 @@ const SPONSOR_LOGO_BASE =
 const SPONSOR_TIER_ORDER = ["executive", "platinum", "gold", "silver", "technical"];
 
 const SITE_READY_TIMEOUT        = 12000;
-const COUNT_UP_MS               = 3600;
+const COUNT_UP_MS               = 2000;
 const SPOTLIGHT_AUTO_ADVANCE_MS = 3000;
 
-const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
-// No autoplay video for reduced-motion or Data Saver visitors.
-const allowVideo = !prefersReducedMotion && !navigator.connection?.saveData;
-
-/* ============================================================
-   HELPERS
-   ============================================================ */
-function escapeHTML(value = "") {
-  return String(value).replace(/[&<>"']/g, c => (
-    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[c]
-  ));
-}
-
-async function fetchJSON(url, options = {}) {
-  const response = await fetch(url, { ...options, signal: AbortSignal.timeout?.(5000) });
-  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
-  return response.json();
-}
-
-/* Calls onEnter(el) once per element, the first time it scrolls into view. */
-function observeOnce(elements, onEnter, options) {
-  const io = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      obs.unobserve(entry.target);
-      onEnter(entry.target);
-    });
-  }, options);
-  elements.forEach(el => io.observe(el));
-}
+// Skip autoplay for reduced-motion, Data Saver, and slow connections.
+const allowVideo =
+  !prefersReducedMotion &&
+  !navigator.connection?.saveData &&
+  !/^(slow-2g|2g|3g)$/.test(navigator.connection?.effectiveType || "");
 
 /* Data fetches start immediately so they're usually done by init time. */
 const sponsorsReady = fetchJSON(SPONSORS_URL)
@@ -59,83 +38,6 @@ const siteReady = new Promise(resolve => {
   document.addEventListener("site:ready", resolve, { once: true });
   setTimeout(resolve, SITE_READY_TIMEOUT);
 });
-
-/* ============================================================
-   THEME
-   ============================================================ */
-function initThemeToggle() {
-  const button = document.getElementById("theme-toggle");
-  if (!button) return;
-
-  const root = document.documentElement;
-
-  function updateButton(theme) {
-    const isLight = theme === "light";
-    button.setAttribute("aria-pressed", String(isLight));
-    button.setAttribute("aria-label", isLight ? "Switch to dark mode" : "Switch to light mode");
-    updateBrandLogos();
-  }
-
-  updateButton(root.dataset.theme === "light" ? "light" : "dark");
-
-  button.addEventListener("click", () => {
-    const nextTheme = root.dataset.theme === "light" ? "dark" : "light";
-
-    // Restart the colour-transition class (void read forces a reflow).
-    root.classList.remove("theme-transition");
-    void root.offsetWidth;
-    root.classList.add("theme-transition");
-
-    root.dataset.theme = nextTheme;
-    try { localStorage.setItem("ashwa-theme", nextTheme); } catch (e) {}
-
-    updateButton(nextTheme);
-
-    // Don't leave the transition class on permanently, or every later
-    // hover/state change on the page inherits it.
-    setTimeout(() => root.classList.remove("theme-transition"), 500);
-  });
-}
-
-/* ── Theme-aware logos: foo.svg -> foo-light.svg in light mode ── */
-function getLightLogoUrl(url) {
-  return url ? url.replace(/(\.[^./?#]+)([?#].*)?$/, "-light$1$2") : url;
-}
-
-function updateBrandLogos() {
-  const isLight = document.documentElement.dataset.theme === "light";
-
-  document.querySelectorAll(".brand-logo-img").forEach(logo => {
-    const darkLogo = logo.dataset.darkLogo || logo.getAttribute("src");
-    if (!darkLogo) return;
-    logo.dataset.darkLogo = darkLogo;
-
-    const useLight = isLight && !logo.dataset.lightMissing;
-    const wanted = useLight ? getLightLogoUrl(darkLogo) : darkLogo;
-
-    logo.onerror = useLight
-      ? () => {
-          logo.onerror = null;
-          logo.dataset.lightMissing = "1"; // don't retry the 404 on every update
-          logo.setAttribute("src", darkLogo);
-        }
-      : null;
-
-    // Re-setting an identical src would re-trigger an image load.
-    if (logo.getAttribute("src") !== wanted) logo.setAttribute("src", wanted);
-  });
-}
-
-/* Header and footer are injected by header.js; watch just those two
-   containers so their logos pick up the current theme when they appear. */
-function initBrandLogoObserver() {
-  const observer = new MutationObserver(updateBrandLogos);
-  ["main-header", "main-footer"].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) observer.observe(el, { childList: true, subtree: true });
-  });
-  updateBrandLogos();
-}
 
 /* ============================================================
    BACKGROUND VIDEO
@@ -228,7 +130,7 @@ function sponsorCardHTML(sponsor, isDuplicate) {
 
   // Eager on purpose: the marquee width depends on every logo's size, and
   // lazy-loading would make the loop jump as images arrive.
-  const img = `<img src="${escapeHTML(sponsorLogoUrl(sponsor))}" alt="${escapeHTML(sponsor.name)}" loading="eager" fetchpriority="low" decoding="async" width="360" height="360">`;
+  const img = `<img src="${escapeHTML(sponsorLogoUrl(sponsor))}" alt="${isDuplicate ? "" : escapeHTML(sponsor.name)}" loading="eager" fetchpriority="low" decoding="async" width="360" height="360">`;
 
   // No website (missing or "#") -> plain card instead of a dead link.
   if (!sponsor.url || sponsor.url === "#") {
@@ -252,34 +154,13 @@ function renderSponsorStrip(sponsors) {
 
 /* ============================================================
    SCROLL REVEAL
-   Each group staggers from 0, and reveal styles are removed once
-   finished so they don't leave transition delays on hover states.
    ============================================================ */
 function initReveal() {
-  if (prefersReducedMotion) return;
-
-  const groups = [
+  [
     ".stat-bar-grid .stat",
     ".spotlight-toggle, .spotlight-content > *:not(h2)",
     ".news-grid .news-card"
-  ];
-
-  const items = groups.flatMap(selector =>
-    [...document.querySelectorAll(selector)].map((el, i) => {
-      el.classList.add("reveal");
-      el.style.transitionDelay = `${Math.min(i * 0.08, 0.4)}s`;
-      return el;
-    })
-  );
-
-  observeOnce(items, el => {
-    const delay = parseFloat(el.style.transitionDelay) || 0;
-    el.classList.add("reveal-visible");
-    setTimeout(() => {
-      el.classList.remove("reveal", "reveal-visible");
-      el.style.transitionDelay = "";
-    }, (delay + 0.7) * 1000 + 50);
-  }, { threshold: 0.12, rootMargin: "0px 0px -40px" });
+  ].forEach(selector => window.Ashwa.reveal(document.querySelectorAll(selector)));
 }
 
 /* Heading line-mask reveal: text slides up from behind a hard edge. */
@@ -304,7 +185,9 @@ function initMaskReveal() {
    ============================================================ */
 function prepareStatCounters() {
   if (prefersReducedMotion) return;
-  document.querySelectorAll(".stat-num[data-count]").forEach(el => { el.textContent = "0"; });
+  document.querySelectorAll(".stat-num[data-count]").forEach(el => {
+    el.textContent = "0" + (el.dataset.suffix || "");
+  });
 }
 
 function initStatCounters() {
@@ -352,6 +235,14 @@ function blogDateValue(date) {
   return parseBlogDate(date)?.getTime() ?? 0;
 }
 
+/* Covers on the assets domain are served resized (480/800px); others as-is. */
+function blogCoverAttrs(cover = "") {
+  const large = window.Ashwa.imgUrl(cover, 800);
+  if (large === cover) return `src="${escapeHTML(cover)}"`;
+  const small = window.Ashwa.imgUrl(cover, 480);
+  return `src="${escapeHTML(large)}" srcset="${escapeHTML(small)} 480w, ${escapeHTML(large)} 800w" sizes="(max-width: 900px) 100vw, 380px"`;
+}
+
 function blogCardHTML(post) {
   const meta = [post.category, post.date && formatBlogDate(post.date)]
     .filter(Boolean)
@@ -361,7 +252,7 @@ function blogCardHTML(post) {
   return `
     <a href="blog-post.html?post=${encodeURIComponent(post.slug)}" class="news-card">
       <div class="news-card-img-wrap">
-        <img src="${escapeHTML(post.cover || "")}" alt="${escapeHTML(post.coverAlt || post.title)}" loading="lazy" decoding="async" width="600" height="400">
+        <img ${blogCoverAttrs(post.cover)} alt="${escapeHTML(post.coverAlt || post.title)}" loading="lazy" decoding="async" width="600" height="400">
       </div>
       <div class="news-card-body">
         <p class="news-meta">${meta}</p>
@@ -377,7 +268,7 @@ async function initBlogPreview() {
   if (!grid) return;
 
   try {
-    const data = await fetchJSON(BLOG_URL, { cache: "no-cache" });
+    const data = await fetchJSON(BLOG_URL);
     if (!Array.isArray(data.posts)) throw new Error("Invalid blog data.");
 
     const posts = data.posts
@@ -420,8 +311,6 @@ async function initHome() {
 }
 
 function start() {
-  initThemeToggle();
-  initBrandLogoObserver();
   document.querySelectorAll(".hero-video").forEach(initBgVideo);
   initHome();
 }

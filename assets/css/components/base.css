@@ -1,0 +1,315 @@
+﻿/* ============================================================
+   ASHWA RACING â€” components/base.css
+   Shared foundation, extracted from pages/index.css so every page
+   can load it instead of redefining tokens: fonts, reset, tokens,
+   light/dark theme, theme toggle, typography patterns, buttons,
+   stat bar, scroll-reveal, and brand type.
+   Load order: components/base.css â†’ header.css â†’ footer.css â†’ pages/<page>.css
+   ============================================================ */
+
+/* Barlow / Barlow Condensed come from Google Fonts (see each page's <head>). */
+@font-face {
+  font-family: "Samarkan";
+  src: url("/assets/fonts/SAMAN.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Xenotron";
+  src: url("/assets/fonts/XENOTRON.TTF") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* â”€â”€ Tokens â”€â”€ */
+:root {
+  --red:          #e8001d;
+  --red-dark:     #b5001a;
+  --red-glow:     rgba(232, 0, 29, 0.28);
+  --ev-blue:      #2E6FF2;
+
+  /* Dark surfaces: a small ramp so panels can sit on each other with depth. */
+  --ink:          #08090c;
+  --ink-2:        #101218;
+  --panel:        #191b22;
+  --panel-hi:     #22242d;
+  --hairline:     rgba(255,255,255,0.08);
+  --hairline-hi:  rgba(255,255,255,0.16);
+
+  --charcoal:     #141414;   /* kept for compat with existing components */
+  --off-white:    #f7f6f4;
+  --white:        #ffffff;
+  --muted:        #767676;
+  --text-nav:     rgba(255,255,255,0.72);
+  --text-nav-h:   #ffffff;
+
+  --ashwa:        'Samarkan', serif;
+  --racing:       'Xenotron', 'Barlow Condensed', sans-serif;
+  --display:      'Barlow Condensed', sans-serif;
+  --body:         'Barlow', Arial, sans-serif;
+  --expo:         cubic-bezier(0.16, 1, 0.3, 1);
+
+  --site-gutter:  clamp(20px, 5vw, 72px);
+  --section-pad:  clamp(56px, 7vw, 112px);
+  --nav-h:        68px;
+  --content-width: 1150px;
+  --wrap:         min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
+  --rule:         rgba(10,10,10,0.14);
+}
+
+/* â”€â”€ Theme system (dark default) â”€â”€ */
+:root {
+  color-scheme: dark;
+
+  --page-bg:     #08090c;
+  --section-bg:  #101218;
+  --surface:     #191b22;
+  --surface-hi:  #22242d;
+  --text:        #f7f6f4;
+  --text-strong: #ffffff;
+  --text-muted:  #767676;
+  --text-soft:   rgba(255,255,255,0.68);
+  --border:      rgba(255,255,255,0.08);
+  --border-strong: rgba(255,255,255,0.16);
+  --shadow:      rgba(0,0,0,0.35);
+  --shadow-hi:   rgba(0,0,0,0.45);
+  --sponsor-bg:  #141414;
+  --card-bg:     #191b22;
+  --card-text:   #f7f6f4;
+  --card-muted:  #9a9a9a;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+
+  --page-bg:     #ffffff;
+  --section-bg:  #ffffff;
+  --surface:     #eeece9;
+  --surface-hi:  #e5e2de;
+  --text:        #111216;
+  --text-strong: #08090c;
+  --text-muted:  #686868;
+  --text-soft:   rgba(17,18,22,0.68);
+  --border:      rgba(10,10,10,0.10);
+  --border-strong: rgba(10,10,10,0.18);
+  --shadow:      rgba(0,0,0,0.14);
+  --shadow-hi:   rgba(0,0,0,0.20);
+  --sponsor-bg:  #ffffff;
+  --card-bg:     #ffffff;
+  --card-text:   #111216;
+  --card-muted:  #686868;
+
+  /* Existing component tokens */
+  --off-white:   #f4f3f1;
+  --white:       #ffffff;
+  --muted:       #686868;
+  --text-nav:    rgba(17,18,22,0.72);
+  --text-nav-h:  #08090c;
+  --panel:       #eeece9;
+  --panel-hi:    #e5e2de;
+  --hairline:    rgba(10,10,10,0.10);
+  --hairline-hi: rgba(10,10,10,0.18);
+  --charcoal:    #e9e7e3;
+}
+
+html[data-theme="dark"] { color-scheme: dark; }
+
+/* â”€â”€ Theme toggle â”€â”€ */
+.theme-toggle {
+  position: fixed;
+  top: calc(var(--nav-h) + 16px);
+  right: var(--site-gutter);
+  z-index: 1100;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  background: rgba(8,9,12,0.72);
+  color: var(--text-strong);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s var(--expo);
+}
+.theme-toggle:hover { background: var(--red); border-color: var(--red); color: #fff; transform: translateY(-2px); }
+.theme-toggle:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+.theme-toggle svg { width: 18px; height: 18px; display: block; }
+.theme-toggle .icon-sun  { display: none; }
+.theme-toggle .icon-moon { display: block; }
+
+html[data-theme="light"] .theme-toggle { background: rgba(255,255,255,0.86); }
+html[data-theme="light"] .theme-toggle .icon-sun  { display: block; }
+html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
+
+@media (max-width: 768px) {
+  .theme-toggle { top: calc(var(--nav-h) + 12px); width: 38px; height: 38px; }
+}
+
+/* Colour transition while the theme flips (class is added/removed by theme.js) */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color .35s ease, color .35s ease, border-color .35s ease !important;
+}
+
+/* â”€â”€ Page base â”€â”€ */
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  font-family: var(--body);
+  background: var(--page-bg);
+  color: var(--text);
+  overflow-x: hidden;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+#main-header { min-height: var(--nav-h); contain: layout; position: relative; z-index: 1000; }
+
+.container { width: var(--wrap); margin-inline: auto; }
+.icon { flex-shrink: 0; }
+
+/* â”€â”€ Shared text patterns â”€â”€ */
+.label {
+  font-family: var(--display);
+  font-size: 0.82rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.label::before { content: ''; width: 34px; height: 3px; background: var(--red); flex-shrink: 0; }
+
+h2 {
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 6vw, 6rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  /* max-width: 12ch; */
+}
+h2 em { font-style: italic; color: var(--red); font-family: Samarkan;}
+
+/* â”€â”€ Buttons â”€â”€ */
+.btn-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--red);
+  border-bottom: 2px solid var(--red);
+  padding-bottom: 3px;
+  transition: gap 0.2s;
+}
+.btn-line:hover { gap: 16px; }
+
+.btn-solid {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--white);
+  background: var(--red);
+  padding: 14px 28px;
+  border: 1px solid var(--red);
+  box-shadow: 4px 4px 0 var(--shadow);
+  transition: transform 0.2s var(--expo), box-shadow 0.2s var(--expo);
+}
+.btn-solid:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--shadow-hi); }
+
+.btn-line:focus-visible,
+.btn-solid:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+
+/* â”€â”€ Stat bar â”€â”€ */
+.stat-bar {
+  background: linear-gradient(180deg, var(--section-bg) 0%, var(--surface) 100%);
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.stat-bar-grid { display: grid; grid-template-columns: repeat(4, 1fr); padding: 30px 0; }
+.stat { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 4px; position: relative; }
+.stat + .stat::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 10%; bottom: 10%;
+  width: 1px;
+  background: var(--border);
+}
+.stat-num {
+  color: var(--text-strong);
+  font-family: var(--racing);
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1;
+}
+.stat-label {
+  color: var(--text-muted);
+  font-family: var(--display);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+@media (max-width: 720px) {
+  .stat-bar-grid { grid-template-columns: repeat(2, 1fr); gap: 28px 0; }
+  .stat:nth-child(odd)::before { display: none; }
+}
+
+/* â”€â”€ Scroll reveal (JS adds/removes these classes) â”€â”€ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s var(--expo), transform 0.7s var(--expo);
+  will-change: opacity, transform;
+}
+.reveal-visible { opacity: 1; transform: translateY(0); }
+
+/* â”€â”€ Brand typography â”€â”€
+   Samarkan = Ashwa identity Â· Xenotron = Racing/technical Â· Barlow = functional */
+.ashwa  { font-family: var(--ashwa);  color: var(--red); }
+.racing { font-family: var(--racing); color: var(--white); }
+
+.brand-ashwa, .logo-ashwa { font-family: var(--ashwa); font-weight: 400; letter-spacing: 0; text-transform: none; }
+.brand-racing, .logo-racing {
+  font-family: var(--racing);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+.brand-lockup { display: inline-flex; flex-direction: column; align-items: flex-start; line-height: 0.8; }
+.brand-lockup .brand-ashwa  { color: var(--red);   font-size: 2rem; }
+.brand-lockup .brand-racing { color: var(--white); font-size: 1.65rem; margin-top: 0.12em; }
+
+.site-logo .ashwa, .logo .ashwa, .header-logo .ashwa { font-family: var(--ashwa); }
+.site-logo .racing, .logo .racing, .header-logo .racing {
+  font-family: var(--racing);
+  font-weight: 800;
+  font-style: italic;
+  text-transform: uppercase;
+}

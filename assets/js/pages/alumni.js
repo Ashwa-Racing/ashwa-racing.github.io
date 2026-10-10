@@ -1,42 +1,196 @@
+// const PROGRAMMES = {
+//   cv:         { label: "Combustion", color: "#e8001d" },
+//   hybrid:     { label: "Hybrid",     color:  "#f59e0b"},
+//   ev:         { label: "Electric",   color: "#3b82f6" },
+//   dv:         { label: "Driverless", color: "#00c2a8" },
+//   hyperloop:  { label: "Hyperloop",  color: "#7c3aed" },
+//   management: { label: "Management", color: "#6b7280" }
+// };
+
 /* ============================================================
-   ASHWA RACING — alumni.js
+   ASHWA RACING — pages/alumni.js
+   Shared helpers come from components/utils.js. The whole file is
+   wrapped so none of its names leak into header.js / loader.js.
    ============================================================ */
+(() => {
 "use strict";
 
-// ─── Data sources ─────────────────────────────────────────────
+const { prefersReducedMotion, ASSET_HOST, escapeHTML, fetchJSON, observeOnce, reveal, imgUrl } = window.Ashwa;
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
 const ORG_URL  = "/assets/data/org-structure.json";
 const TEAM_URL = "/assets/data/team.json";
 
-// Alumni cards + testimonials are derived from team.json:
-// anyone whose year is before the current calendar year is an alumnus.
-// true  → only alumni with a testimony are shown (matches the old hand-picked list)
-// false → every past member is shown
-const REQUIRE_TESTIMONY = true;
-
-const ALUMNI_PHOTO_BASE = "https://assets.ashwaracing.org/images/team/members/";
-const DEFAULT_PHOTO     = "https://assets.ashwaracing.org/images/team/default.webp";
+// Testimonials are derived from team.json: anyone whose year is before the
+// current calendar year is an alumnus, and only alumni with a testimony are shown.
+const MEMBER_PHOTO_BASE = `${ASSET_HOST}images/team/members/`;
+const DEFAULT_PHOTO     = `${ASSET_HOST}images/team/default.webp`;
 
 const ROLE_PRIORITY = ["Team Captain", "Chief Engineer", "Project Manager", "Subsystem Lead", "Member"];
-const PROTOTYPE_TO_PROGRAMME = {
-  Combustion: "cv", Hybrid: "hybrid", Electric: "ev", Hyperloop: "hyperloop", Driverless: "dv"
+
+// Programme colours (used for the project cards in the org structure).
+const PROGRAMMES = {
+  cv:         { label: "Combustion", color: "#0ea5e9" },
+  hybrid:     { label: "Hybrid",     color: "#e8001d" },
+  ev:         { label: "Electric",   color: "#2E6FF2" },
+  dv:         { label: "Driverless", color: "#00c2a8" },
+  hyperloop:  { label: "Hyperloop",  color: "#7c3aed" },
+  management: { label: "Management", color: "#6b7280" }
+};
+const PROGRAMME_ALIASES = { hyb: "hybrid" };
+
+const ORG_COLORS = {
+  advisor: "#e8001d", committee: "#f59e0b", subsystem: "#eab308", fallback: "#e8001d"
 };
 
-// Filled once the JSON files have loaded
-let ORG_STRUCTURE = null;
+const TESTIMONIAL_INTERVAL_MS = 7000;
+const COUNT_UP_MS             = 1600;
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function initials(name = "") {
+  return String(name).split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+}
+
+function programmeKey(id) {
+  return PROGRAMME_ALIASES[id] || id;
+}
+
+/* Fetches start immediately (and are preloaded in the HTML), so they're
+   usually done by the time the page needs them. Each fails independently. */
+const orgReady  = fetchJSON(ORG_URL, {}, 8000).catch(err => { console.error(err); return null; });
+const teamReady = fetchJSON(TEAM_URL, {}, 8000).catch(err => { console.error(err); return null; });
+
+/* ============================================================
+   STAT COUNTERS
+   The HTML holds the real numbers (works without JS); they're
+   zeroed on load and counted up when scrolled into view.
+   ============================================================ */
+function initStatCounters() {
+  if (prefersReducedMotion) return;
+
+  const counters = document.querySelectorAll(".stat-num[data-count]");
+  counters.forEach(el => { el.textContent = "0" + (el.dataset.suffix || ""); });
+
+  observeOnce(counters, el => {
+    const target = parseInt(el.dataset.count, 10) || 0;
+    const suffix = el.dataset.suffix || "";
+    const start = performance.now();
+
+    (function step(now) {
+      const progress = Math.min((now - start) / COUNT_UP_MS, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    })(start);
+  }, { threshold: 0.5 });
+}
+
+/* ============================================================
+   ORG CHART
+   ============================================================ */
+function orgMemberHTML(member) {
+  const name = String(member.name ?? "");
+  const avatar = member.photo
+    ? `<img src="${escapeHTML(imgUrl(member.photo, 96))}" alt="" class="org-mem-photo" width="36" height="36" loading="lazy" decoding="async">`
+    : `<span class="org-mem-ini" aria-hidden="true">${escapeHTML(initials(name))}</span>`;
+  const desig = member.designation
+    ? `<span class="org-mem-desig">${escapeHTML(member.designation)}</span>`
+    : "";
+
+  return `<div class="org-mem">${avatar}<div class="org-mem-meta"><span class="org-mem-name">${escapeHTML(name)}</span>${desig}</div></div>`;
+}
+
+const orgPeople = (members = []) =>
+  `<div class="org-people">${members.map(orgMemberHTML).join("")}</div>`;
+
+function orgCardHTML(node, color, people) {
+  return `<article class="org-card" style="--nc:${color}">
+      <header class="org-card-head">
+        <h4 class="org-card-title">${escapeHTML(node.label)}</h4>
+        ${node.sublabel ? `<span class="org-card-sub">${escapeHTML(node.sublabel)}</span>` : ""}
+      </header>
+      ${people}
+    </article>`;
+}
+
+/* A subsystem shows its lead; with members under it, it becomes a native
+   <details> toggle (keyboard + screen-reader support for free). */
+function orgSubsystemHTML(sub) {
+  const lead    = sub.lead ? orgMemberHTML(sub.lead) : "";
+  const members = sub.members || [];
+  const title   = `<h4 class="org-card-title">${escapeHTML(sub.label)}</h4>`;
+  const style   = `style="--nc:${ORG_COLORS.subsystem}"`;
+
+  if (!members.length) {
+    return `<article class="org-card" ${style}>
+        <header class="org-card-head">${title}</header>
+        <div class="org-people">${lead}</div>
+      </article>`;
+  }
+
+  return `<details class="org-card org-card--toggle" ${style}>
+      <summary>
+        <span class="org-card-head">${title}</span>
+        <span class="org-people">${lead}</span>
+        <span class="org-toggle">${members.length} member${members.length === 1 ? "" : "s"}</span>
+      </summary>
+      ${orgPeople(members)}
+    </details>`;
+}
+
+function orgBandHTML(section, className, bodyHTML) {
+  return `<section class="org-band">
+      <div class="org-band-head">
+        <h3 class="org-band-title">${escapeHTML(section.title)}</h3>
+        ${section.description ? `<p class="org-band-desc">${escapeHTML(section.description)}</p>` : ""}
+      </div>
+      <div class="${className}">${bodyHTML}</div>
+    </section>`;
+}
+
+function renderOrgChart(data) {
+  const container = document.getElementById("org-chart");
+  if (!container) return;
+
+  if (!data) {
+    container.innerHTML = `<p class="al-empty">The team structure couldn't be loaded right now.</p>`;
+    return;
+  }
+
+  const bands = [];
+
+  if (data.governance?.members?.length) {
+    const cards = data.governance.members.map(m => {
+      const color = m.designation === "Faculty Advisor" ? ORG_COLORS.advisor : ORG_COLORS.committee;
+      return `<article class="org-card org-card--person" style="--nc:${color}">${orgMemberHTML(m)}</article>`;
+    }).join("");
+    bands.push(orgBandHTML(data.governance, "org-grid org-grid--gov", cards));
+  }
+
+  if (data.projects?.items?.length) {
+    const cards = data.projects.items.map(p => {
+      const color = PROGRAMMES[programmeKey(p.id)]?.color || ORG_COLORS.fallback;
+      return orgCardHTML(p, color, orgPeople(p.members));
+    }).join("");
+    bands.push(orgBandHTML(data.projects, "org-grid org-grid--projects", cards));
+  }
+
+  if (data.subsystems?.items?.length) {
+    bands.push(orgBandHTML(data.subsystems, "org-grid org-grid--subsystems",
+      data.subsystems.items.map(orgSubsystemHTML).join("")));
+  }
+
+  container.innerHTML = bands.join("");
+}
+
+/* ============================================================
+   ALUMNI DATA
+   ============================================================ */
 let ALUMNI = [];
-
-async function loadJSON(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Failed to load ${url}: ${response.status}`);
-  return response.json();
-}
-
-// Team data comes from a public form, so escape it before using innerHTML.
-function esc(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => (
-    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]
-  ));
-}
 
 function splitJob(currentJob) {
   if (!currentJob) return ["", ""];
@@ -46,29 +200,26 @@ function splitJob(currentJob) {
     : [currentJob.slice(0, i).trim(), currentJob.slice(i + 1).trim()];
 }
 
-// team.json entries → the card shape the renderers below expect
+// team.json entries → the shape the testimonial renderer expects
 function buildAlumni(team) {
+  if (!Array.isArray(team)) return [];
   const thisYear = new Date().getFullYear();
 
   return team
     .filter(m => Number(m.year) < thisYear)
-    .filter(m => !REQUIRE_TESTIMONY || (m.testimony && m.testimony.trim()))
+    .filter(m => m.testimony && m.testimony.trim())
     .map(m => {
-      const social = m.social || {};
-      const roles  = m.roles && m.roles.length ? m.roles : ["Member"];
+      const roles = m.roles && m.roles.length ? m.roles : ["Member"];
       const [jobPosition, jobCompany] = splitJob(m.currentJob);
-      const firstPrototype = Object.keys(m.prototypes || {})[0];
 
       return {
         name:      m.name,
         role:      ROLE_PRIORITY.find(r => roles.includes(r)) || roles[0],
         batch:     String(m.year),
-        photo:     m.photo || `${ALUMNI_PHOTO_BASE}${m.year}/${m.name}.webp`,
+        photo:     m.photo || `${MEMBER_PHOTO_BASE}${m.year}/${encodeURIComponent(m.name)}.webp`,
         company:   m.company  || jobCompany,
         position:  m.position || jobPosition,
-        linkedin:  social.linkedin || null,
-        programme: m.programme || PROTOTYPE_TO_PROGRAMME[firstPrototype] || "",
-        testimony: m.testimony || ""
+        testimony: (m.testimony || "").trim()
       };
     })
     .sort((a, b) =>
@@ -77,277 +228,168 @@ function buildAlumni(team) {
     );
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const [orgResult, teamResult] = await Promise.allSettled([
-    loadJSON(ORG_URL),
-    loadJSON(TEAM_URL)
-  ]);
+/* One delegated handler instead of an inline onerror on every <img>. */
+document.addEventListener("error", e => {
+  const img = e.target;
+  if (!(img instanceof HTMLImageElement) || !img.matches("[data-photo]") || img.dataset.fallback) return;
+  img.dataset.fallback = "1";
+  img.src = DEFAULT_PHOTO;
+}, true);
 
-  // The two sections are independent: one failing shouldn't take down the other.
-  if (orgResult.status === "fulfilled") {
-    ORG_STRUCTURE = orgResult.value;
-    renderOrgChart();
-  } else {
-    console.error(orgResult.reason);
-  }
+/* ============================================================
+   TESTIMONIALS
+   A native scroll-snap track (swipe, trackpad and keyboard work for
+   free) with prev/next buttons and a progress line. Long quotes are
+   clamped with a Read more toggle. Autoplay steps one card at a time
+   and only runs while the section is on screen, the tab is visible,
+   nothing is hovered/focused, and no quote is expanded.
+   ============================================================ */
+function testimonialCardHTML(a, i) {
+  const where = [a.position, a.company].filter(Boolean).map(escapeHTML).join(" · ");
+  const meta  = [a.role, a.batch && `Batch of ${a.batch}`].filter(Boolean).map(escapeHTML).join(" · ");
 
-  if (teamResult.status === "fulfilled") {
-    ALUMNI = buildAlumni(teamResult.value);
-  } else {
-    console.error(teamResult.reason);
-  }
-
-  initFilters();
-  renderAlumniCards();
-  renderTestimonials();
-  initReveal();
-
-  if (teamResult.status === "rejected") {
-    const grid = document.getElementById("al-grid");
-    if (grid) grid.innerHTML = `<p class="al-empty">Alumni couldn't be loaded right now.</p>`;
-  }
-});
-
-const PROG_COLOR_MAP = {
-  cv:"#0ea5e9", hyb:"#e8001d", hybrid:"#e8001d",
-  ev:"#00c2a8", dv:"#3b82f6", hyperloop:"#7c3aed"
-};
-const PROG_LABELS = {
-  cv:"Combustion", hybrid:"Hybrid", ev:"Electric",
-  dv:"Driverless", hyperloop:"Hyperloop", management:"Management"
-};
-const PROG_COLORS = {
-  cv:"#0ea5e9", hybrid:"#e8001d", ev:"#00c2a8",
-  dv:"#3b82f6", hyperloop:"#7c3aed", management:"#6b7280"
-};
-
-function renderOrgChart() {
-  const container = document.getElementById("org-chart");
-  if (!container || !ORG_STRUCTURE) return;
-  const d = ORG_STRUCTURE;
-
-  /* ── All programmes in order: CV first, then the rest ── */
-  const allProgs = [d.children[0], ...d.children.slice(2)];
-
-  const midProgHTML = allProgs.map(prog => {
-    const col = PROG_COLOR_MAP[prog.id] || "#e8001d";
-    const leaderBox = prog.children?.[0]
-      ? `<div class="org-vline org-vline--sm"></div>${orgBox(prog.children[0], col)}`
-      : "";
-    return `<div class="org-prog">${orgBox(prog, col)}${leaderBox}</div>`;
-  }).join("");
-
-  /* ── Subsystems: left group | right group ── */
-  const subsLeft  = d.subsystems?.left  || [];
-  const subsRight = d.subsystems?.right || [];
-  const subsHTML = (subsLeft.length || subsRight.length)
-    ? `<div class="org-vline org-vline--md"></div>
-       <div class="org-row--sub">
-         ${subsLeft.length
-           ? `<div class="org-sub-col">${subsLeft.map(n  => orgBox(n, "#eab308")).join("")}</div>`
-           : ""}
-         ${subsRight.length
-           ? `<div class="org-sub-col">${subsRight.map(n => orgBox(n, "#9333ea")).join("")}</div>`
-           : ""}
-       </div>`
-    : "";
-
-  container.innerHTML = `
-    <div class="org-chart-inner">
-
-      ${orgBox(d, "#e8001d", true)}
-      <div class="org-vline org-vline--md"></div>
-
-      <div class="org-row--top">
-        <div class="org-col org-col--side">
-          ${d.sideLeft.map(n => orgBox(n, "#e8001d")).join('<div class="org-vline org-vline--sm"></div>')}
+  return `
+    <article class="testi-card">
+      <p class="testi-text" id="testi-text-${i}">${escapeHTML(a.testimony)}</p>
+      <button class="testi-more" type="button" aria-expanded="false" aria-controls="testi-text-${i}" hidden>Read more</button>
+      <footer class="testi-author">
+        <div class="testi-avatar">
+          <img src="${escapeHTML(imgUrl(a.photo, 120))}" alt="" data-photo width="48" height="48" loading="lazy" decoding="async">
         </div>
-        <div class="org-col org-col--side">
-          ${d.sideRight.map(n => orgBox(n, "#f59e0b")).join('<div class="org-vline org-vline--sm"></div>')}
+        <div class="testi-meta">
+          <span class="testi-name">${escapeHTML(a.name)}</span>
+          ${where ? `<span class="testi-where">${where}</span>` : ""}
+          ${meta  ? `<span class="testi-batch">${meta}</span>`   : ""}
         </div>
-      </div>
-
-      <div class="org-vline org-vline--md"></div>
-
-      <div class="org-row--phases">
-        <div class="org-phases-col">
-          ${d.children[1].children.map(n => orgBox(n, "#7c3aed")).join("")}
-        </div>
-      </div>
-
-      <div class="org-vline org-vline--md"></div>
-
-      <div class="org-row--mid">
-        ${midProgHTML}
-      </div>
-
-      ${subsHTML}
-
-    </div>`;
+      </footer>
+    </article>`;
 }
-// .org-chart-inner
-//   .org-box--root          ← standalone, centered
-//   .org-vline--md          ← spine down
-//   .org-row--top           ← only 2 .org-col--side children (no --root in the middle)
-//   .org-vline--md          ← spine continues down
-//   .org-row--phases
-//   .org-vline--md
-//   .org-row--mid           ← flat list of .org-prog (no wrapper divs)
-//   .org-vline--md
-//   .org-row--sub
-
-function orgBox(node, color, isRoot = false) {
-  const members = node.members || [];
-  const hasMem  = members.length > 0;
-  const memberHTML = hasMem ? `
-    <div class="org-members">
-      ${members.map(m => {
-        const ini = m.name.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
-        const ava = m.photo
-          ? `<img src="${m.photo}" alt="${m.name}" class="org-mem-photo" loading="lazy">`
-          : `<span class="org-mem-ini">${ini}</span>`;
-        const desig = m.designation ? `<span class="org-mem-desig">${m.designation}</span>` : "";
-        return `<div class="org-mem">${ava}<div class="org-mem-meta"><span class="org-mem-name">${m.name}</span>${desig}</div></div>`;
-      }).join("")}
-    </div>` : "";
-  return `<div class="org-box${isRoot ? " org-box--root" : ""}" style="--nc:${color}">
-      <span class="org-box-label">${node.label}</span>
-      ${node.sublabel ? `<span class="org-box-sub">${node.sublabel}</span>` : ""}
-      ${memberHTML}
-    </div>`;
-}
-
-function renderAlumniCards(filter = "all") {
-  const grid = document.getElementById("al-grid");
-  if (!grid) return;
-  const list = filter === "all" ? ALUMNI : ALUMNI.filter(a => a.programme === filter);
-  if (!list.length) {
-    grid.innerHTML = `<p class="al-empty">No alumni found for this filter.</p>`;
-    return;
-  }
-  grid.innerHTML = list.map(a => {
-    const ini = a.name.split(" ").map(w => w[0]).join("").slice(0,2).toUpperCase();
-    const avatar = a.photo
-      ? `<img src="${esc(a.photo)}" alt="${esc(a.name)}" class="al-card-photo" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_PHOTO}'">`
-      : `<div class="al-card-initials">${esc(ini)}</div>`;
-    const linkedin = a.linkedin
-      ? `<a href="${esc(a.linkedin)}" class="al-card-linkedin" target="_blank" rel="noopener"><i class="fab fa-linkedin-in"></i></a>`
-      : "";
-    const badge = PROG_LABELS[a.programme]
-      ? `<span class="al-card-badge" style="--bc:${PROG_COLORS[a.programme]}">${PROG_LABELS[a.programme]}</span>`
-      : "";
-    return `
-      <article class="al-card reveal-card">
-        <div class="al-card-top">${avatar}${linkedin}</div>
-        <div class="al-card-body">
-          ${badge}
-          <h3 class="al-card-name">${esc(a.name)}</h3>
-          <p class="al-card-role">${esc(a.role)}</p>
-          <div class="al-card-divider"></div>
-          <div class="al-card-current">
-            <span class="al-card-position">${esc(a.position)}</span>
-            <span class="al-card-company">${esc(a.company)}</span>
-          </div>
-          ${a.batch ? `<span class="al-card-batch">Batch of ${esc(a.batch)}</span>` : ""}
-        </div>
-      </article>`;
-  }).join("");
-  initReveal();
-}
-
-function initFilters() {
-  const bar = document.getElementById("al-filters");
-  if (!bar) return;
-  const progs = [...new Set(ALUMNI.map(a => a.programme).filter(Boolean))];
-  progs.forEach(prog => {
-    if (!PROG_LABELS[prog]) return;
-    const btn = document.createElement("button");
-    btn.className = "al-filter-btn";
-    btn.dataset.filter = prog;
-    btn.textContent = PROG_LABELS[prog];
-    bar.appendChild(btn);
-  });
-  bar.addEventListener("click", e => {
-    const btn = e.target.closest(".al-filter-btn");
-    if (!btn) return;
-    bar.querySelectorAll(".al-filter-btn").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    renderAlumniCards(btn.dataset.filter);
-  });
-}
-
-let testiIndex = 0;
-let testiTimer = null;
 
 function renderTestimonials() {
-  const track = document.getElementById("al-testi-track");
-  const dots  = document.getElementById("al-testi-dots");
-  if (!track || !dots) return;
-  const list = ALUMNI.filter(a => a.testimony && a.testimony.trim());
+  const section  = document.getElementById("voices");
+  const track    = document.getElementById("al-testi-track");
+  const controls = document.getElementById("al-testi-controls");
+  const bar      = document.getElementById("al-testi-bar");
+  const prevBtn  = document.getElementById("al-testi-prev");
+  const nextBtn  = document.getElementById("al-testi-next");
+  if (!section || !track || !controls || !bar || !prevBtn || !nextBtn) return;
+
+  const list = ALUMNI.filter(a => a.testimony);
   if (!list.length) {
-    const sec = track.closest(".al-testimonials");
-    if (sec) sec.style.display = "none";
+    section.hidden = true;
     return;
   }
-  track.innerHTML = list.map((a, i) => {
-    const ini = a.name.split(" ").map(w=>w[0]).join("").slice(0,2).toUpperCase();
-    const ava = a.photo
-      ? `<img src="${esc(a.photo)}" alt="${esc(a.name)}" class="testi-avatar-img" loading="lazy" onerror="this.onerror=null;this.src='${DEFAULT_PHOTO}'">`
-      : `<div class="testi-avatar-initials">${esc(ini)}</div>`;
-    const where = [a.position, a.company].filter(Boolean).map(esc).join(" . ");
-    return `
-      <div class="testi-slide ${i===0?"active":""}" data-index="${i}">
-        <blockquote class="testi-quote">"${esc(a.testimony)}"</blockquote>
-        <div class="testi-author">
-          <div class="testi-avatar">${ava}</div>
-          <div class="testi-meta">
-            <span class="testi-name">${esc(a.name)}</span>
-            <span class="testi-role">${esc(a.role)}</span>
-            <span class="testi-company">${where}</span>
-          </div>
-        </div>
-      </div>`;
-  }).join("");
-  dots.innerHTML = list.map((_,i) =>
-    `<button class="testi-dot ${i===0?"active":""}" data-i="${i}" aria-label="Testimonial ${i+1}"></button>`
-  ).join("");
-  dots.addEventListener("click", e => {
-    const dot = e.target.closest(".testi-dot");
-    if (dot) goToTesti(parseInt(dot.dataset.i));
-  });
-  function startTimer() {
-    testiTimer = setInterval(() => {
-      const total = track.querySelectorAll(".testi-slide").length;
-      goToTesti((testiIndex + 1) % total);
-    }, 5500);
-  }
-  startTimer();
-  track.addEventListener("mouseenter", () => clearInterval(testiTimer));
-  track.addEventListener("mouseleave", startTimer);
-}
 
-function goToTesti(i) {
-  testiIndex = i;
-  document.querySelectorAll(".testi-slide").forEach((s,idx) => s.classList.toggle("active", idx===i));
-  document.querySelectorAll(".testi-dot").forEach((d,idx)  => d.classList.toggle("active", idx===i));
-}
+  track.innerHTML = list.map(testimonialCardHTML).join("");
+  const cards = [...track.querySelectorAll(".testi-card")];
 
-function initReveal() {
-  const els = document.querySelectorAll(".reveal-card:not([data-revealed])");
-  els.forEach((el, i) => {
-    el.style.opacity = "0";
-    el.style.transform = "translateY(20px)";
-    el.style.transition = `opacity 0.5s ease ${i*0.07}s, transform 0.5s ease ${i*0.07}s`;
-    el.dataset.revealed = "pending";
-  });
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (!e.isIntersecting) return;
-      e.target.style.opacity = "1";
-      e.target.style.transform = "translateY(0)";
-      e.target.dataset.revealed = "true";
-      obs.unobserve(e.target);
+  let timer = null;
+  let inView = false;
+  let paused = false;
+
+  const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 2;
+  const hasOverflow = () => track.scrollWidth > track.clientWidth + 2;
+  const cardStep = () => cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : track.clientWidth;
+  const behavior = () => (prefersReducedMotion ? "auto" : "smooth");
+
+  /* ── Read more: only offered when the quote is actually clamped ── */
+  function measureClamps() {
+    cards.forEach(card => {
+      const text = card.querySelector(".testi-text");
+      const more = card.querySelector(".testi-more");
+      if (card.classList.contains("is-expanded")) return;
+      more.hidden = text.scrollHeight <= text.clientHeight + 1;
     });
-  }, { threshold: 0.08 });
-  els.forEach(el => obs.observe(el));
+  }
+
+  track.addEventListener("click", e => {
+    const more = e.target.closest(".testi-more");
+    if (!more) return;
+    const card = more.closest(".testi-card");
+    const expanded = card.classList.toggle("is-expanded");
+    more.setAttribute("aria-expanded", String(expanded));
+    more.textContent = expanded ? "Show less" : "Read more";
+    sync();
+  });
+
+  /* ── Prev / next / progress ── */
+  function updateControls() {
+    const overflow = hasOverflow();
+    controls.hidden = !overflow;
+    prevBtn.disabled = track.scrollLeft <= 2;
+    nextBtn.disabled = atEnd();
+    const max = track.scrollWidth - track.clientWidth;
+    const visible = track.clientWidth / track.scrollWidth;
+    const progress = max > 0 ? track.scrollLeft / max : 0;
+    // The bar's width is the visible share of the track; it slides along the line.
+    bar.style.width = `${Math.max(visible, 0.08) * 100}%`;
+    bar.style.transform = `translateX(${progress * (1 / Math.max(visible, 0.08) - 1) * 100}%)`;
+  }
+
+  let ticking = false;
+  track.addEventListener("scroll", () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { ticking = false; updateControls(); });
+  }, { passive: true });
+
+  prevBtn.addEventListener("click", () => track.scrollBy({ left: -cardStep(), behavior: behavior() }));
+  nextBtn.addEventListener("click", () => track.scrollBy({ left:  cardStep(), behavior: behavior() }));
+
+  /* ── Autoplay ── */
+  function sync() {
+    const anyExpanded = cards.some(c => c.classList.contains("is-expanded"));
+    const shouldRun = inView && !paused && !anyExpanded && !document.hidden
+      && !prefersReducedMotion && hasOverflow();
+
+    if (shouldRun && !timer) {
+      timer = setInterval(() => {
+        if (atEnd()) track.scrollTo({ left: 0, behavior: behavior() });
+        else track.scrollBy({ left: cardStep(), behavior: behavior() });
+      }, TESTIMONIAL_INTERVAL_MS);
+    } else if (!shouldRun && timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  [track, controls].forEach(el => {
+    el.addEventListener("mouseenter", () => { paused = true;  sync(); });
+    el.addEventListener("mouseleave", () => { paused = false; sync(); });
+    el.addEventListener("focusin",    () => { paused = true;  sync(); });
+    el.addEventListener("focusout",   () => { paused = false; sync(); });
+  });
+  track.addEventListener("touchstart", () => { paused = true; sync(); }, { passive: true });
+  track.addEventListener("touchend",   () => { paused = false; sync(); }, { passive: true });
+  document.addEventListener("visibilitychange", sync);
+
+  new IntersectionObserver(([entry]) => {
+    inView = entry.isIntersecting;
+    sync();
+  }, { threshold: 0.3 }).observe(section);
+
+  /* Layout changes (resize, web fonts arriving) change what's clamped. */
+  const relayout = () => { measureClamps(); updateControls(); sync(); };
+  if (typeof ResizeObserver !== "undefined") new ResizeObserver(relayout).observe(track);
+  document.fonts?.ready.then(relayout);
+  relayout();
 }
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  initStatCounters();
+  reveal(document.querySelectorAll(".stat, .al-section-header, .al-cta .container > *"));
+
+  orgReady.then(renderOrgChart);
+
+  teamReady.then(team => {
+    ALUMNI = team ? buildAlumni(team) : [];
+    renderTestimonials(); // hides the section if there is nothing to show
+  });
+}
+
+init(); // script is deferred, so the DOM is already parsed
+
+})();

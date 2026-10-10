@@ -75,6 +75,7 @@ h6 {
 .section-heading em {
   color: var(--accent-red);
   font-style: italic;
+  font-family: "Samarkan", serif;
 }
 
 
@@ -561,9 +562,11 @@ h6 {
   font-family: var(--font-display, "Barlow Condensed", sans-serif);
 }
 
-.xray-accent {
+.xray-accent,
+.samarkan-red {
   color: #dc2626;
   font-style: italic;
+  font-family: "Samarkan", serif;
 }
 
 .xray-paragraph {

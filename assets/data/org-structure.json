@@ -1,0 +1,146 @@
+{
+  "governance": {
+    "title": "Steering Committee",
+    "description": "Approves funds and steers the club in the right direction.",
+    "members": [
+      {
+        "name": "Faculty Advisor Name",
+        "designation": "Faculty Advisor"
+      },
+      {
+        "name": "Member Name",
+        "designation": "Steering Committee"
+      },
+      {
+        "name": "Member Name",
+        "designation": "Steering Committee"
+      },
+      {
+        "name": "Member Name",
+        "designation": "Steering Committee"
+      }
+    ]
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "Each project is led by a team captain, a project manager and a chief engineer.",
+    "items": [
+      {
+        "id": "cv",
+        "label": "Combustion",
+        "sublabel": "CV",
+        "members": [
+          {
+            "name": "Name",
+            "designation": "Team Captain"
+          },
+          {
+            "name": "Name",
+            "designation": "Project Manager"
+          },
+          {
+            "name": "Name",
+            "designation": "Chief Engineer"
+          }
+        ]
+      },
+      {
+        "id": "ev",
+        "label": "Electric",
+        "sublabel": "EV",
+        "members": [
+          {
+            "name": "Name",
+            "designation": "Team Captain"
+          },
+          {
+            "name": "Name",
+            "designation": "Project Manager"
+          },
+          {
+            "name": "Name",
+            "designation": "Chief Engineer"
+          }
+        ]
+      }
+    ]
+  },
+  "subsystems": {
+    "title": "Subsystems",
+    "description": "Subsystem leads work across every project, with members under each lead.",
+    "items": [
+      {
+        "label": "Brakes & Logistics",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      },
+      {
+        "label": "Electrical & Testing",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      },
+      {
+        "label": "Engine & Powertrain",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      },
+      {
+        "label": "Drivetrain & HR",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      },
+      {
+        "label": "Suspension & Admin",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      },
+      {
+        "label": "Chassis & Workshop Management",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      },
+      {
+        "label": "IT",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      },
+      {
+        "label": "SMP",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      },
+      {
+        "label": "Aero",
+        "lead": {
+          "name": "Name",
+          "designation": "Subsystem Lead"
+        },
+        "members": []
+      }
+    ]
+  }
+}

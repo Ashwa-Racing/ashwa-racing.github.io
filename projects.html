@@ -30,14 +30,33 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap"></noscript>
 
   <link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/components/footer.css">
   <link rel="stylesheet" href="assets/css/pages/projects.css">
 
-  <link rel="preload" as="script" href="assets/js/pages/projects.js">
+  <link rel="preload" as="fetch" href="/assets/data/projects.json" crossorigin>
 </head>
 
 <body>
+
+  <div id="site-loader" aria-hidden="true">
+    <div class="loader-inner">
+      <div class="loader-brand">
+        <span class="loader-ashwa">Ashwa</span>
+        <span class="loader-racing">Racing</span>
+      </div>
+      <div class="loader-sponsor">
+        <div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div>
+        <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
+      </div>
+      <div class="loader-progress"><span class="loader-progress-bar"></span></div>
+      <div class="loader-meta">
+        <span id="loader-status">INITIALIZING</span>
+        <span id="loader-percent">00%</span>
+      </div>
+    </div>
+  </div>
 
   <div id="main-header"></div>
 
@@ -51,7 +70,7 @@
     </svg>
   </button>
 
-  <main>
+  <main id="main-content">
 
   <!-- ═══════════════════════════
        HERO
@@ -95,42 +114,14 @@
         Ashwa Racing engineers high-performance prototypes built for competition.
       </p>
     </div>
-
-    <!-- Telemetry stats bar — anchored to bottom of hero -->
-    <div class="proj-hero-stats container" id="proj-hero-stats">
-      <div class="proj-stat">
-        <span class="proj-stat-value" data-target="4">0</span>
-        <span class="proj-stat-label">Platforms</span>
-      </div>
-      <div class="proj-stat-divider"></div>
-      <div class="proj-stat">
-        <span class="proj-stat-value" data-target="21">0</span>
-        <span class="proj-stat-label">Seasons</span>
-      </div>
-      <div class="proj-stat-divider"></div>
-      <div class="proj-stat">
-        <span class="proj-stat-value" data-target="26">0</span>
-        <span class="proj-stat-label">Prototypes</span>
-      </div>
-      <div class="proj-stat-divider"></div>
-      <div class="proj-stat">
-        <span class="proj-stat-value" data-target="6">0</span>
-        <span class="proj-stat-label">Countries Raced</span>
-      </div>
-      <div class="proj-stat-divider"></div>
-      <div class="proj-stat">
-        <span class="proj-stat-value" data-target="2003">2003</span>
-        <span class="proj-stat-label">Est.</span>
-      </div>
-    </div>
   </section>
 
   <!-- ═══════════════════════════
        PROGRAMME INDEX
   ════════════════════════════ -->
-  <section class="prog-index" id="prog-index" aria-label="Programme selector">
+  <section class="prog-index" id="prog-index" aria-labelledby="prog-index-heading">
     <div class="prog-index-header container">
-      <span class="prog-index-label">Select Programme</span>
+      <h2 class="prog-index-label" id="prog-index-heading">Select Programme</h2>
       <span class="prog-index-count" id="prog-index-count">— / —</span>
     </div>
     <div class="prog-index-list" id="prog-index-list">
@@ -199,27 +190,10 @@
 
   <footer id="main-footer"></footer>
 
+  <script src="assets/js/components/theme.js" defer></script>
+  <script src="assets/js/components/utils.js" defer></script>
   <script src="assets/js/pages/projects.js" defer></script>
   <script src="assets/js/components/header.js" defer></script>
   <script src="assets/js/components/loader.js" defer></script>
 </body>
-
-<div id="site-loader" aria-hidden="true">
-  <div class="loader-inner">
-    <div class="loader-brand">
-      <span class="loader-ashwa">Ashwa</span>
-      <span class="loader-racing">Racing</span>
-    </div>
-    <div class="loader-sponsor">
-      <div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div>
-      <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
-    </div>
-    <div class="loader-progress"><span class="loader-progress-bar"></span></div>
-    <div class="loader-meta">
-      <span id="loader-status">INITIALIZING</span>
-      <span id="loader-percent">00%</span>
-    </div>
-  </div>
-</div>
-
 </html>

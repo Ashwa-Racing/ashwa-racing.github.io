@@ -1,5 +1,7 @@
 "use strict";
 
+const { fetchJSON, escapeHTML } = window.Ashwa;
+
 /* ============================================================
    PROGRAMME IDENTITY
    ============================================================ */
@@ -79,188 +81,6 @@ const siteReady = new Promise(resolve => {
 
   setTimeout(resolve, 12000);
 });
-
-
-/* ============================================================
-   THEME
-   ============================================================ */
-
-function getLightLogoUrl(url) {
-  return url
-    ? url.replace(
-        /(\.[^./?#]+)([?#].*)?$/,
-        "-light$1$2"
-      )
-    : url;
-}
-
-
-function updateBrandLogos() {
-  const isLight =
-    document.documentElement.dataset.theme === "light";
-
-  document
-    .querySelectorAll(".brand-logo-img")
-    .forEach(logo => {
-      const darkLogo =
-        logo.dataset.darkLogo ||
-        logo.getAttribute("src");
-
-      if (!darkLogo) return;
-
-      logo.dataset.darkLogo = darkLogo;
-
-      const wanted =
-        isLight && !logo.dataset.lightMissing
-          ? getLightLogoUrl(darkLogo)
-          : darkLogo;
-
-      logo.onerror = isLight
-        ? () => {
-            logo.onerror = null;
-            logo.dataset.lightMissing = "1";
-            logo.setAttribute(
-              "src",
-              darkLogo
-            );
-          }
-        : null;
-
-      if (
-        logo.getAttribute("src") !== wanted
-      ) {
-        logo.setAttribute(
-          "src",
-          wanted
-        );
-      }
-    });
-}
-
-
-function initThemeToggle() {
-  const button =
-    document.getElementById(
-      "theme-toggle"
-    );
-
-  if (!button) return;
-
-  const root =
-    document.documentElement;
-
-  function updateButton(theme) {
-    const isLight =
-      theme === "light";
-
-    button.setAttribute(
-      "aria-pressed",
-      String(isLight)
-    );
-
-    button.setAttribute(
-      "aria-label",
-      isLight
-        ? "Switch to dark mode"
-        : "Switch to light mode"
-    );
-
-    updateBrandLogos();
-  }
-
-  updateButton(
-    root.dataset.theme === "light"
-      ? "light"
-      : "dark"
-  );
-
-  /*
-   * Prevent duplicate listeners if this
-   * function is accidentally initialized again.
-   */
-  if (
-    button.dataset.projectsThemeBound === "1"
-  ) {
-    return;
-  }
-
-  button.dataset.projectsThemeBound = "1";
-
-  button.addEventListener(
-    "click",
-    () => {
-      const nextTheme =
-        root.dataset.theme === "light"
-          ? "dark"
-          : "light";
-
-      root.classList.remove(
-        "theme-transition"
-      );
-
-      void root.offsetWidth;
-
-      root.classList.add(
-        "theme-transition"
-      );
-
-      root.dataset.theme =
-        nextTheme;
-
-      try {
-        localStorage.setItem(
-          "ashwa-theme",
-          nextTheme
-        );
-      } catch (e) {}
-
-      updateButton(
-        nextTheme
-      );
-
-      setTimeout(
-        () =>
-          root.classList.remove(
-            "theme-transition"
-          ),
-        500
-      );
-    }
-  );
-}
-
-
-/*
- * Header and footer are injected dynamically.
- * Watch only those containers so their logos
- * update when they appear.
- */
-function initBrandLogoObserver() {
-  const observer =
-    new MutationObserver(
-      updateBrandLogos
-    );
-
-  [
-    "main-header",
-    "main-footer"
-  ].forEach(id => {
-    const element =
-      document.getElementById(id);
-
-    if (!element) return;
-
-    observer.observe(
-      element,
-      {
-        childList: true,
-        subtree: true
-      }
-    );
-  });
-
-  updateBrandLogos();
-}
 
 
 /* ============================================================
@@ -562,34 +382,37 @@ function renderYear(
           <div class="prog-spec">
             <span>Weight</span>
             <strong>
-              ${specs.weight || "—"}
+              ${escapeHTML(specs.weight || "—")}
             </strong>
           </div>
 
           <div class="prog-spec">
             <span>Power</span>
             <strong>
-              ${specs.power || "—"}
+              ${escapeHTML(specs.power || "—")}
             </strong>
           </div>
 
           <div class="prog-spec">
             <span>0–100</span>
             <strong>
-              ${specs.acceleration || "—"}
+              ${escapeHTML(specs.acceleration || "—")}
             </strong>
           </div>
 
           <div class="prog-spec">
             <span>Top Speed</span>
             <strong>
-              ${specs.topSpeed || "—"}
+              ${escapeHTML(specs.topSpeed || "—")}
             </strong>
           </div>
 
         </div>
       `
       : "";
+
+  const descriptionOpen =
+    !window.matchMedia("(max-width: 860px)").matches;
 
 
   /* Badge */
@@ -598,7 +421,7 @@ function renderYear(
     data.badge
       ? `
         <div class="prog-badge">
-          ${data.badge}
+          ${escapeHTML(data.badge)}
         </div>
       `
       : "";
@@ -610,7 +433,7 @@ function renderYear(
     (data.changes || [])
       .map(
         change =>
-          `<li>${change}</li>`
+          `<li>${escapeHTML(change)}</li>`
       )
       .join("");
 
@@ -618,7 +441,7 @@ function renderYear(
     (data.achievements || [])
       .map(
         achievement =>
-          `<li>${achievement}</li>`
+          `<li>${escapeHTML(achievement)}</li>`
       )
       .join("");
 
@@ -630,7 +453,7 @@ function renderYear(
       <div>
 
         <div class="prog-section-label">
-          Updates · ${year}
+          Updates · ${escapeHTML(year)}
         </div>
 
         <ul class="prog-changes">
@@ -639,9 +462,10 @@ function renderYear(
 
       </div>
 
-      <p class="prog-desc">
-        ${data.desc || ""}
-      </p>
+      <details class="prog-desc-disclosure" ${descriptionOpen ? "open" : ""}>
+        <summary>About this prototype</summary>
+        <p class="prog-desc">${escapeHTML(data.desc || "")}</p>
+      </details>
 
       ${specHTML}
 
@@ -910,11 +734,12 @@ function switchProgramme(
         ".prog-index-item"
       )
       .forEach(item => {
+        const active = item.dataset.prog === progKey;
         item.classList.toggle(
           "active",
-          item.dataset.prog ===
-            progKey
+          active
         );
+        item.setAttribute("aria-pressed", String(active));
       });
 
 
@@ -1020,10 +845,8 @@ function buildProgIndex() {
         : String(years[0]);
 
 
-    const item =
-      document.createElement(
-        "div"
-      );
+    const item = document.createElement("button");
+    item.type = "button";
 
     item.className =
       "prog-index-item";
@@ -1032,19 +855,10 @@ function buildProgIndex() {
       key;
 
     item.setAttribute(
-      "role",
-      "button"
-    );
-
-    item.setAttribute(
-      "tabindex",
-      "0"
-    );
-
-    item.setAttribute(
       "aria-label",
       `${identity.tag} programme`
     );
+    item.setAttribute("aria-pressed", "false");
 
     item.style.setProperty(
       "--item-accent",
@@ -1055,7 +869,7 @@ function buildProgIndex() {
       <div
         class="prog-index-item-bg-code"
         aria-hidden="true">
-        ${identity.code}
+        ${escapeHTML(identity.code)}
       </div>
 
       <div
@@ -1064,15 +878,15 @@ function buildProgIndex() {
       </div>
 
       <div class="prog-index-item-code">
-        ${identity.code}
+        ${escapeHTML(identity.code)}
       </div>
 
       <div class="prog-index-item-name">
-        ${programme.title}
+        ${escapeHTML(programme.title)}
       </div>
 
       <div class="prog-index-item-meta">
-        ${yearRange} · ${years.length}
+        ${escapeHTML(yearRange)} · ${years.length}
         season${years.length !== 1 ? "s" : ""}
       </div>
     `;
@@ -1093,19 +907,6 @@ function buildProgIndex() {
     item.addEventListener(
       "click",
       activate
-    );
-
-    item.addEventListener(
-      "keydown",
-      event => {
-        if (
-          event.key === "Enter" ||
-          event.key === " "
-        ) {
-          event.preventDefault();
-          activate();
-        }
-      }
     );
 
     list.appendChild(
@@ -1783,154 +1584,11 @@ function initReveal() {
 
 
 /* ============================================================
-   STAT COUNTERS
-   ============================================================ */
-
-function initStatCounters() {
-  const statValues =
-    document.querySelectorAll(
-      ".proj-stat-value[data-target]"
-    );
-
-  if (!statValues.length) {
-    return;
-  }
-
-  if (
-    !("IntersectionObserver" in window)
-  ) {
-    statValues.forEach(
-      element => {
-        const target =
-          parseInt(
-            element.dataset.target,
-            10
-          );
-
-        if (
-          target > 1000
-        ) {
-          element.textContent =
-            target;
-        }
-      }
-    );
-
-    return;
-  }
-
-  const observer =
-    new IntersectionObserver(
-      entries => {
-        entries.forEach(
-          entry => {
-            if (
-              !entry.isIntersecting
-            ) {
-              return;
-            }
-
-            const element =
-              entry.target;
-
-            const target =
-              parseInt(
-                element.dataset.target,
-                10
-              );
-
-            /*
-             * Years should not count up.
-             */
-            if (
-              target > 1000
-            ) {
-              observer.unobserve(
-                element
-              );
-
-              return;
-            }
-
-            const duration =
-              1000;
-
-            const start =
-              performance.now();
-
-            function tick(now) {
-              const progress =
-                Math.min(
-                  (
-                    now - start
-                  ) /
-                    duration,
-                  1
-                );
-
-              const eased =
-                1 -
-                Math.pow(
-                  1 - progress,
-                  3
-                );
-
-              element.textContent =
-                Math.round(
-                  target *
-                    eased
-                );
-
-              if (
-                progress < 1
-              ) {
-                requestAnimationFrame(
-                  tick
-                );
-              }
-            }
-
-            requestAnimationFrame(
-              tick
-            );
-
-            observer.unobserve(
-              element
-            );
-          }
-        );
-      },
-      {
-        threshold: 0.5
-      }
-    );
-
-  statValues.forEach(
-    element =>
-      observer.observe(
-        element
-      )
-  );
-}
-
-
-/* ============================================================
    LOAD PROJECT DATA
    ============================================================ */
 
 async function loadProjects() {
-  const response =
-    await fetch(
-      PROJECTS_URL
-    );
-
-  if (!response.ok) {
-    throw new Error(
-      `Failed to load projects: ${response.status}`
-    );
-  }
-
-  return response.json();
+  return fetchJSON(PROJECTS_URL);
 }
 
 
@@ -1939,8 +1597,6 @@ async function loadProjects() {
    ============================================================ */
 
 async function init() {
-  initBrandLogoObserver();
-
   try {
     projectData =
       await loadProjects();
@@ -1951,8 +1607,6 @@ async function init() {
 
     await siteReady;
 
-    initThemeToggle();
-    initStatCounters();
     initReveal();
 
     const firstKey =
@@ -1974,6 +1628,13 @@ async function init() {
       "Projects page failed to initialize:",
       error
     );
+
+    if (progContent) {
+      progContent.innerHTML = `
+        <p class="prog-error" role="status">
+          Project information is unavailable right now. Please refresh to try again.
+        </p>`;
+    }
   }
 }
 

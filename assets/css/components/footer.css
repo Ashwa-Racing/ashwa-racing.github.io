@@ -1,412 +1,226 @@
-/* ============================================================
-   ASHWA RACING — FOOTER
-   System: Barlow Condensed + Barlow · dark motorsport
-   ============================================================ */
-
-@font-face {
-    font-family: "Samarkan";
-    src: url("/assets/fonts/SAMAN.TTF") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
+﻿.footer {
+  border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+  background: var(--page-bg, #08090c);
+  color: var(--text, #f7f6f4);
+  font-family: var(--body, var(--font-body, 'Barlow', Arial, sans-serif));
 }
 
-@font-face {
-    font-family: "Xenotron";
-    src: url("/assets/fonts/XENOTRON.TTF") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* ─── Base ──────────────────────────────────────────────────── */
-.footer {
-  background: var(--black);
-  color: rgba(255,255,255,1);
-  font-family: var(--font-body);
-  border-top: 2px solid var(--red);
-}
-
-/* ─── Top section ───────────────────────────────────────────── */
 .footer-top {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 80px;
-  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
-  padding: 80px 0 64px;
+  grid-template-columns: minmax(190px, 0.8fr) minmax(0, 3.2fr);
+  gap: clamp(36px, 6vw, 88px);
+  width: var(--wrap, min(calc(100% - (var(--site-gutter, 20px) * 2)), var(--content-width, 1150px)));
   margin-inline: auto;
+  padding: clamp(56px, 7vw, 88px) 0 clamp(44px, 5vw, 64px);
 }
 
-/* ─── Brand column ──────────────────────────────────────────── */
 .footer-brand-col {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  align-items: flex-start;
+  gap: 22px;
+  min-width: 0;
 }
 
 .footer-brand-link {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
-  text-decoration: none;
   width: fit-content;
+  text-decoration: none;
 }
 
-.footer-logo {
-  height: 42px;
+.footer-brand-link .brand-logo-img {
+  display: block;
   width: auto;
-  filter: invert(1) brightness(1);
+  height: 52px;
   transition: opacity 0.2s ease;
 }
-/* FIX: removed no-op .footer-brand-link:hover .footer-logo { opacity: 1 }
-   — base opacity is already 1, the hover rule had no effect */
-.footer-brand-link:hover .footer-logo { opacity: 0.85; }
 
-.footer-brand-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-  padding-left: 4px;
-  border-left: 2px solid var(--red);
-}
-
-.footer-ashwa {
-  font-family: 'Samarkan', serif;
-  font-size: 24px;
-  color: var(--red);
-  letter-spacing: 1px;
-  line-height: 1.05;
-}
-
-.footer-racing {
-  font-family: 'Xenotron', sans-serif;
-  font-size: 12px;
-  color: #ffffff;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  margin-top: 3px;
-}
+.footer-brand-link:hover .brand-logo-img { opacity: 0.82; }
 
 .footer-tagline {
-  font-size: 0.82rem;
-  line-height: 1.75;
-  color: rgba(255,255,255,0.55);
-  font-weight: 300;
+  color: var(--text-muted, #767676);
+  font-size: 0.92rem;
+  line-height: 1.7;
 }
 
-/* Socials */
 .footer-socials {
   display: flex;
-  gap: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .footer-socials a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px; height: 36px;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 4px;
-  color: rgba(255,255,255,0.7);
-  font-size: 0.9rem;
-  text-decoration: none;
-  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-.footer-socials a img {
-  filter: brightness(0) invert(1);
-  opacity: 0.65;
-  transition: filter 0.3s ease, opacity 0.3s ease;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border-strong, rgba(255,255,255,0.16));
+  border-radius: 2px;
+  background: var(--surface, #191b22);
+  transition: border-color 0.18s ease, background-color 0.18s ease, transform 0.18s ease;
 }
 
 .footer-socials a:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.3);
-  color: #fff;
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+  border-color: var(--red, #e8001d);
+  background: var(--surface-hi, #22242d);
 }
 
-.footer-socials a:hover img {
-  filter: none;
-  opacity: 1;
+.footer-socials img {
+  display: block;
+  width: 17px;
+  height: 17px;
+  opacity: 0.72;
+  filter: brightness(0) invert(1);
+  transition: opacity 0.18s ease, filter 0.18s ease;
 }
 
-/* ─── Nav columns ───────────────────────────────────────────── */
+html[data-theme="light"] .footer-socials img { filter: none; }
+.footer-socials a:hover img { opacity: 1; }
+
 .footer-nav-cols {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-content: start;
+  gap: clamp(16px, 2.5vw, 36px);
 }
 
+.footer-col { min-width: 0; }
+
 .footer-col-label {
-  font-family: var(--font-display);
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--red);
-  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 10px;
+  margin: 3px 0 18px;
+  color: var(--text-strong, #ffffff);
+  font-family: var(--display, var(--font-display, 'Barlow Condensed', sans-serif));
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .footer-col-label::after {
-  content: '';
   flex: 1;
   height: 1px;
-  background: rgba(255,255,255,0.2);
+  background: var(--border-strong, rgba(255,255,255,0.16));
+  content: "";
 }
 
 .footer-col ul {
-  list-style: none;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  list-style: none;
 }
 
 .footer-col ul li {
-  font-size: 0.82rem;
+  color: var(--text-muted, #767676);
+  font-size: 0.84rem;
   line-height: 1.5;
 }
 
 .footer-col ul li a {
-  color: rgba(255,255,255,0.65);
-  text-decoration: none;
-  font-weight: 400;
-  transition: color 0.18s ease, padding-left 0.18s ease;
   display: inline-block;
-}
-
-.footer-col ul li a:hover {
-  color: var(--red);
-  padding-left: 4px;
-}
-
-/* "Soon" items */
-.footer-link-soon {
-  color: rgba(255,255,255,0.2);
-  font-size: 0.82rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: default;
-  user-select: none;
-}
-
-.soon-tag {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.2);
-  border: 1px solid rgba(255,255,255,0.1);
-  padding: 1px 6px;
-  border-radius: 2px;
-}
-
-/* ─── Contact column ────────────────────────────────────────── */
-
-/* FIX: wrapper div for each contact entry — groups the link and its
-   subtitle label into a structured container */
-.footer-contact-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.footer-contact-link {
-  color: rgba(255,255,255,0.55);
+  color: var(--text-soft, rgba(255,255,255,0.68));
   text-decoration: none;
-  font-size: 0.82rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: color 0.18s ease;
+  transition: color 0.18s ease, transform 0.18s ease;
 }
 
-.footer-contact-link:hover { color: #fff; }
-
-.footer-contact-link i,
-.footer-location i {
-  color: var(--red);
-  font-size: 0.75rem;
-  flex-shrink: 0;
-  margin-top: 2px;
+.footer-col ul li a:hover,
+.footer-col ul li a:focus-visible {
+  color: var(--red, #e8001d);
+  transform: translateX(3px);
 }
 
-/* FIX: explicit class for contact subtitle labels — was unstyled bare <span> */
-.footer-contact-label {
-  font-size: 0.72rem;
-  color: rgba(255,255,255,0.3);
-  padding-left: 20px; /* aligns under the text, past the icon */
-  line-height: 1.4;
+.footer-col a:focus-visible,
+.footer-brand-link:focus-visible,
+.footer-socials a:focus-visible {
+  outline: 2px solid var(--red, #e8001d);
+  outline-offset: 3px;
 }
 
-.footer-location {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: rgba(255,255,255,0.3);
-  line-height: 1.55;
-}
+.footer-contact-list { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border, rgba(255,255,255,0.08)); }
+.footer-contact-list li + li { margin-top: 3px; }
+.footer-contact-list a { overflow-wrap: anywhere; }
+.footer-location { color: var(--text-muted, #767676); }
 
-/* ─── Divider ───────────────────────────────────────────────── */
 .footer-divider {
+  width: var(--wrap, min(calc(100% - (var(--site-gutter, 20px) * 2)), var(--content-width, 1150px)));
   height: 1px;
-  background: rgba(255,255,255,0.06);
-  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
   margin-inline: auto;
+  background: var(--border, rgba(255,255,255,0.08));
 }
 
-/* ─── Bottom bar ────────────────────────────────────────────── */
 .footer-bottom {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-  width: min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
-  padding: 24px 0;
+  justify-content: space-between;
+  gap: 16px 32px;
+  width: var(--wrap, min(calc(100% - (var(--site-gutter, 20px) * 2)), var(--content-width, 1150px)));
   margin-inline: auto;
+  padding: 20px 0 24px;
 }
 
-/* FIX: .footer-copy and .footer-credit had identical declarations —
-   merged into a single rule */
 .footer-copy,
 .footer-credit {
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  color: var(--text-muted, #767676);
+  font-family: var(--display, var(--font-display, 'Barlow Condensed', sans-serif));
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  line-height: 1.5;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.4);
 }
 
-/* ─── Responsive ────────────────────────────────────────────── */
+.footer-credit { text-align: right; }
 
-@media (max-width: 1100px) {
-
-  .footer-nav-cols {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 1120px) {
+  .footer-top {
+    grid-template-columns: minmax(180px, 0.7fr) minmax(0, 2.3fr);
     gap: 36px;
   }
+
+  .footer-nav-cols { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 28px; }
 }
 
-@media (max-width: 860px) {
-
-  .footer-col-label {
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-  }
-
-  .footer-col-label::after {
-    display: none;
-  }
-
+@media (max-width: 760px) {
   .footer-top {
     grid-template-columns: 1fr;
-
-    justify-items: center;
-
-    gap: 48px;
-    padding: 64px 0 48px;
+    gap: 44px;
+    padding: 52px 0 40px;
   }
 
   .footer-brand-col {
-    max-width: 360px;
-    width: 100%;
-
-    text-align: center;
-
-    display: flex;
-    flex-direction: column;
     align-items: center;
-  }
-
-  .footer-brand-logo {
-    display: flex;
-    justify-content: center;
-  }
-
-  .footer-socials {
-    display: flex;
-    justify-content: center;
+    text-align: center;
   }
 
   .footer-nav-cols {
     width: 100%;
-
-    grid-template-columns: repeat(2, 1fr);
-
-    justify-items: center;
-    text-align: center;
-
-    gap: 32px;
-  }
-
-  .footer-nav-col {
-    width: 100%;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .footer-col-label {
-    text-align: center;
-  }
-
-  .footer-nav-col a,
-  .footer-nav-col p,
-  .footer-nav-col span {
-    text-align: center;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px 24px;
   }
 }
 
-@media (max-width: 560px) {
+@media (max-width: 480px) {
+  .footer-nav-cols { gap: 28px 16px; }
 
-  .footer-top {
-    gap: 40px;
-    padding: 56px 0 40px;
+  .footer-col-label {
+    gap: 0;
+    font-size: 0.82rem;
+    letter-spacing: 0.09em;
   }
 
-  .footer-nav-cols {
-    grid-template-columns: 1fr 1fr;
-    gap: 28px 20px;
-  }
+  .footer-col-label::after { display: none; }
 
   .footer-bottom {
     flex-direction: column;
     align-items: center;
-
     text-align: center;
-
-    gap: 10px;
   }
 
-  .footer-bottom-right {
-    justify-content: center;
-  }
-
-  .footer-brand-col {
-    max-width: 320px;
-  }
-}
-
-@media (max-width: 380px) {
-
-  .footer-top {
-    padding: 48px 0 36px;
-  }
-
-  .footer-nav-cols {
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  .footer-brand-col {
-    max-width: 100%;
-  }
+  .footer-credit { text-align: center; }
 }

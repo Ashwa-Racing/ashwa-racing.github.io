@@ -80,6 +80,7 @@
 .blog-hero h1 em {
   color: var(--red);
   font-style: italic;
+  font-family: "Samarkan", serif;
 }
 
 .blog-intro {

@@ -160,6 +160,7 @@ body {
 .hero-title em {
   font-style: italic;
   color: var(--red);
+  font-family: "Samarkan", serif;
 }
 
 .hero-desc {

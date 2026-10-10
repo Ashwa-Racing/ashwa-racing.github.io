@@ -1,6 +1,6 @@
 {
   "cv": {
-    "title": "Combustion Platform",
+    "title": "Combustion",
     "years": {
       "2005": {
         "images": [
@@ -528,7 +528,7 @@
     }
   },
   "hyb": {
-    "title": "Hybrid Powertrain Platform",
+    "title": "Hybrid",
     "years": {
       "2015": {
         "images": [
@@ -730,7 +730,7 @@
     }
   },
   "ev": {
-    "title": "Electric Powertrain Platform",
+    "title": "Electric",
     "years": {
       "2026": {
         "images": [
@@ -754,7 +754,7 @@
     }
   },
   "hyp": {
-    "title": "Hyperloop Pod Platform",
+    "title": "Hyperloop Pod",
     "years": {
       "2023": {
         "images": [

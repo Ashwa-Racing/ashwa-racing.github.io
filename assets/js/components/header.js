@@ -15,6 +15,7 @@ async function loadComponent(id, path, callback) {
 loadComponent("main-header", "components/header.html", () => {
   initNav();
   initScrollShrink();
+  markActivePage();
 });
 
 loadComponent("main-footer", "components/footer.html");
@@ -31,6 +32,7 @@ function initNav() {
     hamburger.classList.toggle("open", open);
     mobileMenu.classList.toggle("open", open);
     hamburger.setAttribute("aria-expanded", open);
+    hamburger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     mobileMenu.setAttribute("aria-hidden", !open);
     document.body.style.overflow = open ? "hidden" : "";
   };
@@ -46,7 +48,13 @@ function initNav() {
   });
 
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") toggleMenu(false);
+    if (e.key !== "Escape") return;
+    const menuWasOpen = hamburger?.classList.contains("open");
+    toggleMenu(false);
+    $$(".nav-dropdown.open").forEach(dd => {
+      dd.classList.remove("open");
+      dd.querySelector(".nav-drop-btn")?.setAttribute("aria-expanded", "false");
+    });
   });
 
   $$(".nav-dropdown").forEach(dd => {
@@ -59,11 +67,22 @@ function initNav() {
     };
 
     dd.addEventListener("mouseenter", () => set(true));
-    dd.addEventListener("mouseleave", () => set(false));
+    dd.addEventListener("focusin", () => set(true));
+    dd.addEventListener("mouseleave", () => {
+      if (!dd.contains(document.activeElement)) set(false);
+    });
+    dd.addEventListener("focusout", e => {
+      if (!dd.contains(e.relatedTarget)) set(false);
+    });
 
     btn.addEventListener("click", e => {
       e.stopPropagation();
-      $$(".nav-dropdown.open").forEach(d => d !== dd && d.classList.remove("open"));
+      $$(".nav-dropdown.open").forEach(d => {
+        if (d === dd) return;
+        d.classList.remove("open");
+        d.querySelector(".nav-drop-btn")?.setAttribute("aria-expanded", "false");
+      });
+    if (menuWasOpen) hamburger?.focus();
       set(!dd.classList.contains("open"));
     });
 
@@ -74,7 +93,7 @@ function initNav() {
 
   /* ── Mobile Accordion */
   $$(".mob-accordion-btn").forEach(btn => {
-    const panel = document.getElementById(btn.id.replace("Btn", "Panel"));
+    const panel = document.getElementById(btn.getAttribute("aria-controls"));
     btn.addEventListener("click", () => {
       const open = btn.classList.toggle("open");
       panel?.classList.toggle("open", open);
@@ -88,16 +107,15 @@ function initNav() {
 function markActivePage() {
   const page = location.pathname.split("/").filter(Boolean).pop() || "index.html";
 
-  document.querySelectorAll(".nav-link[href], .mob-link[href]").forEach(link => {
-    const href = link.getAttribute("href");
-    if (!href) return;
+  document.querySelectorAll(".nav-desktop a[href], .mobile-menu a[href]").forEach(link => {
+    const target = new URL(link.href, location.href).pathname.split("/").filter(Boolean).pop() || "index.html";
+    const isActive = target === page || (page === "blog-post.html" && target === "blog.html");
+    if (!isActive) return;
 
-    const cleanHref = href.replace(".html", "");
-    const cleanPage = page.replace(".html", "");
-
-    if (cleanHref === cleanPage) {
-      link.classList.add("active");
-    }
+    link.classList.add("active");
+    link.setAttribute("aria-current", "page");
+    link.closest(".nav-dropdown")?.querySelector(".nav-drop-btn")?.classList.add("active");
+    link.closest(".mob-accordion")?.previousElementSibling?.classList.add("active");
   });
 }
 

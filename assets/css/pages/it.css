@@ -214,7 +214,7 @@ body {
   letter-spacing: -0.02em; text-transform: uppercase;
   color: var(--white); margin-bottom: 20px;
 }
-.it-hero-title em { font-style: italic; color: var(--red); display: block; }
+.it-hero-title em { font-style: italic; color: var(--red); display: block; font-family: "Samarkan", serif; }
 
 .it-hero-desc {
   font-size: clamp(0.88rem, 1.2vw, 1rem);
@@ -281,7 +281,7 @@ body {
   letter-spacing: -0.01em; text-transform: uppercase;
   color: var(--white); margin-bottom: 32px;
 }
-.it-heading em { font-style: italic; color: var(--red); display: block; }
+.it-heading em { font-style: italic; color: var(--red); display: block; font-family: "Samarkan", serif; }
 
 /* ═══════════════════════════════════════════════════════════════
    ABOUT — split layout

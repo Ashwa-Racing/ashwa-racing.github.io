@@ -84,7 +84,7 @@ body { font-family: var(--font-body); background: var(--charcoal); color: var(--
   letter-spacing: -0.02em; text-transform: uppercase;
   color: var(--white); margin-bottom: 20px;
 }
-.blog-hero-title em { font-style: italic; color: var(--red); display: block; }
+.blog-hero-title em { font-style: italic; color: var(--red); display: block; font-family: "Samarkan", serif; }
 
 .blog-hero-desc {
   font-size: clamp(0.88rem, 1.3vw, 1rem);

@@ -4,39 +4,61 @@
 
     <!-- Brand -->
     <a href="index.html" class="brand" aria-label="Ashwa Racing Home">
-      <img src="https://assets.ashwaracing.org/images/favicon/header.png" alt="Ashwa Racing Logo" class="brand-logo-img">
+      <img src="https://assets.ashwaracing.org/images/favicon/header.png" alt="" class="brand-logo-img">
     </a>
 
     <!-- Desktop nav -->
     <nav class="nav-desktop" aria-label="Primary navigation">
 
       
-      <a href="projects.html" class="nav-link">Cars</a>
-      <!-- <a href="gallery.html" class="nav-link">Gallery</a> -->
+      <a href="projects.html" class="nav-link">Cars &amp; Projects</a>
 
       <!-- Team dropdown -->
       <div class="nav-dropdown" id="teamDropdown">
-        <button class="nav-link nav-drop-btn" aria-expanded="false" aria-haspopup="true">
+        <button class="nav-link nav-drop-btn" type="button" aria-expanded="false" aria-controls="teamDropdownPanel">
           Team
         </button>
-        <div class="dropdown-panel dropdown-panel--narrow" role="menu">
+        <div class="dropdown-panel dropdown-panel--narrow" id="teamDropdownPanel">
           <div class="dropdown-col">
-            <a href="about.html" role="menuitem">About</a>
-            <a href="team.html" role="menuitem">Members</a>
-            <a href="alumni.html" role="menuitem">Alumni</a>
-            <a href="subsystem.html" role="menuitem">Subsystems</a>
+            <a href="about.html">About</a>
+            <a href="team.html">Members</a>
+            <a href="alumni.html">Alumni</a>
+            <a href="subsystem.html">Subsystems</a>
+            <a href="recruitment.html">Join the Team</a>
           </div>
         </div>
       </div>
 
-      <a href="recruitment.html" class="nav-link">Join Us</a>
+      <div class="nav-dropdown" id="exploreDropdown">
+        <button class="nav-link nav-drop-btn" type="button" aria-expanded="false" aria-controls="exploreDropdownPanel">
+          Explore
+        </button>
+        <div class="dropdown-panel dropdown-panel--narrow" id="exploreDropdownPanel">
+          <div class="dropdown-col">
+            <a href="blog.html">Blog</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="newsletters.html">Newsletters</a>
+          </div>
+        </div>
+      </div>
 
-      <a href="sponsors.html" class="nav-link">Sponsors</a>
+      <div class="nav-dropdown" id="partnersDropdown">
+        <button class="nav-link nav-drop-btn" type="button" aria-expanded="false" aria-controls="partnersDropdownPanel">
+          Partners
+        </button>
+        <div class="dropdown-panel dropdown-panel--narrow" id="partnersDropdownPanel">
+          <div class="dropdown-col">
+            <a href="sponsors.html">Sponsors &amp; Partners</a>
+            <a href="smp.html">Sponsorship Packages</a>
+          </div>
+        </div>
+      </div>
+
       <a href="contact.html" class="nav-link">Contact Us</a>
 
     </nav>
 
-    <button class="hamburger" id="hamburger"
+    <button class="hamburger" id="hamburger" type="button"
       aria-label="Open menu"
       aria-expanded="false"
       aria-controls="mobile-menu">
@@ -48,25 +70,37 @@
   <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
     <nav aria-label="Mobile navigation">
 
-      <a href="about.html" class="mob-link">About</a>
-      <a href="projects.html" class="mob-link">Cars</a>
-      <!-- <a href="gallery.html" class="mob-link">Gallery</a> -->
+      <a href="projects.html" class="mob-link">Cars &amp; Projects</a>
 
       <!-- Team accordion -->
-      <button class="mob-link mob-accordion-btn" id="mobTeamBtn" aria-expanded="false">
+      <button class="mob-link mob-accordion-btn" id="mobTeamBtn" type="button" aria-expanded="false" aria-controls="mobTeamPanel">
         Team
       </button>
       <div class="mob-accordion" id="mobTeamPanel">
-        <a href="team.html" role="menuitem">Members
-        </a>
-        <a href="alumni.html" role="menuitem">Alumni
-        </a>
-        <a href="recruitment.html" role="menuitem">Join Us
-        </a>
-        <a href="subsystem.html" role="menuitem">Subsystems</a>
+        <a href="about.html">About</a>
+        <a href="team.html">Members</a>
+        <a href="alumni.html">Alumni</a>
+        <a href="subsystem.html">Subsystems</a>
+        <a href="recruitment.html">Join the Team</a>
       </div>
 
-      <a href="sponsors.html" class="mob-link">Sponsors</a>
+      <button class="mob-link mob-accordion-btn" id="mobExploreBtn" type="button" aria-expanded="false" aria-controls="mobExplorePanel">
+        Explore
+      </button>
+      <div class="mob-accordion" id="mobExplorePanel">
+        <a href="blog.html">Blog</a>
+        <a href="gallery.html">Gallery</a>
+        <a href="newsletters.html">Newsletters</a>
+      </div>
+
+      <button class="mob-link mob-accordion-btn" id="mobPartnersBtn" type="button" aria-expanded="false" aria-controls="mobPartnersPanel">
+        Partners
+      </button>
+      <div class="mob-accordion" id="mobPartnersPanel">
+        <a href="sponsors.html">Sponsors &amp; Partners</a>
+        <a href="smp.html">Sponsorship Packages</a>
+      </div>
+
       <a href="contact.html" class="mob-link">Contact</a>
 
     </nav>

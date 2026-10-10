@@ -52,6 +52,7 @@ body.susp-body {
   font-style: italic;
   color: var(--red);
   display: block;
+  font-family: "Samarkan", serif;
 }
 
 .susp-accent-title {
@@ -69,6 +70,7 @@ body.susp-body {
   font-style: italic;
   color: var(--red);
   display: block;
+  font-family: "Samarkan", serif;
 }
 
 .susp-p {
@@ -188,6 +190,7 @@ section {
   font-style: italic;
   color: var(--red);
   display: block;
+  font-family: "Samarkan", serif;
 }
 
 .hero__quote {

@@ -83,7 +83,7 @@ body { font-family: var(--font-body); background: var(--charcoal); color: var(--
   color: var(--white); margin-bottom: 20px;
   margin-top: 50px;
 }
-.sp-hero-title em { font-style: italic; color: var(--red); display: block; }
+.sp-hero-title em { font-style: italic; color: var(--red); display: block; font-family: "Samarkan", serif; }
 
 .sp-hero-desc {
   font-size: clamp(0.88rem, 1.3vw, 1rem);

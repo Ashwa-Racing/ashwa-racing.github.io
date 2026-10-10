@@ -28,6 +28,10 @@
       href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap">
   </noscript>
 
+  <!-- Start the data requests before index.js runs -->
+  <link rel="preload" as="fetch" href="/assets/data/sponsors.json" crossorigin>
+  <link rel="preload" as="fetch" href="/assets/data/blog.json" crossorigin>
+
   <script>
     (() => {
       let theme = null;
@@ -36,6 +40,7 @@
     })();
   </script>
 
+  <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/loader.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/pages/index.css">
@@ -102,11 +107,10 @@
           height="860" fetchpriority="high" decoding="async">
       </picture>
 
-      <!-- Sits above the poster image but starts invisible; index.js adds
+      <!-- Sits above the still image but starts invisible; index.js adds
            .is-loaded once enough data is buffered, and starts playback
-           (skipped entirely for prefers-reduced-motion). -->
+             (skipped for reduced-motion, Data Saver, and slow connections). -->
       <video class="hero-video" id="hero-video" muted loop playsinline preload="none"
-        poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/heroimg/hero-desktop.jpg"
         aria-hidden="true">
         <source src="https://assets.ashwaracing.org/videos/hero_vid_1080p30.mp4" type="video/mp4">
       </video>
@@ -171,7 +175,6 @@
                   https://assets.ashwaracing.org/cdn-cgi/image/width=2560,format=auto,quality=85/images/prototypes/RZ-XX6-E/preevent/1.png 2560w"
           sizes="100vw" alt="RZ-XX6-E" loading="lazy" decoding="async">
         <video class="spotlight-bg-video" muted loop playsinline preload="none"
-          poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-XX6-E/preevent/1.png"
           aria-hidden="true">
           <source src="https://assets.ashwaracing.org/videos/ev_spotlight.mp4" type="video/mp4">
         </video>
@@ -185,7 +188,6 @@
                   https://assets.ashwaracing.org/cdn-cgi/image/width=2560,format=auto,quality=85/images/prototypes/RZ-XX6-C/postevent/1.jpg 2560w"
           sizes="100vw" alt="Ashwa Racing RZ-XX6-C Formula Student car" loading="lazy" decoding="async">
         <video class="spotlight-bg-video" muted loop playsinline preload="none"
-          poster="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-XX6-C/postevent/1.jpg"
           aria-hidden="true">
           <source src="https://assets.ashwaracing.org/videos/cv_spotlight.mp4" type="video/mp4">
         </video>
@@ -274,7 +276,6 @@
 
     <section class="news" aria-label="Latest news">
       <div class="container">
-        <p class="label">LATEST</p>
         <h2>From the <em>Team</em></h2>
 
         <div class="news-grid" id="home-blog-grid"></div>
@@ -292,6 +293,8 @@
 
   <footer id="main-footer"></footer>
 
+  <script src="assets/js/components/theme.js" defer></script>
+  <script src="assets/js/components/utils.js" defer></script>
   <script src="assets/js/pages/index.js" defer></script>
   <script src="assets/js/components/header.js" defer></script>
   <script src="assets/js/components/loader.js" defer></script>

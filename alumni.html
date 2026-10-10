@@ -1,135 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alumni & Network | Ashwa Racing</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alumni &amp; Network | Ashwa Racing</title>
+  <meta name="description"
+    content="Explore the Ashwa Racing alumni network spanning 400+ engineers across leading automotive, motorsport, and technology companies worldwide. Discover the people shaping the future of engineering beyond Formula Student.">
 
   <link rel="canonical" href="https://ashwaracing.org/alumni.html" />
 
-  <meta name="description" content="Explore the Ashwa Racing alumni network spanning 400+ engineers across leading automotive, motorsport, and technology companies worldwide. Discover the people shaping the future of engineering beyond Formula Student." />
-
-  <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="assets/images/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="Ashwa Racing" />
-  <link rel="manifest" href="assets/images/favicon/site.webmanifest" />
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <!-- Images are plain (no-CORS) requests, so no crossorigin attribute here -->
+  <link rel="preconnect" href="https://assets.ashwaracing.org">
 
-  <link rel="stylesheet" href="assets/css/components/header.css?v=2" />
-  <link rel="stylesheet" href="assets/css/components/footer.css" />
-  <link rel="stylesheet" href="assets/css/pages/alumni.css" />
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500&display=swap">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500&display=swap"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500&display=swap">
+  </noscript>
+
+  <!-- Start the data requests before alumni.js runs -->
+  <link rel="preload" as="fetch" href="/assets/data/team.json" crossorigin>
+  <link rel="preload" as="fetch" href="/assets/data/org-structure.json" crossorigin>
+
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
+  <link rel="stylesheet" href="assets/css/components/footer.css">
+  <link rel="stylesheet" href="assets/css/pages/alumni.css">
 </head>
+
 <body>
 
-<div id="main-header"></div>
+  <div id="main-header"></div>
 
-<!-- ═══════════════════════════════════════
-     HERO
-════════════════════════════════════════ -->
-<section class="al-hero">
-  <div class="al-hero-bg"></div>
-  <div class="al-hero-overlay"></div>
-  <div class="al-hero-grid"></div>
-  <div class="al-hero-stripe"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" />
+    </svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+    </svg>
+  </button>
 
-  <div class="al-hero-content">
-    <div class="al-eyebrow">
-      <span class="eyebrow-dash"></span>
-      <span>20+ Years of Engineering Excellence</span>
-    </div>
-    <h1 class="al-hero-title">
-      OUR<br><em>ALUMNI</em><br>&amp; NETWORK
-    </h1>
-    <p class="al-hero-desc">
-      Every prototype Ashwa has built carries the fingerprints of hundreds of engineers.
-      This is where they are now.
-    </p>
-  </div>
+  <main>
 
-  <div class="al-hero-stats">
-    <div class="hs"><span class="hs-num">400<sup>+</sup></span><span class="hs-label">Alumni</span></div>
-    <div class="hs-div"></div>
-    <div class="hs"><span class="hs-num">20<sup>+</sup></span><span class="hs-label">Years Active</span></div>
-    <div class="hs-div"></div>
-    <div class="hs"><span class="hs-num">100<sup>+</sup></span><span class="hs-label">Companies</span></div>
-    <div class="hs-div"></div>
-    <div class="hs"><span class="hs-num">12<sup>+</sup></span><span class="hs-label">Countries</span></div>
-  </div>
-</section>
+    <section class="al-hero" aria-label="Alumni and network">
+      <img class="al-hero-img"
+        src="https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-07-C/17.jpg"
+        srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=828,format=auto,quality=85/images/prototypes/RZ-07-C/17.jpg 828w,
+                https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=auto,quality=85/images/prototypes/RZ-07-C/17.jpg 1440w,
+                https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-07-C/17.jpg 1920w,
+                https://assets.ashwaracing.org/cdn-cgi/image/width=2560,format=auto,quality=85/images/prototypes/RZ-07-C/17.jpg 2560w"
+        sizes="100vw" alt="" width="1440" height="860" fetchpriority="high" decoding="async">
 
-<!-- ═══════════════════════════════════════
-     ORG STRUCTURE
-════════════════════════════════════════ -->
-<section class="al-org">
-  <div class="al-section-header">
-    <div class="al-label"><span class="label-dash"></span>Structure</div>
-    <h2 class="al-section-title">HOW WE'RE<br><em>Organised</em></h2>
-    <p class="al-section-desc">
-      Ashwa operates across multiple technical and management verticals,
-      each led by alumni who guide the next generation.
-    </p>
-  </div>
+      <div class="al-hero-content">
+        <p class="label">20+ Years of Engineering Excellence</p>
+        <h1>Our <em>Alumni</em> &amp; Network</h1>
+        <p class="al-hero-desc">
+          Every prototype Ashwa has built carries the fingerprints of hundreds of engineers.
+          This is where they are now.
+        </p>
+      </div>
+    </section>
 
-  <div class="org-chart" id="org-chart">
-    <!-- Rendered by JS -->
-  </div>
-</section>
+    <section class="stat-bar" aria-label="Alumni network by the numbers">
+      <div class="container stat-bar-grid">
+        <div class="stat">
+          <span class="stat-num" data-count="400" data-suffix="+">400+</span>
+          <span class="stat-label">Alumni</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-count="20" data-suffix="+">20+</span>
+          <span class="stat-label">Years Active</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-count="100" data-suffix="+">100+</span>
+          <span class="stat-label">Companies</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" data-count="12" data-suffix="+">12+</span>
+          <span class="stat-label">Countries</span>
+        </div>
+      </div>
+    </section>
 
-<!-- ═══════════════════════════════════════
-     NOTABLE ALUMNI
-════════════════════════════════════════ -->
-<section class="al-notable">
-  <div class="al-section-header">
-    <div class="al-label"><span class="label-dash"></span>People</div>
-    <h2 class="al-section-title">NOTABLE<br><em>Alumni</em></h2>
-  </div>
+    <section class="al-section al-section--alt al-org" id="structure" aria-labelledby="structure-title">
+      <div class="container al-section-header">
+        <p class="label">Structure</p>
+        <h2 id="structure-title">How we're <em>organised</em></h2>
+        <p class="al-section-desc">
+          Ashwa operates across multiple technical and management verticals,
+          each led by alumni who guide the next generation.
+        </p>
+      </div>
 
-  <!-- Filter bar -->
-  <div class="al-filters" id="al-filters">
-    <button class="al-filter-btn active" data-filter="all">All</button>
-    <!-- More filter buttons injected by JS based on data -->
-  </div>
+      <!-- Rendered by alumni.js -->
+      <div class="container org" id="org-chart"></div>
+    </section>
 
-  <div class="al-grid" id="al-grid">
-    <!-- Cards injected by JS -->
-  </div>
-</section>
+    <section class="al-section al-testimonials" id="voices" aria-labelledby="voices-title">
+      <div class="container">
+        <div class="al-section-header">
+          <p class="label">Voices</p>
+          <h2 id="voices-title">What they <em>say</em></h2>
+        </div>
 
-<!-- ═══════════════════════════════════════
-     TESTIMONIALS
-════════════════════════════════════════ -->
-<section class="al-testimonials">
-  <div class="al-section-header">
-    <div class="al-label"><span class="label-dash"></span>Voices</div>
-    <h2 class="al-section-title">WHAT THEY<br><em>Say</em></h2>
-  </div>
-  <div class="al-testi-track" id="al-testi-track">
-    <!-- Injected by JS -->
-  </div>
-  <div class="al-testi-dots" id="al-testi-dots"></div>
-</section>
+        <div class="al-testi-track" id="al-testi-track" tabindex="0" role="region"
+          aria-roledescription="carousel" aria-label="Alumni testimonials"></div>
 
-<!-- ═══════════════════════════════════════
-     CTA — JOIN THE NETWORK
-════════════════════════════════════════ -->
-<section class="al-cta">
-  <div class="al-cta-inner">
-    <div class="al-label"><span class="label-dash"></span>Stay Connected</div>
-    <h2 class="al-cta-title">ONCE ASHWA,<br><em>Always Ashwa.</em></h2>
-    <p class="al-cta-desc">Are you an alumnus? Get back in touch, mentor current members, or just say hello.</p>
-    <a href="contact.html" class="al-cta-btn">Reach Out</a>
-  </div>
-</section>
+        <div class="al-testi-controls" id="al-testi-controls" hidden>
+          <div class="al-testi-progress" aria-hidden="true"><span id="al-testi-bar"></span></div>
+          <div class="al-testi-nav">
+            <button class="al-testi-btn" id="al-testi-prev" type="button" aria-label="Previous testimonials">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 5l-7 7 7 7" /></svg>
+            </button>
+            <button class="al-testi-btn" id="al-testi-next" type="button" aria-label="Next testimonials">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<footer id="main-footer"></footer>
+    <section class="al-section al-section--alt al-cta" aria-labelledby="cta-title">
+      <div class="container">
+        <p class="label">Stay Connected</p>
+        <h2 id="cta-title">Once Ashwa, <em>always Ashwa.</em></h2>
+        <p class="al-cta-desc">Are you an alumnus? Get back in touch, mentor current members, or just say hello.</p>
+        <a href="contact.html" class="btn-solid">Reach Out</a>
+      </div>
+    </section>
 
-<script src="assets/js/components/header.js"></script>
-<script src="assets/js/pages/alumni.js"></script>
+  </main>
+
+  <footer id="main-footer"></footer>
+
+  <script src="assets/js/components/theme.js" defer></script>
+  <script src="assets/js/components/utils.js" defer></script>
+  <script src="assets/js/components/header.js" defer></script>
+  <script src="assets/js/pages/alumni.js" defer></script>
+
 </body>
+
 </html>
