@@ -672,15 +672,25 @@
       "Member"
     ],
     "subsystem": [
-      "Sponsorship, Marketing & Public Relations"
+      "Sponsorship",
+      "Marketing & Public Relations"
     ],
     "year": "2026",
-    "experience": "Secured 20+ sponsors including industry giants like Adani Group, Motul, Henkel, SKF, Delhivery, and BMC. Turns conversations into long-term collaborations, building partnerships that fuel performance on and off the track.",
+    "experience": "For the 2025–26 season, I helped Ashwa Racing work towards its ₹35 lakh budget by securing ₹25+ lakh in financial and in-kind sponsorships through strategic outreach, professional communication, and relationship-building. This marked one of the biggest sponsorship boosts in the team’s 20+ year history, helping achieve a record 40+ sponsors in a single season, including Adani, SKF, Motul, Delhivery, Henkel, Pegasys Machinery, Sansera Engineering, Metacarbon, and many more—strengthening industry partnerships and the team’s future network.",
     "social": {
       "linkedin": "https://www.linkedin.com/in/vansh-jain-a55b272b6",
       "github": null,
       "gmail": "vanshjain.ashwa@gmail.com"
-    }
+    },
+    "prototypes": {
+      "Combustion": "Member / Part of team",
+      "Hybrid": "Member / Part of team",
+      "Electric": "Member / Part of team",
+      "Hyperloop": "Member / Part of team",
+      "Driverless": "Member / Part of team"
+    },
+    "testimony": "Everything was truly superb and amazing. Ashwa has played a significant role in shaping who I am today, helping me grow both personally and professionally. I’m incredibly grateful for the experiences, learning, and opportunities I had during my time there. I thoroughly enjoyed my tenure with Ashwa, and it will always hold a special place in my journey.",
+    "currentJob": "Multi-Brand Role Working across Speedworks, RaceOrbit, All Things Driven & Metacarbon — driving marketing, brand strategy, and growth across all four brands."
   },
   {
     "name": "Hemanth",
@@ -707,12 +717,16 @@
       "Electrical & Testing"
     ],
     "year": "2026",
-    "experience": "Designed and developed the BMS/AMS architecture and supporting firmware for the vehicle.",
+    "experience": "Worked on developing AMS systems for RZ-XE6",
     "social": {
       "linkedin": "https://www.linkedin.com/in/sandeepnu0620/",
       "github": "https://github.com/SandeepASHWARACING",
       "gmail": "sandeepnuttarkar.ashwa@gmail.com"
-    }
+    },
+    "prototypes": {
+      "Electric": "Member / Part of team"
+    },
+    "currentJob": "Associate engineer AIRBUS"
   },
   {
     "name": "U P Madhavan",
