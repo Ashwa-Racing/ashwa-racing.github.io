@@ -74,7 +74,7 @@ body {
 
 .about-hero {
   position:relative;
-  min-height:calc(100vh - var(--nav-h));
+  min-height:min(720px,calc(88svh - var(--nav-h)));
   display:flex;
   flex-direction:column;
   justify-content:flex-end;

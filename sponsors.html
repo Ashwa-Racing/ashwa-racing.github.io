@@ -1,113 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sponsors &amp; Partners | Ashwa Racing</title>
-
-  <link rel="canonical" href="https://ashwaracing.org/sponsors.html" />
-
-  <!-- FIX: meta description rewritten — specific to Ashwa, not generic marketing copy -->
-  <meta name="description"
-    content="45+ industry sponsors powering Ashwa Racing's 2026–27 Formula Student season. Bosch, Infineon, Analog Devices, SKF, Motul, LAPP, and more — from sensors to structural components." />
-
-  <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="assets/images/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png" />
-  <meta name="apple-mobile-web-app-title" content="Ashwa Racing" />
-  <link rel="manifest" href="assets/images/favicon/site.webmanifest" />
-
+  <meta name="description" content="Meet the companies and institutions supporting Ashwa Racing's Formula Student programme with technical expertise, materials, manufacturing, education, and funding.">
+  <link rel="canonical" href="https://ashwaracing.org/sponsors.html">
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
-  <link rel="stylesheet" href="assets/css/components/header.css?v=2">
+  <link rel="preconnect" href="https://assets.ashwaracing.org">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/components/footer.css">
   <link rel="stylesheet" href="assets/css/pages/sponsors.css">
 </head>
-
 <body>
-
   <div id="main-header"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
+  </button>
 
-  <!-- ═══════════════════════════════════════════════════════════
-     HERO
-     FIX: copy rewritten throughout.
-     Old: "pioneering companies pushing the boundaries of
-          engineering, performance, and innovation" — generic
-          marketing language that could describe any sponsor
-          page on earth.
-     New: specific to Ashwa's actual sponsor relationships —
-          names what the partners supply and why it matters.
-     FIX: "Tier quick-jump" text node removed — it was a raw
-          text string sitting directly in the <section>, visible
-          in the DOM and in some render contexts.
-     FIX: tier nav <nav> uncommented — the JS builds it correctly
-          but the commented-out container meant it rendered nowhere.
-════════════════════════════════════════════════════════════ -->
-  <section class="sp-hero" aria-label="Partners hero">
-    <div class="sp-hero-bg" aria-hidden="true"></div>
-    <div class="sp-hero-wall" id="hero-wall" aria-hidden="true"></div>
-    <div class="sp-hero-overlay" aria-hidden="true"></div>
-    <div class="sp-hero-grid" aria-hidden="true"></div>
-    <div class="sp-hero-stripe" aria-hidden="true"></div>
+  <main>
+    <section class="sp-hero" aria-labelledby="sponsors-title">
+      <div class="sp-hero-bg" aria-hidden="true"></div>
+      <div class="sp-hero-wall" id="hero-wall" aria-hidden="true"></div>
+      <div class="sp-hero-overlay" aria-hidden="true"></div>
+      <div class="sp-hero-grid" aria-hidden="true"></div>
+      <div class="sp-hero-content">
+        <p class="sp-eyebrow"><span></span> Our partners <span class="sp-partner-count" id="sponsor-count"></span></p>
+        <h1 class="sp-hero-title" id="sponsors-title">Built <em>together.</em></h1>
+        <p class="sp-hero-desc">Our partners help turn engineering ideas into a race-ready car. Their support spans technology, materials, manufacturing, education, and the people who make every season possible.</p>
+        <a href="sponsorship.html#packages" class="sp-cta">Explore partnership packages <span aria-hidden="true">&#8594;</span></a>
+      </div>
+      <nav class="tier-nav" id="tier-nav" aria-label="Jump to sponsor category"></nav>
+    </section>
 
-    <div class="sp-hero-content">
-      <h1 class="sp-hero-title">OUR<br><em>PARTNERS</em></h1>
+    <div class="sp-listing" id="sponsor-sections" aria-label="Sponsors and partners by category" aria-live="polite"></div>
 
-      <!--
-      FIX: description now says something real.
-      45+ sponsors is a credible, verifiable number.
-      "go into the car" is specific — it tells a sponsor their
-      contribution is tangible, not just a logo placement.
-    -->
-      <p class="sp-hero-desc">
-        Formula Student requires significant financial and technical support.
-        Our sponsors make it possible for the team to design, manufacture, and compete with the car each season.
-      </p>
-
-      <a href="smp.html" class="sp-cta" aria-label="View sponsorship packages">
-        Become a Partner <i class="fas fa-arrow-right" aria-hidden="true"></i>
-      </a>
-    </div>
-
-    <!--
-    FIX: tier nav restored — was commented out with only the label text
-    left as a naked text node in the DOM ("Tier quick-jump").
-    The JS (sponsors.js → buildTierNav()) correctly targets #tier-nav
-    and injects the buttons; the container just needed to exist and be visible.
-  -->
-    <nav class="tier-nav" id="tier-nav" aria-label="Jump to sponsor tier"></nav>
-  </section>
-
-  <!-- ═══════════════════════════════════════════════════════════
-     SPONSOR SECTIONS
-     Fully injected by sponsors.js.
-     Each tier (Executive → Platinum → Gold → Silver → Technical)
-     gets its own section, grid layout, accent colour, and
-     scroll-reveal stagger.
-════════════════════════════════════════════════════════════ -->
-  <main id="sponsor-sections" aria-label="Sponsor listings by tier"></main>
+    <section class="sp-bottom-cta" aria-labelledby="sp-cta-title">
+      <div>
+        <p class="sp-eyebrow"><span></span> Join the grid</p>
+        <h2 id="sp-cta-title">Let's build what's next.</h2>
+        <p>Help our student engineers design, build, and compete on an international stage.</p>
+      </div>
+      <a href="sponsorship.html#packages" class="sp-cta sp-cta-button">View partnership packages <span aria-hidden="true">&#8594;</span></a>
+    </section>
+  </main>
 
   <footer id="main-footer"></footer>
-
+  <script src="assets/js/components/utils.js" defer></script>
   <script src="assets/js/components/header.js" defer></script>
-
-  <!--
-  sponsors.js is NOT deferred — it needs to run after DOMContentLoaded
-  but the script itself contains no DOMContentLoaded wrapper,
-  so it must execute after the target elements (#sponsor-sections,
-  #tier-nav) exist in the DOM. Placing it at the end of <body>
-  with defer would fire it before the DOM is guaranteed ready in
-  all browsers. Bottom-of-body placement without defer is correct here.
--->
-  <script src="assets/js/pages/sponsors.js"></script>
-
+  <script src="assets/js/components/theme.js" defer></script>
+  <script src="assets/js/pages/sponsors.js" defer></script>
 </body>
-
 </html>

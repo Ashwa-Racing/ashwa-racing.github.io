@@ -7,7 +7,7 @@
 
   <link rel="canonical" href="https://ashwaracing.org/contact.html" />
 
-  <meta name="description" content="Contact Ashwa Racing for sponsorships, recruitment, media collaborations, or general enquiries. Connect with the Formula Student team of RV College of Engineering and be part of the engineering journey behind our race cars." />
+<meta name="description" content="Contact Ashwa Racing by email, phone, or WhatsApp about sponsorship packages, recruitment, media, or general enquiries. Reach the Formula Student team at RV College of Engineering." />
 
   <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96" />
   <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg" />
@@ -18,16 +18,31 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://assets.ashwaracing.org">
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
-  <link rel="stylesheet" href="assets/css/components/header.css?v=2">
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/components/footer.css">
   <link rel="stylesheet" href="assets/css/pages/contact.css">
 </head>
 <body>
 
 <div id="main-header"></div>
+
+<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l1.41-1.41" /></svg>
+</button>
 
 <!-- ═══════════════════════════
      HERO
@@ -41,13 +56,14 @@
   <div class="ct-hero-content">
     <div class="ct-eyebrow">
       <span class="eyebrow-dash"></span>
-      <span>Ashwa Racing · RVCE</span>
+      <span>Ashwa Racing &middot; RVCE</span>
     </div>
     <h1 class="ct-hero-title">GET IN<br><em>TOUCH.</em></h1>
     <p class="ct-hero-desc">
       Whether you're a student looking to join, a company interested in partnership,
-      or a racing enthusiast — we'd love to hear from you.
+      or a racing enthusiast &mdash; we'd love to hear from you.
     </p>
+    <a class="ct-hero-link" href="sponsorship.html">Explore sponsorship packages <span aria-hidden="true">&rarr;</span></a>
   </div>
 </section>
 
@@ -70,16 +86,16 @@
       <div class="ct-detail">
         <div class="ct-detail-icon"><i class="fas fa-envelope"></i></div>
         <div>
-          <div class="ct-detail-label">Email</div>
+          <div class="ct-detail-label">General enquiries</div>
           <a class="ct-detail-value" href="mailto:ashwaracing@rvce.edu.in">ashwaracing@rvce.edu.in</a>
         </div>
       </div>
 
       <div class="ct-detail">
-        <div class="ct-detail-icon"><i class="fas fa-phone-alt"></i></div>
+        <div class="ct-detail-icon"><i class="fas fa-envelope"></i></div>
         <div>
-          <div class="ct-detail-label">Phone</div>
-          <a class="ct-detail-value" href="tel:+918208072332">+91 82080 72332</a>
+          <div class="ct-detail-label">Sponsorship enquiries</div>
+          <a class="ct-detail-value" href="mailto:ashwa.smp@gmail.com">ashwa.smp@gmail.com</a>
         </div>
       </div>
 
@@ -87,9 +103,35 @@
         <div class="ct-detail-icon"><i class="fas fa-map-marker-alt"></i></div>
         <div>
           <div class="ct-detail-label">Workshop</div>
-          <span class="ct-detail-value">RV College of Engineering,<br>Mysore Road, Bengaluru — 560059</span>
+          <span class="ct-detail-value">RV College of Engineering,<br>Mysore Road, Bengaluru &mdash; 560059</span>
         </div>
       </div>
+    </div>
+
+    <div class="ct-direct-block reveal" style="--delay:0.04s">
+      <div class="ct-section-label"><span class="label-dash"></span>Talk to an SMP Lead</div>
+      <article class="ct-direct-card">
+        <div class="ct-direct-icon" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
+        <div class="ct-direct-copy">
+          <span class="ct-direct-role">Batch of 2027</span>
+          <h3>Pranav Ramakrishnan</h3>
+          <div class="ct-direct-actions">
+            <a class="ct-direct-action ct-direct-action--primary" href="https://wa.me/919148718718" data-whatsapp-contact="919148718718" data-whatsapp-name="Pranav" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a class="ct-direct-action" href="tel:+919148718718">Call</a>
+          </div>
+        </div>
+      </article>
+      <article class="ct-direct-card">
+        <div class="ct-direct-icon" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
+        <div class="ct-direct-copy">
+          <span class="ct-direct-role">Batch of 2028</span>
+          <h3>Dilan Da Silva</h3>
+          <div class="ct-direct-actions">
+            <a class="ct-direct-action ct-direct-action--primary" href="https://wa.me/919886546677" data-whatsapp-contact="919886546677" data-whatsapp-name="Dilan" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a class="ct-direct-action" href="tel:+919886546677">Call</a>
+          </div>
+        </div>
+      </article>
     </div>
 
     <!-- Enquiry types -->
@@ -99,7 +141,7 @@
       </div>
       <div class="ct-enquiry-grid">
         <button class="ct-eq-btn active" data-eq="general">General</button>
-        <button class="ct-eq-btn" data-eq="sponsorship">Sponsorship & Marketing Purposes</button>
+        <button class="ct-eq-btn" data-eq="sponsorship">Sponsorship</button>
         <button class="ct-eq-btn" data-eq="recruitment">Recruitment</button>
         <button class="ct-eq-btn" data-eq="media">Media / Press</button>
       </div>
@@ -183,7 +225,7 @@
         <span class="ct-submit-text">Send Message</span>
         <span class="ct-submit-icon"><i class="fas fa-arrow-right"></i></span>
         <span class="ct-submit-loading" hidden>
-          <i class="fas fa-circle-notch fa-spin"></i> Sending…
+          <i class="fas fa-circle-notch fa-spin"></i> Sending&hellip;
         </span>
       </button>
 
@@ -203,8 +245,9 @@
 
 <footer id="main-footer"></footer>
 
-<script src="assets/js/components/header.js"></script>
-<script src="assets/js/pages/contact.js"></script>
+<script src="assets/js/components/theme.js" defer></script>
+<script src="assets/js/components/header.js" defer></script>
+<script src="assets/js/pages/contact.js" defer></script>
 
 </body>
 </html>

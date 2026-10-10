@@ -31,6 +31,31 @@ document.addEventListener("DOMContentLoaded", () => {
 const params = new URLSearchParams(window.location.search);
 const urlType = params.get("type");
 
+const packageName = params.get("package");
+const enquiryTopics = {
+  general: "a general enquiry",
+  sponsorship: "a sponsorship or partnership enquiry",
+  recruitment: "joining the team",
+  media: "a media or press enquiry"
+};
+
+function updateWhatsAppLinks() {
+  const enquiryType = enquiryHidden?.value || urlType || "general";
+  const topic = enquiryType === "sponsorship" && packageName
+    ? `the ${packageName} sponsorship package`
+    : enquiryTopics[enquiryType] || enquiryTopics.general;
+
+  document.querySelectorAll("[data-whatsapp-contact]").forEach(link => {
+    const name = link.dataset.whatsappName || "Ashwa Racing";
+    const message = `Hi ${name}, I'm contacting Ashwa Racing about ${topic}.`;
+    link.href = `https://wa.me/${link.dataset.whatsappContact}?text=${encodeURIComponent(message)}`;
+  });
+}
+
+if (urlType === "sponsorship" && packageName) {
+  const subjectInput = document.getElementById("ct-subject");
+  if (subjectInput) subjectInput.value = `${packageName} Sponsorship Package`;
+}
 if (urlType && RECIPIENTS[urlType]) {
   enquiryHidden.value = urlType;
 
@@ -56,6 +81,7 @@ if (urlType && RECIPIENTS[urlType]) {
   document.getElementById("ct-form")
     ?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
+updateWhatsAppLinks();
 
   // ─── Enquiry type pills ───────────────────────────────────
   document.querySelectorAll(".ct-eq-btn").forEach(btn => {
@@ -63,6 +89,7 @@ if (urlType && RECIPIENTS[urlType]) {
       document.querySelectorAll(".ct-eq-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       if (enquiryHidden) enquiryHidden.value = btn.dataset.eq;
+      updateWhatsAppLinks();
 
       // Update form subject placeholder to match context
       const subjectInput = document.getElementById("ct-subject");

@@ -1,4 +1,4 @@
-﻿.navbar {
+.navbar {
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -124,7 +124,7 @@
 
 .dropdown-panel {
   position: absolute;
-  top: calc(100% + 10px);
+  top: 100%;
   right: 0;
   z-index: 1100;
   display: grid;
@@ -133,7 +133,7 @@
   width: max-content;
   min-width: 230px;
   max-width: min(360px, calc(100vw - 32px));
-  padding: 8px;
+  padding: 12px 8px 8px;
   border: 1px solid var(--border-strong, rgba(255,255,255,0.16));
   border-top: 2px solid var(--red, #e8001d);
   background: var(--surface, #191b22);
