@@ -1,23 +1,104 @@
 {
   "governance": {
-    "title": "Steering Committee",
-    "description": "Approves funds and steers the club in the right direction.",
-    "members": [
+    "title": "Governance & Advisors",
+    "description": "Institutional leadership, alumni advisors, and industry leaders support the team.",
+    "groups": [
       {
-        "name": "Faculty Advisor Name",
-        "designation": "Faculty Advisor"
+        "title": "Institutional Leadership",
+        "members": [
+          {
+            "name": "Dr. K.N. Subramanya",
+            "designation": "Principal, R.V. College of Engineering",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RVCE/knsubramanya.webp",
+            "featured": true
+          },
+          {
+            "name": "Dr. Ranvindra S. Kulkarni",
+            "designation": "Faculty Advisor · Professor, Department of Aerospace Engineering, R.V. College of Engineering",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RVCE/ravindraskulkarni.webp",
+            "featured": true
+          },
+          {
+            "name": "Dr. M.P. Shyam",
+            "designation": "President, RSST",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RSST/mpshyam.webp",
+            "featured": true
+          }
+        ]
       },
       {
-        "name": "Member Name",
-        "designation": "Steering Committee"
+        "title": "RSST Management",
+        "members": [
+          {
+            "name": "Dr. C. Vinod Hayagriv",
+            "designation": "Vice President, RSST",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RSST/cvinod.webp"
+          },
+          {
+            "name": "Mr. A.C. Chandrashekar Raju",
+            "designation": "Vice President, RSST",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RSST/acchandrashekar.webp"
+          },
+          {
+            "name": "Mr. P.S. Venkatesh Babu",
+            "designation": "Treasurer, RSST",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RSST/psvenkatesh.webp"
+          },
+          {
+            "name": "Dr. (h.c.) A.V.S. Murthy",
+            "designation": "Honorary Secretary, RSST",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RSST/avsmurthy.webp"
+          },
+          {
+            "name": "Mr. D.P. Nagaraj",
+            "designation": "Honorary Joint Secretary, RSST",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RSST/dpnagaraj.webp"
+          },
+          {
+            "name": "Mr. Nikhil A Murthy",
+            "designation": "Assistant Secretary, RSST",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/RSST/nikhilamurthy.webp"
+          }
+        ]
       },
       {
-        "name": "Member Name",
-        "designation": "Steering Committee"
+        "title": "Alumni Advisors & Founder",
+        "members": [
+          {
+            "name": "Arunraj Subbaraj (Founder)",
+            "designation": "Director, Quality HDPE Packaging Industry",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/advisor/arunraj.webp"
+          },
+          {
+            "name": "Bhuvan Doreswamy (Electrical Advisor)",
+            "designation": "Student, Masters of ECE, University of Minnesota. Former PD at Microchip",
+            "photo": "https://assets.ashwaracing.org/images/team/default.webp"
+          },
+          {
+            "name": "Darren Nishan Patrao (Mechanical Advisor)",
+            "designation": "Mechanical Engineer, Applied Materials.",
+            "photo": "https://assets.ashwaracing.org/images/team/default.webp"
+          },
+          {
+            "name": "Goutham SG (Advisor)",
+            "photo": "https://assets.ashwaracing.org/images/team/default.webp"
+          }
+        ]
       },
       {
-        "name": "Member Name",
-        "designation": "Steering Committee"
+        "title": "Industry Leaders",
+        "members": [
+          {
+            "name": "Hubert Reilard",
+            "designation": "Managing Partner, COMANO Advisory LLP. Former Managing Director, EFD Induction Group",
+            "photo": "https://assets.ashwaracing.org/images/alumni-management/industryleads/herbert.webp"
+          },
+          {
+            "name": "Harish Kukreja",
+            "designation": "CEO at Aquarius Estates & Properties",
+            "photo": "https://assets.ashwaracing.org/images/team/default.webp"
+          }
+        ]
       }
     ]
   },
@@ -31,16 +112,21 @@
         "sublabel": "CV",
         "members": [
           {
-            "name": "Name",
-            "designation": "Team Captain"
+            "name": "Shravan CS",
+            "designation": "Team Captain",
+            "photo": "https://assets.ashwaracing.org/images/team/members/2027/Shravan CS.webp",
+            "featured": true
           },
           {
-            "name": "Name",
-            "designation": "Project Manager"
+            "name": "N Akshay Urs",
+            "designation": "Project Manager",
+            "photo": "https://assets.ashwaracing.org/images/team/members/2027/N Akshay Urs.webp"
           },
           {
-            "name": "Name",
-            "designation": "Chief Engineer"
+            "name": "Sathvik S Naik",
+            "designation": "Chief Engineer",
+            "photo": "https://assets.ashwaracing.org/images/team/members/2027/Sathvik S Naik.webp",
+            "featured": true
           }
         ]
       },
@@ -50,16 +136,21 @@
         "sublabel": "EV",
         "members": [
           {
-            "name": "Name",
-            "designation": "Team Captain"
+            "name": "Amitha A V",
+            "designation": "Team Captain",
+            "photo": "https://assets.ashwaracing.org/images/team/default.webp",
+            "featured": true
           },
           {
-            "name": "Name",
-            "designation": "Project Manager"
+            "name": "Kritik Modawel",
+            "designation": "Project Manager",
+            "photo": "https://assets.ashwaracing.org/images/team/default.webp"
           },
           {
-            "name": "Name",
-            "designation": "Chief Engineer"
+            "name": "Gaurav Raju",
+            "designation": "Chief Engineer",
+            "photo": "https://assets.ashwaracing.org/images/team/members/2026/Gaurav Raju.webp",
+            "featured": true
           }
         ]
       }
@@ -72,73 +163,86 @@
       {
         "label": "Brakes & Logistics",
         "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
+          "name": "Shravan CS",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Shravan CS.webp"
         },
         "members": []
       },
       {
         "label": "Electrical & Testing",
         "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
+          "name": "Aditeya Sarkar",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Aditeya Sarkar.webp"
         },
         "members": []
       },
       {
         "label": "Engine & Powertrain",
         "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
+          "name": "Talin Thimmaiah",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Talin Thimmaiah.webp"
         },
         "members": []
       },
       {
         "label": "Drivetrain & HR",
         "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
+          "name": "Ranjith DS",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Ranjith DS.webp"
         },
         "members": []
       },
       {
         "label": "Suspension & Admin",
         "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
+          "name": "Aitijhya Sahoo",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Aitijhya Sahoo.webp"
         },
         "members": []
       },
       {
         "label": "Chassis & Workshop Management",
         "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
+          "name": "Sathvik S Naik",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Sathvik S Naik.webp"
         },
         "members": []
       },
       {
         "label": "IT",
         "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
+          "name": "Aditeya Sarkar",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Aditeya Sarkar.webp"
         },
         "members": []
       },
       {
         "label": "SMP",
         "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
+          "name": "Pranav Ramakrishnan",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Pranav Ramakrishnan.webp"
+        },
+        "members": []
+      },
+      {
+        "label": "Finance",
+        "lead": {
+          "name": "Pranav Ramakrishnan",
+          "designation": "Subsystem Lead",
+          "photo": "https://assets.ashwaracing.org/images/team/members/2027/Pranav Ramakrishnan.webp"
         },
         "members": []
       },
       {
         "label": "Aero",
-        "lead": {
-          "name": "Name",
-          "designation": "Subsystem Lead"
-        },
         "members": []
       }
     ]

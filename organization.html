@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Organization | Ashwa Racing</title>
+  <meta name="description" content="Meet the leaders, advisors, project teams, and subsystem leads who shape Ashwa Racing.">
+  <link rel="canonical" href="https://ashwaracing.org/organization.html">
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico"><link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="preconnect" href="https://assets.ashwaracing.org">
+  <link rel="preload" as="fetch" href="/assets/data/org-structure.json" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500&display=swap"></noscript>
+  <script>(() => { let theme = null; try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {} document.documentElement.dataset.theme = theme === "light" ? "light" : "dark"; })();</script>
+  <link rel="stylesheet" href="assets/css/components/base.css"><link rel="stylesheet" href="assets/css/components/header.css?v=3"><link rel="stylesheet" href="assets/css/components/footer.css"><link rel="stylesheet" href="assets/css/pages/organization.css">
+</head>
+<body>
+  <div id="main-header"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
+  </button>
+  <main>
+    <section class="org-hero" aria-labelledby="org-page-title"><div class="container org-hero-content">
+      <p class="label">People &amp; Leadership</p><h1 id="org-page-title">How we're <em>organised</em></h1>
+      <p>Ashwa is built by students, supported by alumni and advisors, and strengthened by the people who guide each project and subsystem.</p>
+    </div></section>
+    <section class="organization-structure" id="structure" aria-labelledby="structure-title">
+      <div class="container al-section-header">
+        <p class="label">Structure</p>
+        <h2 id="structure-title">How we're <em>organised</em></h2>
+        <p class="al-section-desc">
+          Ashwa operates across multiple technical and management verticals,
+          each guided by dedicated team members, alumni, and advisors.
+        </p>
+      </div>
+
+      <!-- Rendered by organization.js -->
+      <div class="container org" id="org-chart"></div>
+    </section>
+
+
+  </main>
+  <footer id="main-footer"></footer>
+  <script src="assets/js/components/theme.js" defer></script><script src="assets/js/components/utils.js" defer></script><script src="assets/js/components/header.js" defer></script><script src="assets/js/pages/organization.js" defer></script>
+</body>
+</html>

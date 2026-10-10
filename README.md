@@ -54,7 +54,8 @@ Opening files straight off disk (`file://`) mostly works, but the header/footer 
 ```
 ashwa-racing.github.io/
 ├── index.html, about.html, team.html, alumni.html,
-│   subsystem.html, projects.html, sponsors.html, smp.html,
+│   subsystem.html, organization.html, projects.html, sponsors.html,
+│   sponsorship.html, smp.html,
 │   recruitment.html, contact.html, gallery.html, newsletters.html
 │
 ├── aero.html, brakes-logistics.html, chassis-workshop.html,

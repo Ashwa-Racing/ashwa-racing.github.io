@@ -1,0 +1,49 @@
+.sp-landing-hero { position:relative; display:flex; align-items:center; min-height:min(640px, calc(82svh - var(--nav-h))); padding:clamp(104px, 14vh, 150px) 0 76px; overflow:hidden; background:var(--ink); }
+.sp-landing-hero__image { position:absolute; inset:0; background:linear-gradient(90deg, rgba(8,9,12,.96) 0%, rgba(8,9,12,.82) 46%, rgba(8,9,12,.25) 100%), linear-gradient(0deg, rgba(8,9,12,.35), transparent 50%), url("https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-XX6-C/event/3.JPG") center 35%/cover; }
+.sp-landing-hero__content { position:relative; z-index:1; }
+.sp-landing-hero .label { margin-bottom:22px; }
+.sp-landing-hero h1 { max-width:10ch; margin:0 0 24px; color:var(--white); font-family:var(--display); font-size:clamp(4rem, 10vw, 8.5rem); font-weight:800; line-height:.82; letter-spacing:-.04em; text-transform:uppercase; }
+.sp-landing-hero h1 em,.sp-intro h2 em,.sp-section-heading h2 em,.sp-custom h2 em { color:var(--red); font-family:"Samarkan",serif; font-style:italic; text-transform:none; letter-spacing:0; }
+.sp-landing-lead { max-width:58ch; color:rgba(255,255,255,.78); font-size:clamp(1rem,1.6vw,1.2rem); line-height:1.7; }
+.sp-landing-actions { display:flex; align-items:center; gap:28px; flex-wrap:wrap; margin-top:32px; }
+.sp-text-link,.sp-inline-link { color:var(--text-strong); font-weight:600; text-decoration:none; }
+.sp-text-link span,.sp-inline-link span { margin-left:8px; color:var(--red); transition:margin .2s ease; }
+.sp-text-link:hover span,.sp-inline-link:hover span { margin-left:13px; }
+.sp-hero-note { position:absolute; z-index:1; right:var(--site-gutter); bottom:28px; left:var(--site-gutter); display:flex; justify-content:space-between; padding-top:12px; border-top:1px solid rgba(255,255,255,.28); color:rgba(255,255,255,.62); font-family:var(--display); font-size:.72rem; font-weight:700; letter-spacing:.16em; }
+.section-pad { padding:clamp(64px,8vw,112px) 0; }
+.sp-intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(36px,8vw,120px); align-items:start; }
+.sp-intro h2,.sp-section-heading h2,.sp-custom h2 { margin-top:14px; color:var(--text-strong); font-family:var(--display); font-size:clamp(2.8rem,5vw,5rem); font-weight:800; line-height:.95; text-transform:uppercase; }
+.sp-intro-copy { max-width:60ch; color:var(--text-soft); font-size:1.04rem; line-height:1.75; }
+.sp-intro-copy p+p { margin-top:18px; }
+.sp-inline-link { display:inline-block; margin-top:26px; }
+.sp-packages { background:var(--section-bg); }
+.sp-section-heading { display:flex; justify-content:space-between; align-items:end; gap:36px; margin-bottom:40px; }
+.sp-section-heading h2 { margin-bottom:0; }
+.sp-section-heading>p { max-width:48ch; color:var(--text-soft); line-height:1.7; }
+.sp-package-grid { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:14px; align-items:stretch; }
+.sp-package { position:relative; grid-column:span 2; display:flex; flex-direction:column; min-height:390px; padding:clamp(22px,3vw,34px); overflow:hidden; border:1px solid var(--border-strong); border-top:3px solid var(--package-accent,var(--red)); background:var(--card-bg); color:var(--card-text); }
+.sp-package:nth-child(4) { grid-column:2 / span 2; }
+.sp-package:nth-child(5) { grid-column:4 / span 2; }
+.sp-package--executive { --package-accent:#e8001d; }
+.sp-package--platinum { --package-accent:#91b8d8; }
+.sp-package--gold { --package-accent:#c59b45; }
+.sp-package--silver { --package-accent:#aeb5c0; }
+.sp-package--titanium { --package-accent:#56a882; }
+.sp-package-top { display:flex; justify-content:space-between; align-items:center; color:var(--text-muted); font-family:var(--display); font-size:.7rem; font-weight:700; letter-spacing:.14em; }
+.sp-package-mark { color:var(--package-accent); font-size:1rem; }
+.sp-package h3 { margin:24px 0 2px; color:var(--text-strong); font-family:var(--display); font-size:2rem; font-weight:800; text-transform:uppercase; }
+.sp-package-amount { color:var(--package-accent); font-family:var(--display); font-size:1.5rem; font-weight:700; }
+.sp-package-summary { min-height:52px; margin-top:14px; color:var(--text-soft); font-size:.92rem; line-height:1.55; }
+.sp-package ul { display:grid; gap:10px; margin:20px 0 28px; padding:0; list-style:none; }
+.sp-package li { position:relative; padding-left:18px; color:var(--card-text); font-size:.9rem; line-height:1.5; }
+.sp-package li::before { position:absolute; top:.64em; left:0; width:6px; height:6px; background:var(--package-accent); content:""; }
+.sp-package-cta { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:auto; padding-top:16px; border-top:1px solid var(--border); color:var(--text-strong); font-family:var(--display); font-size:.86rem; font-weight:800; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
+.sp-package-cta span { color:var(--package-accent); font-size:1.2rem; transition:transform .2s ease; }
+.sp-package-cta:hover span { transform:translateX(4px); }
+.sp-package-footnote { margin-top:22px; color:var(--text-muted); font-size:.82rem; line-height:1.6; }
+.sp-custom { border-top:1px solid var(--border); }
+.sp-custom-inner { display:grid; grid-template-columns:1fr 1fr; gap:clamp(36px,8vw,120px); align-items:center; }
+.sp-custom-inner>div:last-child p { max-width:58ch; margin-bottom:26px; color:var(--text-soft); font-size:1.02rem; line-height:1.7; }
+@media(max-width:900px) { .sp-package-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .sp-package,.sp-package:nth-child(4),.sp-package:nth-child(5) { grid-column:auto; } .sp-package:last-child { grid-column:1 / -1; min-height:unset; } }
+@media(max-width:650px) { .sp-landing-hero { min-height:540px; padding:104px 0 78px; } .sp-landing-hero__image { background-position:58% center; } .sp-landing-hero h1 { font-size:clamp(3.8rem,16vw,6rem); } .sp-hero-note { font-size:.6rem; } .sp-intro-grid,.sp-custom-inner { grid-template-columns:1fr; gap:28px; } .sp-section-heading { align-items:start; flex-direction:column; gap:18px; } .sp-package-grid { grid-template-columns:1fr; } .sp-package,.sp-package:nth-child(4),.sp-package:nth-child(5),.sp-package:last-child { grid-column:auto; min-height:unset; } .sp-package-summary { min-height:0; } }
+@media(prefers-reduced-motion:reduce) { .sp-text-link span,.sp-inline-link span,.sp-package-cta span { transition:none; } }

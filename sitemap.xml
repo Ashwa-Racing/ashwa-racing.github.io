@@ -1,88 +1,85 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
     <loc>https://ashwaracing.org/</loc>
   </url>
-
   <url>
     <loc>https://ashwaracing.org/about.html</loc>
   </url>
-
   <url>
-    <loc>https://ashwaracing.org/subsystem.html</loc>
+    <loc>https://ashwaracing.org/aero.html</loc>
   </url>
-
   <url>
     <loc>https://ashwaracing.org/alumni.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/newsletters.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/brakes-logistics.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/chassis-workshop.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/contact.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/drivetrain-hr.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/electrical-testing.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/engine.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/finance.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/gallery.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/it.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/projects.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/recruitment.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/smp.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/sponsors.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/suspension-admin.html</loc>
-  </url>
-
-  <url>
-    <loc>https://ashwaracing.org/team.html</loc>
   </url>
   <url>
     <loc>https://ashwaracing.org/blog.html</loc>
   </url>
-
-  
+  <url>
+    <loc>https://ashwaracing.org/blog-post.html?post=june-2026-general-newsletter</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/blog-post.html?post=formula-bharat-2026-engineering-design</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/blog-post.html?post=applications-open-2026-27-season</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/brakes-logistics.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/chassis-workshop.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/contact.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/drivetrain-hr.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/electrical-testing.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/engine.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/finance.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/gallery.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/it.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/newsletters.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/organization.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/projects.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/recruitment.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/smp.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/sponsors.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/sponsorship.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/subsystem.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/suspension-admin.html</loc>
+  </url>
+  <url>
+    <loc>https://ashwaracing.org/team.html</loc>
+  </url>
 </urlset>
