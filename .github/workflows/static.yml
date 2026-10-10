@@ -1,5 +1,5 @@
-# Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+# Temporary GitHub Pages fallback during the Cloudflare Pages migration
+name: GitHub Pages fallback
 
 on:
   # Runs on pushes targeting the default branch

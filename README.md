@@ -10,7 +10,7 @@
 **The official site of RV College of Engineering's Formula Student team.**
 
 [![Live Site](https://img.shields.io/badge/ashwaracing.org-live-e8001d?style=for-the-badge&logo=googlechrome&logoColor=white)](https://ashwaracing.org)
-[![Deploy](https://img.shields.io/github/actions/workflow/status/Ashwa-Racing/ashwa-racing.github.io/static.yml?label=pages%20deploy&style=for-the-badge&color=0a0a0a&labelColor=1e1e1e)](https://github.com/Ashwa-Racing/ashwa-racing.github.io/actions)
+[![GitHub Pages fallback](https://img.shields.io/github/actions/workflow/status/Ashwa-Racing/ashwa-racing.github.io/static.yml?label=legacy%20deploy&style=for-the-badge&color=0a0a0a&labelColor=1e1e1e)](https://github.com/Ashwa-Racing/ashwa-racing.github.io/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e8001d?style=for-the-badge&labelColor=1e1e1e)](LICENSE)
 [![Formula Student](https://img.shields.io/badge/formula%20student-RVCE-e8001d?style=for-the-badge&labelColor=1e1e1e)](https://ashwaracing.org)
 
@@ -20,11 +20,11 @@
 
 <br>
 
-Built and broken and rebuilt by whoever on the team has a free evening between builds, exams, and competition prep. No framework, no build step, no `node_modules` — clone it, open `index.html`, and you're looking at the live site. That's the whole point.
+Built and broken and rebuilt by whoever on the team has a free evening between builds, exams, and competition prep. No framework and no `node_modules`; a small Python script gathers the pages and assets into a clean Cloudflare Pages output folder.
 
 <div align="center">
 
-`HTML` · `CSS` · `Vanilla JS` · `GitHub Actions` · `Cloudflare R2`
+`HTML` · `CSS` · `Vanilla JS` · `Cloudflare Pages` · `Cloudflare R2` · `GitHub Actions`
 
 </div>
 
@@ -81,7 +81,7 @@ ashwa-racing.github.io/
 │   └── audit.py                   # link/SEO/alt-text auditor → audit_report.md
 │
 ├── .github/workflows/
-│   ├── static.yml                 # deploy to GitHub Pages on push to main
+│   ├── static.yml                 # temporary GitHub Pages fallback
 │   └── sync.yml                   # runs sync.py nightly
 │
 ├── CNAME, robots.txt, sitemap.xml
@@ -112,7 +112,7 @@ fetch('/components/header.html')
 
 Change the nav once, it updates on every page. The tradeoff is that `fetch()` needs a server, not `file://`.
 
-**Design tokens.** Colors, fonts, spacing, and easing live as CSS custom properties (`--red`, `--font-display`, `--pad`, …), currently declared in `assets/css/components/header.css` and re-declared in most per-page stylesheets. That's copy-paste, not a single source of truth — pulling it into one shared stylesheet is on the list, not done yet. Match `header.css` if you're touching brand color or spacing.
+**Design tokens.** Shared colors, fonts, spacing, and theme rules live in `assets/css/components/base.css`; page styles build on those values. Header and footer styles include fallbacks for older pages that do not yet load the base stylesheet.
 
 **Team roster & alumni — automated, not hand-edited.** `team.js` and `alumni-data.js` are regenerated every night by `scripts/sync.py`:
 
@@ -156,7 +156,18 @@ A couple of the spotlight videos, straight from the site:
 
 ## Deployment
 
-Every push to `main` deploys to GitHub Pages automatically via `.github/workflows/static.yml` — no build step, the repo root is served as-is. Custom domain is set in `CNAME`.
+The site is being migrated to Cloudflare Pages. It has no framework or package dependencies; `python3 scripts/build_site.py` assembles only the public site into `dist/` so repository files such as workflows, scripts, and this README are not published.
+
+For the Cloudflare Pages Git integration, connect this GitHub repository and set:
+
+- Production branch: `main`
+- Build command: `python3 scripts/build_site.py`
+- Build output directory: `dist`
+- Root directory: `/` (the repository root)
+
+Cloudflare Pages will then build on pushes and create preview deployments for pull requests. The existing `.github/workflows/static.yml` remains enabled temporarily as a fallback while the first Cloudflare deployment and the `ashwaracing.org` custom domain are verified. Once the Cloudflare site is live on the custom domain, disable GitHub Pages and remove that fallback workflow. `CNAME` is retained only for that transition and is intentionally excluded from `dist/`.
+
+The nightly roster sync in `.github/workflows/sync.yml` continues to commit updated data to `main`; those commits will trigger a Cloudflare Pages build after the Git integration is connected.
 
 ## Contributing
 
