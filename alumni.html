@@ -30,7 +30,6 @@
 
   <!-- Start the data requests before alumni.js runs -->
   <link rel="preload" as="fetch" href="/assets/data/team.json" crossorigin>
-  <link rel="preload" as="fetch" href="/assets/data/org-structure.json" crossorigin>
 
   <script>
     (() => {
@@ -100,20 +99,6 @@
           <span class="stat-label">Countries</span>
         </div>
       </div>
-    </section>
-
-    <section class="al-section al-section--alt al-org" id="structure" aria-labelledby="structure-title">
-      <div class="container al-section-header">
-        <p class="label">Structure</p>
-        <h2 id="structure-title">How we're <em>organised</em></h2>
-        <p class="al-section-desc">
-          Ashwa operates across multiple technical and management verticals,
-          each led by alumni who guide the next generation.
-        </p>
-      </div>
-
-      <!-- Rendered by alumni.js -->
-      <div class="container org" id="org-chart"></div>
     </section>
 
     <section class="al-section al-testimonials" id="voices" aria-labelledby="voices-title">
