@@ -1,3 +1,5 @@
 drive-download-*.zip
 drive_data/
 /dist/
+.wrangler/
+node_modules/

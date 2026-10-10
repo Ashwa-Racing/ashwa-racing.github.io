@@ -1,4 +1,4 @@
-"""Assemble the files published to Cloudflare Pages."""
+"""Assemble the static assets published by the Cloudflare Worker."""
 
 from pathlib import Path
 import shutil
@@ -32,7 +32,7 @@ def build() -> None:
         if source.is_file():
             shutil.copy2(source, output / name)
 
-    print(f"Cloudflare Pages output created at {output}")
+    print(f"Cloudflare Worker assets created at {output}")
 
 
 if __name__ == "__main__":
