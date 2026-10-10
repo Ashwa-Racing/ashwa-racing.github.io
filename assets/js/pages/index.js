@@ -250,7 +250,7 @@ function blogCardHTML(post) {
     .join(" · ");
 
   return `
-    <a href="blog-post.html?post=${encodeURIComponent(post.slug)}" class="news-card">
+    <a href="blog-post?post=${encodeURIComponent(post.slug)}" class="news-card">
       <div class="news-card-img-wrap">
         <img ${blogCoverAttrs(post.cover)} alt="${escapeHTML(post.coverAlt || post.title)}" loading="lazy" decoding="async" width="600" height="400">
       </div>

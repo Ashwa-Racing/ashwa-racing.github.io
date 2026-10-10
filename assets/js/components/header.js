@@ -105,11 +105,12 @@ function initNav() {
 
 /* ── Active Page Highlight ─────────────────────── */
 function markActivePage() {
-  const page = location.pathname.split("/").filter(Boolean).pop() || "index.html";
+  const normalizePage = value => value.replace(/\.html$/, "") || "index";
+  const page = normalizePage(location.pathname.split("/").filter(Boolean).pop() || "index");
 
   document.querySelectorAll(".nav-desktop a[href], .mobile-menu a[href]").forEach(link => {
-    const target = new URL(link.href, location.href).pathname.split("/").filter(Boolean).pop() || "index.html";
-    const isActive = target === page || (page === "blog-post.html" && target === "blog.html");
+    const target = normalizePage(new URL(link.href, location.href).pathname.split("/").filter(Boolean).pop() || "index");
+    const isActive = target === page || (page === "blog-post" && target === "blog");
     if (!isActive) return;
 
     link.classList.add("active");

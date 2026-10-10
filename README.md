@@ -10,7 +10,6 @@
 **The official site of RV College of Engineering's Formula Student team.**
 
 [![Live Site](https://img.shields.io/badge/ashwaracing.org-live-e8001d?style=for-the-badge&logo=googlechrome&logoColor=white)](https://ashwaracing.org)
-[![GitHub Pages fallback](https://img.shields.io/github/actions/workflow/status/Ashwa-Racing/ashwa-racing.github.io/static.yml?label=legacy%20deploy&style=for-the-badge&color=0a0a0a&labelColor=1e1e1e)](https://github.com/Ashwa-Racing/ashwa-racing.github.io/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e8001d?style=for-the-badge&labelColor=1e1e1e)](LICENSE)
 [![Formula Student](https://img.shields.io/badge/formula%20student-RVCE-e8001d?style=for-the-badge&labelColor=1e1e1e)](https://ashwaracing.org)
 
@@ -20,11 +19,11 @@
 
 <br>
 
-Built and broken and rebuilt by whoever on the team has a free evening between builds, exams, and competition prep. No framework and no `node_modules`; a small Python script gathers the pages and assets into a clean Cloudflare Pages output folder.
+Built and broken and rebuilt by whoever on the team has a free evening between builds, exams, and competition prep. No framework; a small Python script gathers the pages and assets into a clean Cloudflare Worker static-assets folder.
 
 <div align="center">
 
-`HTML` · `CSS` · `Vanilla JS` · `Cloudflare Pages` · `Cloudflare R2` · `GitHub Actions`
+`HTML` · `CSS` · `Vanilla JS` · `Cloudflare Workers` · `Cloudflare R2` · `GitHub Actions`
 
 </div>
 
@@ -74,7 +73,7 @@ ashwa-racing.github.io/
 │   ├── js/
 │   │   ├── components/            # header.js — injects header.html, nav state
 │   │   └── pages/                 # one script per page
-│   ├── images/, videos/, icons/, pdfs/
+│   ├── data/, images/, videos/, icons/, pdfs/
 │
 ├── scripts/
 │   ├── sync.py                    # nightly team-roster sync
@@ -82,10 +81,9 @@ ashwa-racing.github.io/
 │   └── audit.py                   # link/SEO/alt-text auditor → audit_report.md
 │
 ├── .github/workflows/
-│   ├── static.yml                 # temporary GitHub Pages fallback
 │   └── sync.yml                   # runs sync.py nightly
 │
-├── CNAME, robots.txt, sitemap.xml
+├── 404.html, robots.txt, sitemap.xml, wrangler.jsonc
 └── CODE_OF_CONDUCT.md, LICENSE
 ```
 
@@ -115,19 +113,19 @@ Change the nav once, it updates on every page. The tradeoff is that `fetch()` ne
 
 **Design tokens.** Shared colors, fonts, spacing, and theme rules live in `assets/css/components/base.css`; page styles build on those values. Header and footer styles include fallbacks for older pages that do not yet load the base stylesheet.
 
-**Team roster & alumni — automated, not hand-edited.** `team.js` and `alumni-data.js` are regenerated every night by `scripts/sync.py`:
+**Team roster & alumni — automated, not hand-edited.** `assets/data/team.json` is synchronized every night by `scripts/sync.py`:
 
 - pulls responses from a Google Form via its Sheet's CSV export,
-- merges into the existing arrays by name — new fields win, manual-only fields survive,
+- merges form responses into the existing roster by name — updated form fields are applied while manual-only fields survive,
 - pulls profile photos from a linked Drive folder,
-- routes people into `team.js` vs `alumni-data.js` by year (current + next two = active; the rest, alumni),
+- keeps everyone in `team.json`; the site derives current members and alumni from each member's batch year,
 - commits the result back to `main` automatically (`.github/workflows/sync.yml`).
 
 <div align="center">
 <img src="assets/images/team/fullteam/2026-C.png" width="70%" alt="Full team photo" />
 </div>
 
-A few flags (easter eggs, manual overrides) are preserved across every sync — see `MANUAL_FLAGS` at the top of the script. Adding someone outside the form flow? Edit the arrays directly; the next sync merges cleanly around it.
+A few flags and manual overrides are preserved across every sync. Adding someone outside the form flow? Edit `assets/data/team.json`; the next sync merges cleanly around it.
 
 **Media hosting.** Car photography, team photos, and spotlight videos add up fast, and we've bloated `git` history with large media before. Everything now serves from Cloudflare R2 at `assets.ashwaracing.org`, with `scripts/upload_to_r2.py` as the bulk-upload tool. The repo's own `assets/images/` and `assets/videos/` still carry a good chunk of source material while migration finishes — expect that folder to shrink, not grow, over time.
 
@@ -143,6 +141,8 @@ A couple of the spotlight videos, straight from the site:
 
 **Newsletters.** `newsletters.html` renders our archive going back to 2016 — literally a filename list in `assets/js/pages/newsletters.js` pointing at PDFs in `assets/pdfs/newsletters/`, with a matching cover image per issue in `assets/images/newsletters/<year>/`. To add one: drop the PDF, drop the cover, add the filename to the array, push.
 
+**Blog articles.** Articles are records in `assets/data/blog.json`. Article links use `/blog-post?post=<slug>`; the page reads the `post` query parameter to load the matching record and set its metadata.
+
 <div align="center">
 <img src="assets/images/newsletters/2026/2026-06.png" width="18%" alt="Newsletter cover" />
 <img src="assets/images/newsletters/2026/2026-03.png" width="18%" alt="Newsletter cover" />
@@ -157,18 +157,15 @@ A couple of the spotlight videos, straight from the site:
 
 ## Deployment
 
-The site is being migrated to Cloudflare Pages. It has no framework or package dependencies; `python3 scripts/build_site.py` assembles only the public site into `dist/` so repository files such as workflows, scripts, and this README are not published.
+The site deploys as a Cloudflare Worker with static assets. `python3 scripts/build_site.py` assembles the public site into `dist/`; `wrangler.jsonc` configures Wrangler to publish only that directory, keeping repository files such as workflows, scripts, and this README out of the deployment.
 
-For the Cloudflare Pages Git integration, connect this GitHub repository and set:
+Cloudflare Workers Builds uses:
 
 - Production branch: `main`
 - Build command: `python3 scripts/build_site.py`
-- Build output directory: `dist`
-- Root directory: `/` (the repository root)
+- Deploy command: `npx wrangler deploy`
 
-Cloudflare Pages will then build on pushes and create preview deployments for pull requests. The existing `.github/workflows/static.yml` remains enabled temporarily as a fallback while the first Cloudflare deployment and the `ashwaracing.org` custom domain are verified. Once the Cloudflare site is live on the custom domain, disable GitHub Pages and remove that fallback workflow. `CNAME` is retained only for that transition and is intentionally excluded from `dist/`.
-
-The nightly roster sync in `.github/workflows/sync.yml` continues to commit updated data to `main`; those commits will trigger a Cloudflare Pages build after the Git integration is connected.
+The nightly roster sync in `.github/workflows/sync.yml` commits changed `assets/data/team.json` data to `main`. Those commits trigger a new Worker build through the Cloudflare Git integration.
 
 ## Contributing
 
@@ -177,7 +174,7 @@ Most of us are picking this up between classes and car builds, so:
 - Match the existing pattern for the page you're editing before inventing a new one.
 - New pages get a matching `assets/css/pages/*.css` and, if there's interactivity, `assets/js/pages/*.js` — same base filename as the HTML.
 - Run `scripts/audit.py` before opening a PR if you've touched links, images, or added a page.
-- New team member? Use the sync form — don't hand-edit `team.js` unless there's a good reason to.
+- New team member? Use the sync form — don't hand-edit `assets/data/team.json` unless there's a good reason to.
 
 Questions, broken things, ideas — open an issue, or ping IT/Web in the team group.
 

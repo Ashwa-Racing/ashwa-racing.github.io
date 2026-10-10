@@ -80,7 +80,7 @@
       post.excerpt || 'Ashwa Racing article';
 
     const url =
-      `${window.location.origin}/blog-post.html?post=${
+      `${window.location.origin}/blog-post?post=${
         encodeURIComponent(post.slug)
       }`;
 
@@ -151,7 +151,7 @@
     new URLSearchParams(window.location.search).get('post');
 
   const postURL = slug =>
-    `blog-post.html?post=${encodeURIComponent(slug)}`;
+    `blog-post?post=${encodeURIComponent(slug)}`;
 
   const renderBlock = block => {
     if (!block || !block.type) {
@@ -251,7 +251,7 @@
     }
 
     const articleURL =
-      `${window.location.origin}/blog-post.html?post=${
+      `${window.location.origin}/blog-post?post=${
         encodeURIComponent(post.slug)
       }`;
 

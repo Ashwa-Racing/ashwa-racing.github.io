@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, follow">
+  <title>Page Not Found | Ashwa Racing</title>
+  <meta name="description" content="The page you are looking for could not be found. Return to Ashwa Racing or explore our team, projects, and partners.">
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <link rel="stylesheet" href="/assets/css/components/base.css">
+  <link rel="stylesheet" href="/assets/css/components/header.css?v=3">
+  <link rel="stylesheet" href="/assets/css/components/footer.css">
+  <link rel="stylesheet" href="/assets/css/pages/404.css">
+</head>
+<body>
+  <div id="main-header"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l1.41-1.41" /></svg>
+  </button>
+  <main class="not-found">
+    <div class="not-found-mark" aria-hidden="true">404</div>
+    <div class="not-found-copy">
+      <p class="not-found-eyebrow"><span></span> Off the track</p>
+      <h1>This page<br><em>isn't here.</em></h1>
+      <p class="not-found-message">The link may be out of date, or the page may have moved. Choose a destination and get back to Ashwa Racing.</p>
+      <nav class="not-found-links" aria-label="Suggested pages">
+        <a class="not-found-home" href="/">Back to home <span aria-hidden="true">&#8594;</span></a>
+        <a href="/projects">Cars &amp; projects</a>
+        <a href="/team">Meet the team</a>
+        <a href="/contact">Contact us</a>
+      </nav>
+    </div>
+    <div class="not-found-footer" aria-hidden="true"><span>ASHWA RACING</span><span>RVCE &middot; BENGALURU</span></div>
+  </main>
+  <footer id="main-footer"></footer>
+  <script src="/assets/js/components/header.js" defer></script>
+  <script src="/assets/js/components/theme.js" defer></script>
+</body>
+</html>
