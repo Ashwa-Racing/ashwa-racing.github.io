@@ -12,8 +12,6 @@ const BLOG_FORM = {
   author: 'Author',
   category: 'Category',
   excerpt: 'Short summary',
-  cover: 'Cover image URL (optional)',
-  coverAlt: 'Cover image description (optional)',
   featured: 'Feature this article?'
 };
 
@@ -34,6 +32,12 @@ function installBlogPublisher() {
   if (!properties.getProperty('GITHUB_TOKEN')) {
     throw new Error('Add GITHUB_TOKEN in Apps Script Project Settings before setup.');
   }
+  ['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET_NAME']
+    .forEach(name => {
+      if (!properties.getProperty(name)) {
+        throw new Error('Add ' + name + ' in Apps Script Project Settings before setup.');
+      }
+    });
 
   form.setCollectEmail(true);
   const existing = ScriptApp.getProjectTriggers().some(trigger =>
@@ -87,18 +91,20 @@ function publishBlogSubmission(event) {
 
     const slug = slugify_(date + ' ' + title);
     const convertedArticle = convertDocxToMarkdown_(upload, slug);
+    const firstImage = convertedArticle.images[0] || null;
     const markdown = makeMarkdown_( {
       title: title,
       date: date,
       author: author,
       category: category,
       excerpt: excerpt,
-      cover: String(answers[BLOG_FORM.cover] || '').trim(),
-      coverAlt: String(answers[BLOG_FORM.coverAlt] || '').trim(),
+      cover: firstImage ? firstImage.url : '',
+      coverAlt: firstImage ? firstImage.alt : '',
       featured: /^yes$/i.test(String(answers[BLOG_FORM.featured] || '').trim())
     }, convertedArticle.markdown);
 
-    convertedArticle.images.forEach(image => writeAssetToGitHub_(image));
+    convertedArticle.images.forEach(writeAssetToR2_);
+    writeMarkdownToR2_(slug, markdown);
     writePostToGitHub_(slug, markdown);
     if (respondent) {
       MailApp.sendEmail(respondent, 'Your Ashwa Racing article was published',
@@ -245,11 +251,12 @@ function saveInlineImage_(image, imageContext) {
   }
 
   const number = imageContext.images.length + 1;
-  const path = '/assets/images/blog/' + imageContext.slug + '-image-' + number + '.' + extension;
-  imageContext.images.push({ path: path.replace(/^\//, ''), bytes: bytes });
+  const key = 'images/blog/' + imageContext.slug + '-image-' + number + '.' + extension;
   const alt = String(image.getAltDescription() || image.getAltTitle() || ('Article image ' + number))
     .replace(/\]/g, '\\]').replace(/[\r\n]+/g, ' ');
-  return '![' + alt + '](' + path + ')';
+  const url = 'https://assets.ashwaracing.org/' + key;
+  imageContext.images.push({ key: key, url: url, alt: alt, mimeType: mimeType, bytes: bytes });
+  return '![' + alt + '](' + url + ')';
 }
 
 function writePostToGitHub_(slug, markdown) {
@@ -258,8 +265,81 @@ function writePostToGitHub_(slug, markdown) {
   writeGitHubFile_(path, bytes, 'Publish blog article: ' + slug);
 }
 
-function writeAssetToGitHub_(asset) {
-  writeGitHubFile_(asset.path, asset.bytes, 'Add article image: ' + asset.path.split('/').pop());
+function writeAssetToR2_(asset) {
+  putR2Object_(asset.key, asset.bytes, asset.mimeType);
+}
+
+function writeMarkdownToR2_(slug, markdown) {
+  const bytes = Utilities.newBlob(markdown, 'text/markdown').getBytes();
+  putR2Object_('blog/articles/' + slug + '.md', bytes, 'text/markdown');
+}
+
+function putR2Object_(key, bytes, contentType) {
+  const properties = PropertiesService.getScriptProperties();
+  const accountId = properties.getProperty('R2_ACCOUNT_ID');
+  const accessKey = properties.getProperty('R2_ACCESS_KEY_ID');
+  const secretKey = properties.getProperty('R2_SECRET_ACCESS_KEY');
+  const bucket = properties.getProperty('R2_BUCKET_NAME');
+  const host = accountId + '.r2.cloudflarestorage.com';
+  const encodedKey = key.split('/').map(awsEncodeURIComponent_).join('/');
+  const canonicalUri = '/' + awsEncodeURIComponent_(bucket) + '/' + encodedKey;
+  const now = new Date();
+  const amzDate = Utilities.formatDate(now, 'UTC', "yyyyMMdd'T'HHmmss'Z'");
+  const dateStamp = Utilities.formatDate(now, 'UTC', 'yyyyMMdd');
+  const payloadHash = sha256Hex_(bytes);
+  const signedHeaders = 'content-type;host;x-amz-content-sha256;x-amz-date';
+  const canonicalHeaders = 'content-type:' + contentType.trim() + '\n' +
+    'host:' + host + '\n' +
+    'x-amz-content-sha256:' + payloadHash + '\n' +
+    'x-amz-date:' + amzDate + '\n';
+  const canonicalRequest = [
+    'PUT', canonicalUri, '', canonicalHeaders, signedHeaders, payloadHash
+  ].join('\n');
+  const scope = dateStamp + '/auto/s3/aws4_request';
+  const stringToSign = [
+    'AWS4-HMAC-SHA256', amzDate, scope,
+    sha256Hex_(Utilities.newBlob(canonicalRequest).getBytes())
+  ].join('\n');
+  const dateKey = hmacSha256_(Utilities.newBlob(dateStamp).getBytes(), 'AWS4' + secretKey);
+  const regionKey = hmacSha256_(Utilities.newBlob('auto').getBytes(), dateKey);
+  const serviceKey = hmacSha256_(Utilities.newBlob('s3').getBytes(), regionKey);
+  const signingKey = hmacSha256_(Utilities.newBlob('aws4_request').getBytes(), serviceKey);
+  const signature = bytesToHex_(hmacSha256_(Utilities.newBlob(stringToSign).getBytes(), signingKey));
+  const authorization = 'AWS4-HMAC-SHA256 Credential=' + accessKey + '/' + scope +
+    ', SignedHeaders=' + signedHeaders + ', Signature=' + signature;
+  const response = UrlFetchApp.fetch('https://' + host + canonicalUri, {
+    method: 'put',
+    contentType: contentType,
+    headers: {
+      Authorization: authorization,
+      'x-amz-date': amzDate,
+      'x-amz-content-sha256': payloadHash
+    },
+    payload: bytes,
+    muteHttpExceptions: true
+  });
+  if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
+    throw new Error('Cloudflare R2 rejected ' + key + ' (' + response.getResponseCode() + '): ' + response.getContentText());
+  }
+}
+
+function awsEncodeURIComponent_(value) {
+  return encodeURIComponent(value).replace(/[!'()*]/g, character =>
+    '%' + character.charCodeAt(0).toString(16).toUpperCase()
+  );
+}
+
+function sha256Hex_(bytes) {
+  return bytesToHex_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, bytes));
+}
+
+function hmacSha256_(valueBytes, key) {
+  const keyBytes = typeof key === 'string' ? Utilities.newBlob(key).getBytes() : key;
+  return Utilities.computeHmacSha256Signature(valueBytes, keyBytes);
+}
+
+function bytesToHex_(bytes) {
+  return bytes.map(value => ((value + 256) % 256).toString(16).padStart(2, '0')).join('');
 }
 
 function writeGitHubFile_(path, bytes, message) {
