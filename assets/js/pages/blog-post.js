@@ -495,10 +495,23 @@
       coverEl.innerHTML = '';
     }
 
+    const content = Array.isArray(post.content) ? [...post.content] : [];
+    // The cover is already shown in the article header. Avoid rendering it a
+    // second time when the first content block repeats the same image.
+    const firstImageIndex = content.findIndex(block => block && block.type === 'image');
+    if (firstImageIndex >= 0 && post.cover && content[firstImageIndex].src) {
+      const normalizeImageURL = value => {
+        try { return new URL(value, window.location.href).href; }
+        catch (error) { return String(value).split('?')[0]; }
+      };
+      if (normalizeImageURL(content[firstImageIndex].src) === normalizeImageURL(post.cover)) {
+        content.splice(firstImageIndex, 1);
+      }
+    }
+
     bodyEl.innerHTML =
-      Array.isArray(post.content) &&
-      post.content.length
-        ? post.content
+      content.length
+        ? content
             .map(renderBlock)
             .join('')
         : `

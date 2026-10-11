@@ -13,7 +13,7 @@
 .blog-post-meta .category { color: var(--red); }
 .blog-post-header h1 { max-width: 16ch; color: #fff; font: 800 clamp(3.3rem, 8vw, 7.4rem)/.84 var(--display); letter-spacing: -.04em; text-transform: uppercase; text-wrap: balance; }
 .blog-post-excerpt { max-width: 66ch; margin-top: 22px; color: rgb(255 255 255 / 76%); font-size: clamp(1rem, 1.5vw, 1.12rem); line-height: 1.7; }
-.blog-post-cover { position: relative; width: 100%; max-height: 640px; aspect-ratio: 16 / 8; margin-top: clamp(32px, 5vw, 54px); overflow: hidden; border: 1px solid var(--border-strong); border-top: 3px solid var(--red); background: var(--surface); }
+.blog-post-cover { position: relative; width: 100%; height: clamp(240px, 42vw, 520px); max-height: 60vh; margin-top: clamp(32px, 5vw, 54px); overflow: hidden; border: 1px solid var(--border-strong); border-top: 3px solid var(--red); background: var(--surface); }
 .blog-post-cover:empty { display: none; }
 .blog-post-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .blog-post-content { padding: clamp(48px, 7vw, 88px) 0; background: var(--page-bg); }
@@ -61,7 +61,7 @@
 @media (max-width: 760px) {
   .blog-post-header > .container { padding-top: 30px; }
   .blog-post-header h1 { font-size: clamp(3rem, 13vw, 5.2rem); }
-  .blog-post-cover { aspect-ratio: 4 / 3; }
+  .blog-post-cover { height: clamp(220px, 62vw, 380px); max-height: 48vh; }
   .blog-post-body { font-size: 1rem; }
   .blog-post-navigation { grid-template-columns: 1fr; }
   .blog-post-nav-link.next { text-align: left; }

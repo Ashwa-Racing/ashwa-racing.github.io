@@ -8,15 +8,14 @@
 
   <link rel="canonical" href="https://ashwaracing.org/gallery" />
 
-  <meta name="description"
-    content="Explore the Ashwa Racing gallery featuring Formula Student race cars, workshop builds, competition highlights, and the engineering journey behind two decades of motorsport innovation." />
+    <meta name="description"
+    content="Explore a continuously refreshed visual archive of Ashwa Racing cars, people, engineering, and competition moments." />
 
-  <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96">
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg">
-  <link rel="shortcut icon" href="assets/images/favicon/favicon.ico">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png">
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://assets.ashwaracing.org/images/favicon/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="Ashwa Racing">
-  <link rel="manifest" href="assets/images/favicon/site.webmanifest">
+  <link rel="manifest" href="https://assets.ashwaracing.org/images/favicon/site.webmanifest">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,65 +25,48 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/solid.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/fontawesome.min.css">
 
-  <link rel="stylesheet" href="assets/css/components/header.css?v=2">
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/components/footer.css">
   <link rel="stylesheet" href="assets/css/pages/gallery.css">
 </head>
 
-<body>
+<body class="gallery-page">
 
   <div id="main-header"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
+  </button>
 
+  <main>
   <!-- HERO -->
   <section class="gallery-hero">
     <div class="gallery-hero__content hero-reveal">
-      <div class="gallery-hero__eyebrow">Visual Archive</div>
-      <h1 class="gallery-hero__title">Gallery</h1>
-      <p class="gallery-hero__sub">Engineering moments. Competition intensity. Precision in motion.</p>
-
-      <div class="gallery-hero__chips" aria-label="Gallery categories">
-        <span class="gallery-hero__chip">Cars</span>
-        <span class="gallery-hero__chip">Competition</span>
-        <span class="gallery-hero__chip">Workshop</span>
-        <span class="gallery-hero__chip">Team</span>
-      </div>
-
-      <div class="gallery-hero__meta">
-        <div class="gallery-hero__meta-item">
-          <span class="gallery-hero__meta-label">Focus</span>
-          <span>Formula Student engineering and track moments.</span>
-        </div>
-        <div class="gallery-hero__meta-item">
-          <span class="gallery-hero__meta-label">Scope</span>
-          <span>Build, test, compete, and celebrate together.</span>
-        </div>
-      </div>
+      <div class="gallery-hero__eyebrow">Ashwa Racing · RVCE</div>
+      <h1 class="gallery-hero__title">Ashwa<br><em>in motion.</em></h1>
+      <p class="gallery-hero__sub">A walk through Ashwa’s rich tapestry—years of craft, grit, and speed, woven together one moment at a time.</p>
     </div>
 
-    <div class="gallery-hero__collage hero-reveal" aria-hidden="true">
-      <figure class="collage-card is-primary is-float">
-        <img src="https://assets.ashwaracing.org/images/gallery/XX6C.webp"
-          data-fallback="assets/images/gallery/XX6C.webp" alt="" loading="eager" decoding="async">
-        <figcaption>RZ-XX6C</figcaption>
-      </figure>
-      <figure class="collage-card is-secondary is-float-alt">
-        <img src="https://assets.ashwaracing.org/images/gallery/IMG_3970_Original.webp"
-          data-fallback="assets/images/gallery/IMG_3970_Original.webp" alt="" loading="eager" decoding="async">
-        <figcaption>Endurance</figcaption>
-      </figure>
-      <figure class="collage-card is-tertiary is-float">
-        <img src="https://assets.ashwaracing.org/images/gallery/DSC_0698.webp"
-          data-fallback="assets/images/gallery/DSC_0698.webp" alt="" loading="eager" decoding="async">
-        <figcaption>Workshop</figcaption>
-      </figure>
+    <div class="gallery-hero-media hero-reveal" aria-hidden="true">
+      <img id="gallery-hero-image" src="https://assets.ashwaracing.org/images/gallery/XX6C.webp" alt="" fetchpriority="high" decoding="async">
     </div>
   </section>
 
   <!-- GALLERY SECTIONS (JS populates) -->
-  <section class="gallery-section" id="gallery"></section>
+  <section class="gallery-section" id="gallery" aria-label="Random photos from the Ashwa Racing archive"></section>
+  </main>
 
   <!-- LIGHTBOX -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Photo viewer">
     <div class="lb-backdrop" id="lbBackdrop"></div>
 
     <button class="lb-close" id="lbClose" aria-label="Close lightbox">
@@ -111,8 +93,14 @@
 
   <footer id="main-footer"></footer>
 
-  <script src="assets/js/components/header.js"></script>
-  <script src="assets/js/pages/gallery.js"></script>
+  <div id="site-loader" aria-hidden="true">
+    <div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div>
+  </div>
+
+  <script src="assets/js/components/header.js" defer></script>
+  <script src="assets/js/pages/gallery.js" defer></script>
+  <script src="assets/js/components/theme.js" defer></script>
+  <script src="assets/js/components/loader.js" defer></script>
 </body>
 
 </html>

@@ -4,66 +4,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Newsletters | Ashwa Racing</title>
-
-  <link rel="canonical" href="https://ashwaracing.org/newsletters" />
-
-  <meta name="description" content="Browse the official Ashwa Racing newsletter archive featuring Formula Student development updates, competition coverage, engineering milestones, alumni stories, and team progress across multiple seasons." />
-  
-  <link rel="icon" href="assets/images/favicon/favicon.ico">
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg">
+  <meta name="description" content="Browse the official Ashwa Racing newsletter archive featuring Formula Student development updates, competition coverage, engineering milestones, alumni stories, and team progress across multiple seasons.">
+  <link rel="canonical" href="https://ashwaracing.org/newsletters">
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,800;1,800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/components/header.css?v=2">
+  <link rel="preconnect" href="https://assets.ashwaracing.org">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
+  <link rel="stylesheet" href="assets/css/pages/blog.css">
+  <link rel="stylesheet" href="assets/css/pages/newsletters.css">
   <link rel="stylesheet" href="assets/css/components/footer.css">
-  <link rel="stylesheet" href="assets/css/pages/newsletters.css"> <!-- reuse -->
-
 </head>
-<body>
-
-<div id="main-header"></div>
-
-<!-- HERO -->
-<section class="blog-hero">
-  <div class="blog-hero-bg"></div>
-  <div class="blog-hero-overlay"></div>
-
-  <div class="blog-hero-content">
-    <div class="blog-eyebrow">
-      <span class="eyebrow-dash"></span>
-      <span>Archive</span>
-    </div>
-    <h1 class="blog-hero-title">TEAM<br><em>NEWSLETTERS</em></h1>
-    <p class="blog-hero-desc">
-      Official Ashwa Racing newsletters documenting engineering progress,
-      competition journeys, and team milestones.
-    </p>
+<body class="newsletters-page">
+  <div id="main-header"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
+  </button>
+  <main>
+    <section class="blog-hero" aria-labelledby="newsletters-title">
+      <div class="blog-hero-inner">
+        <p class="blog-eyebrow">Ashwa Racing · Archive</p>
+        <h1 id="newsletters-title">Team <em>Newsletters</em></h1>
+        <p class="blog-intro">Official newsletters documenting engineering progress, competition journeys, and team milestones.</p>
+      </div>
+    </section>
+    <section class="blog-content" aria-label="Newsletter archive">
+      <div class="blog-wrap">
+        <div class="newsletter-toolbar">
+          <p class="blog-toolbar-label" id="count" aria-live="polite">Newsletters</p>
+          <div class="blog-filter" id="filter-bar" aria-label="Filter newsletters by year">
+            <button type="button" class="is-active" data-year="all" aria-pressed="true">All Years</button>
+          </div>
+        </div>
+        <div class="blog-grid newsletter-grid" id="list"></div>
+        <div class="blog-empty" id="empty" hidden><h2>No newsletters found.</h2><p>Try another year or check back soon.</p></div>
+      </div>
+    </section>
+  </main>
+  <footer id="main-footer"></footer>
+  <div id="site-loader" aria-hidden="true">
+    <div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div>
   </div>
-
-  <div class="blog-filter-bar" id="filter-bar">
-    <button class="blog-filter-btn active" data-year="all">All Years</button>
-  </div>
-</section>
-
-<!-- GRID -->
-<main class="blog-main">
-
-  <div class="blog-meta-bar">
-    <div class="blog-post-count" id="count">— newsletters</div>
-  </div>
-
-  <div class="blog-grid" id="list"></div>
-
-  <div class="blog-empty" id="empty" hidden>
-    <p>No newsletters found.</p>
-  </div>
-
-</main>
-
-<footer id="main-footer"></footer>
-
-<script src="assets/js/components/header.js"></script>
-<script src="assets/js/pages/newsletters.js"></script>
-
+  <script src="assets/js/pages/newsletters.js" defer></script>
+  <script src="assets/js/components/header.js" defer></script>
+  <script src="assets/js/components/theme.js" defer></script>
+  <script src="assets/js/components/loader.js" defer></script>
 </body>
 </html>
