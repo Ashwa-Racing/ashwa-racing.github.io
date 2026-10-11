@@ -138,6 +138,8 @@
   const pageCount = document.getElementById('reader-page-count');
   const zoomLabel = document.getElementById('reader-zoom-label');
   const recList = document.getElementById('reader-recommendations');
+  const viewToggle = document.getElementById('reader-view-toggle');
+  let singlePageMode = false;
   let pdfDocument = null;
   let pageNumber = 1;
   let zoom = 1;
@@ -180,13 +182,20 @@
     if (!pdfDocument || !stage.clientWidth || !stage.clientHeight) return;
     pageNumber = Math.max(1, Math.min(pdfDocument.numPages, page));
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
-    const pageStep = isMobile ? 1 : 2;
+    const isSinglePage = isMobile || singlePageMode;
+    const pageStep = isSinglePage ? 1 : 2;
     const secondPageNumber = pageNumber + 1;
-    pageCount.textContent = isMobile || secondPageNumber > pdfDocument.numPages
+    pageCount.textContent = isSinglePage || secondPageNumber > pdfDocument.numPages
       ? `${pageNumber} / ${pdfDocument.numPages}`
       : `${pageNumber}–${secondPageNumber} / ${pdfDocument.numPages}`;
-    nextSheet.hidden = isMobile || secondPageNumber > pdfDocument.numPages;
+    nextSheet.hidden = isSinglePage || secondPageNumber > pdfDocument.numPages;
     stage.classList.toggle('has-single-page', secondPageNumber > pdfDocument.numPages);
+    stage.classList.toggle('is-single-page', isSinglePage);
+    viewToggle.hidden = false;
+    viewToggle.textContent = singlePageMode ? 'Two-page spread' : 'Expand page';
+    viewToggle.setAttribute('aria-pressed', String(singlePageMode));
+    document.getElementById('reader-prev').setAttribute('aria-label', isSinglePage ? 'Previous page' : 'Previous spread');
+    document.getElementById('reader-next').setAttribute('aria-label', isSinglePage ? 'Next page' : 'Next spread');
     document.getElementById('reader-prev').disabled = pageNumber <= 1;
     document.getElementById('reader-next').disabled = pageNumber + pageStep > pdfDocument.numPages;
     document.getElementById('reader-page-prev').disabled = pageNumber <= 1;
@@ -202,12 +211,16 @@
     renderTasks = [];
     try {
       const slots = [{ number: pageNumber, canvas }];
-      if (!isMobile && secondPageNumber <= pdfDocument.numPages) slots.push({ number: secondPageNumber, canvas: nextCanvas });
+      if (!isSinglePage && secondPageNumber <= pdfDocument.numPages) slots.push({ number: secondPageNumber, canvas: nextCanvas });
       await Promise.all(slots.map(async slot => {
         const pageData = await pdfDocument.getPage(slot.number);
         const baseViewport = pageData.getViewport({ scale: 1 });
-        const slotWidth = isMobile ? stage.clientWidth - 32 : stage.clientWidth / 2 - 24;
-        const fit = Math.min(slotWidth / baseViewport.width, (stage.clientHeight - 26) / baseViewport.height);
+        const expanded = dialog.classList.contains('is-expanded');
+        const expandedWidthGutter = 0;
+        const expandedHeightGutter = 0;
+        const slotWidth = isSinglePage ? stage.clientWidth - (expanded ? expandedWidthGutter : 32) : stage.clientWidth / 2 - 24;
+        const slotHeight = stage.clientHeight - (expanded ? expandedHeightGutter : 26);
+        const fit = Math.min(slotWidth / baseViewport.width, slotHeight / baseViewport.height);
         const outputScale = Math.min(window.devicePixelRatio || 1, 1.5);
         const viewport = pageData.getViewport({ scale: fit * zoom });
         slot.canvas.width = Math.floor(viewport.width * outputScale);
@@ -243,6 +256,9 @@
     pageNumber = 1;
     zoom = 1;
     zoomLabel.textContent = 'FIT';
+    singlePageMode = false;
+    dialog.classList.remove('is-expanded');
+    reader.classList.remove('is-expanded');
     pageCount.textContent = 'Loading';
 
     if (!window.pdfjsLib) {
@@ -269,6 +285,9 @@
 
   function closeReader() {
     openRequest++;
+    singlePageMode = false;
+    dialog.classList.remove('is-expanded');
+    reader.classList.remove('is-expanded');
     reader.hidden = true;
     document.body.classList.remove('reader-open');
     if (pdfDocument) { pdfDocument.destroy(); pdfDocument = null; }
@@ -279,7 +298,7 @@
 
   function turnPage(direction) {
     if (!pdfDocument) return;
-    const nextPage = pageNumber + direction * (window.matchMedia('(max-width: 760px)').matches ? 1 : 2);
+    const nextPage = pageNumber + direction * (window.matchMedia('(max-width: 760px)').matches || singlePageMode ? 1 : 2);
     if (nextPage < 1 || nextPage > pdfDocument.numPages) return;
     renderPage(nextPage, true);
   }
@@ -289,6 +308,13 @@
   document.getElementById('reader-next').addEventListener('click', () => turnPage(1));
   document.getElementById('reader-page-prev').addEventListener('click', () => turnPage(-1));
   document.getElementById('reader-page-next').addEventListener('click', () => turnPage(1));
+  viewToggle.addEventListener('click', () => {
+    singlePageMode = !singlePageMode;
+    dialog.classList.toggle('is-expanded', singlePageMode);
+    reader.classList.toggle('is-expanded', singlePageMode);
+    if (singlePageMode) dialog.querySelector('.reader-close').focus();
+    renderPage(pageNumber, true);
+  });
   document.getElementById('reader-zoom-out').addEventListener('click', () => { zoom = Math.max(.7, zoom - .15); zoomLabel.textContent = `${Math.round(zoom * 100)}%`; renderPage(); });
   document.getElementById('reader-zoom-in').addEventListener('click', () => { zoom = Math.min(1.8, zoom + .15); zoomLabel.textContent = `${Math.round(zoom * 100)}%`; renderPage(); });
   document.addEventListener('keydown', event => {
@@ -307,6 +333,20 @@
     }
   });
   window.addEventListener('resize', () => { if (!reader.hidden) renderPage(); });
+
+  let touchStart = null;
+  stage.addEventListener('touchstart', event => {
+    if (event.touches.length !== 1) { touchStart = null; return; }
+    touchStart = { x: event.touches[0].clientX, y: event.touches[0].clientY };
+  }, { passive: true });
+  stage.addEventListener('touchend', event => {
+    if (!touchStart || !event.changedTouches.length) return;
+    const deltaX = event.changedTouches[0].clientX - touchStart.x;
+    const deltaY = event.changedTouches[0].clientY - touchStart.y;
+    touchStart = null;
+    if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+    turnPage(deltaX < 0 ? 1 : -1);
+  }, { passive: true });
 
   filterBar.addEventListener('click', event => {
     const button = event.target.closest('button[data-year]');
