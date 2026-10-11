@@ -119,6 +119,30 @@ html[data-theme="light"] {
 
 html[data-theme="dark"] { color-scheme: dark; }
 
+/* Light-theme engineering grid for the pale section surfaces used across
+   the refreshed content pages. The paired red edge marks echo the hero rails. */
+html[data-theme="light"] :is(
+  .story-step:not(.story-step--dark),
+  .al-section,
+  .organization-structure,
+  .ct-main,
+  .sp-tier-section,
+  .sp-intro,
+  .sp-packages,
+  .sp-custom,
+  .blog-content,
+  .blog-post-content
+) {
+  background-image:
+    linear-gradient(rgba(8,9,12,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8,9,12,.035) 1px, transparent 1px),
+    linear-gradient(var(--red), var(--red)),
+    linear-gradient(rgba(232,0,29,.3), rgba(232,0,29,.3));
+  background-size: 64px 64px, 64px 64px, 3px 48px, 1px 48px;
+  background-position: 0 0, 0 0, var(--site-gutter) 0, calc(var(--site-gutter) + 12px) 0;
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+}
+
 /* â”€â”€ Theme toggle â”€â”€ */
 .theme-toggle {
   position: fixed;

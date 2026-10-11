@@ -8,6 +8,7 @@
   const DATA_URL = 'assets/data/blog.json';
 
   const featuredEl = document.getElementById('blog-featured');
+  const toolbarEl = document.querySelector('.blog-toolbar');
   const filterEl = document.getElementById('blog-filter');
   const gridEl = document.getElementById('blog-grid');
   const emptyEl = document.getElementById('blog-empty');
@@ -188,6 +189,12 @@
     `).join('');
 
     emptyEl.hidden = filtered.length > 0;
+    if (!filtered.length) {
+      const heading = emptyEl.querySelector('h2');
+      const message = emptyEl.querySelector('p');
+      if (heading) heading.textContent = 'No stories in this category.';
+      if (message) message.textContent = 'Choose another category to keep exploring.';
+    }
   };
 
   const render = () => {
@@ -201,20 +208,16 @@
     renderGrid();
   };
 
-  const showError = () => {
+  const showEmpty = (title, message) => {
     featuredEl.innerHTML = '';
+    if (toolbarEl) toolbarEl.hidden = true;
     filterEl.innerHTML = '';
     gridEl.innerHTML = '';
-
     emptyEl.hidden = false;
-
-    const message =
-      emptyEl.querySelector('p');
-
-    if (message) {
-      message.textContent =
-        'Unable to load articles.';
-    }
+    const heading = emptyEl.querySelector('h2');
+    const description = emptyEl.querySelector('p');
+    if (heading) heading.textContent = title;
+    if (description) description.textContent = message;
   };
 
   const loadPosts = async () => {
@@ -247,11 +250,12 @@
         );
 
       if (!posts.length) {
-        showError();
+        showEmpty('No articles yet.', 'We’re preparing stories from the workshop, the track, and everything in between. Check back soon.');
         return;
       }
 
       render();
+      if (toolbarEl) toolbarEl.hidden = false;
 
     } catch (error) {
       console.error(
@@ -259,7 +263,7 @@
         error
       );
 
-      showError();
+      showEmpty('Articles unavailable.', 'We couldn’t load the latest stories. Please refresh the page and try again.');
     }
   };
 
