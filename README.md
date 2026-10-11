@@ -38,7 +38,8 @@ Subsystem leads and recruits rotate through this repo every single year, most ha
 ```bash
 git clone https://github.com/Ashwa-Racing/ashwa-racing.github.io.git
 cd ashwa-racing.github.io
-python -m http.server 8000     # or: npx serve .
+python scripts/build_site.py
+python -m http.server 8000 --directory dist
 ```
 
 Opening files straight off disk (`file://`) mostly works, but the header/footer and a couple of other bits load via `fetch()`, which browsers block on `file://`. Any static server fixes it.
@@ -141,7 +142,7 @@ A couple of the spotlight videos, straight from the site:
 
 **Newsletters.** `newsletters.html` renders our archive going back to 2016 — literally a filename list in `assets/js/pages/newsletters.js` pointing at PDFs in `assets/pdfs/newsletters/`, with a matching cover image per issue in `assets/images/newsletters/<year>/`. To add one: drop the PDF, drop the cover, add the filename to the array, push.
 
-**Blog articles.** Articles are records in `assets/data/blog.json`. Article links use `/blog-post?post=<slug>`; the page reads the `post` query parameter to load the matching record and set its metadata.
+**Blog articles.** The site build reads Markdown files in `content/blog/` and generates the JSON used by the blog pages. For contributors without GitHub access, `scripts/google-blog-publisher/` contains an Apps Script workflow for a Google Form: authors enter the article details, upload a `.docx`, and the script converts and submits it for publication. A maintainer sets up the form and its private GitHub token once; authors only need the responder link. See the [Google Form setup guide](scripts/google-blog-publisher/SETUP.md). Direct Markdown upload through the GitHub website remains available; see [`content/blog/README.md`](content/blog/README.md).
 
 <div align="center">
 <img src="assets/images/newsletters/2026/2026-06.png" width="18%" alt="Newsletter cover" />

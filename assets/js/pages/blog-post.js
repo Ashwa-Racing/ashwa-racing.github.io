@@ -24,6 +24,18 @@
       "'": '&#039;'
     }[char]));
 
+  const renderInline = value => {
+    let text = escapeHTML(value);
+    text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*|#[^\s)]*)\)/g,
+      '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+    text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
+    text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    text = text.replace(/_(.+?)_/g, '<em>$1</em>');
+    return text;
+  };
+
   const parseDate = date => {
     if (!date) {
       return null;
@@ -163,7 +175,7 @@
       case 'paragraph':
         return `
           <p>
-            ${escapeHTML(block.text)}
+            ${renderInline(block.text)}
           </p>
         `;
 
@@ -175,7 +187,7 @@
 
         return `
           <h${level}>
-            ${escapeHTML(block.text)}
+            ${renderInline(block.text)}
           </h${level}>
         `;
       }
@@ -207,7 +219,7 @@
       case 'quote':
         return `
           <blockquote>
-            ${escapeHTML(block.text)}
+            ${renderInline(block.text)}
           </blockquote>
         `;
 
@@ -219,18 +231,19 @@
           return '';
         }
 
+        const listTag = block.ordered ? 'ol' : 'ul';
         return `
-          <ul>
+          <${listTag}>
             ${block.items
               .map(
                 item => `
                   <li>
-                    ${escapeHTML(item)}
+                    ${renderInline(item)}
                   </li>
                 `
               )
               .join('')}
-          </ul>
+          </${listTag}>
         `;
 
       default:
