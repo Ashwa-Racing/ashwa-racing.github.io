@@ -85,8 +85,8 @@ function publishBlogSubmission(event) {
       throw new Error('The upload must be a .docx file.');
     }
 
-    const body = convertDocxToMarkdown_(upload);
     const slug = slugify_(date + ' ' + title);
+    const convertedArticle = convertDocxToMarkdown_(upload, slug);
     const markdown = makeMarkdown_( {
       title: title,
       date: date,
@@ -96,8 +96,9 @@ function publishBlogSubmission(event) {
       cover: String(answers[BLOG_FORM.cover] || '').trim(),
       coverAlt: String(answers[BLOG_FORM.coverAlt] || '').trim(),
       featured: /^yes$/i.test(String(answers[BLOG_FORM.featured] || '').trim())
-    }, body);
+    }, convertedArticle.markdown);
 
+    convertedArticle.images.forEach(image => writeAssetToGitHub_(image));
     writePostToGitHub_(slug, markdown);
     if (respondent) {
       MailApp.sendEmail(respondent, 'Your Ashwa Racing article was published',
@@ -123,22 +124,23 @@ function trashUploads_(fileIds) {
   });
 }
 
-function convertDocxToMarkdown_(wordFile) {
+function convertDocxToMarkdown_(wordFile, slug) {
   const converted = Drive.Files.create({
     name: wordFile.getName().replace(/\.docx$/i, ''),
     mimeType: 'application/vnd.google-apps.document'
   }, wordFile.getBlob(), { fields: 'id' });
 
   try {
-    return googleDocToMarkdown_(converted.id);
+    return googleDocToMarkdown_(converted.id, slug);
   } finally {
     DriveApp.getFileById(converted.id).setTrashed(true);
   }
 }
 
-function googleDocToMarkdown_(documentId) {
+function googleDocToMarkdown_(documentId, slug) {
   const body = DocumentApp.openById(documentId).getBody();
   const lines = [];
+  const imageContext = { slug: slug, images: [] };
 
   for (let index = 0; index < body.getNumChildren(); index += 1) {
     const element = body.getChild(index);
@@ -146,7 +148,7 @@ function googleDocToMarkdown_(documentId) {
 
     if (type === DocumentApp.ElementType.PARAGRAPH) {
       const paragraph = element.asParagraph();
-      const text = styledElementToMarkdown_(paragraph).trim();
+      const text = styledElementToMarkdown_(paragraph, imageContext).trim();
       if (!text) continue;
 
       const heading = paragraph.getHeading();
@@ -164,7 +166,7 @@ function googleDocToMarkdown_(documentId) {
       lines.push(headingLevel ? '#'.repeat(headingLevel) + ' ' + text : text);
     } else if (type === DocumentApp.ElementType.LIST_ITEM) {
       const item = element.asListItem();
-      const text = styledElementToMarkdown_(item).trim();
+      const text = styledElementToMarkdown_(item, imageContext).trim();
       if (text) lines.push('  '.repeat(item.getNestingLevel()) + '- ' + text);
     } else if (type === DocumentApp.ElementType.TABLE) {
       const table = element.asTable();
@@ -172,7 +174,17 @@ function googleDocToMarkdown_(documentId) {
         const row = table.getRow(rowIndex);
         const cells = [];
         for (let cellIndex = 0; cellIndex < row.getNumCells(); cellIndex += 1) {
-          const cellText = row.getCell(cellIndex).getText().trim();
+          const cell = row.getCell(cellIndex);
+          const cellParts = [];
+          for (let childIndex = 0; childIndex < cell.getNumChildren(); childIndex += 1) {
+            const child = cell.getChild(childIndex);
+            if (child.getType() === DocumentApp.ElementType.PARAGRAPH ||
+                child.getType() === DocumentApp.ElementType.LIST_ITEM) {
+              const part = styledElementToMarkdown_(child, imageContext).trim();
+              if (part) cellParts.push(part);
+            }
+          }
+          const cellText = cellParts.join(' ').trim();
           if (cellText) cells.push(cellText);
         }
         if (cells.length) lines.push('- ' + cells.join(' — '));
@@ -182,13 +194,17 @@ function googleDocToMarkdown_(documentId) {
 
   const markdown = lines.join('\n\n').trim();
   if (!markdown) throw new Error('The DOCX converted, but no readable text was found.');
-  return markdown;
+  return { markdown: markdown, images: imageContext.images };
 }
 
-function styledElementToMarkdown_(container) {
+function styledElementToMarkdown_(container, imageContext) {
   let output = '';
   for (let index = 0; index < container.getNumChildren(); index += 1) {
     const child = container.getChild(index);
+    if (child.getType() === DocumentApp.ElementType.INLINE_IMAGE) {
+      output += saveInlineImage_(child.asInlineImage(), imageContext);
+      continue;
+    }
     if (child.getType() !== DocumentApp.ElementType.TEXT) continue;
 
     const text = child.asText();
@@ -209,9 +225,45 @@ function styledElementToMarkdown_(container) {
   return output;
 }
 
+function saveInlineImage_(image, imageContext) {
+  const blob = image.getBlob();
+  const mimeType = String(blob.getContentType() || '').toLowerCase();
+  const extensions = {
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/gif': 'gif',
+    'image/webp': 'webp'
+  };
+  const extension = extensions[mimeType];
+  if (!extension) {
+    throw new Error('An embedded image uses an unsupported format (' + (mimeType || 'unknown') + '). Use JPG, PNG, GIF, or WebP.');
+  }
+
+  const bytes = blob.getBytes();
+  if (bytes.length > 10 * 1024 * 1024) {
+    throw new Error('An embedded image is over 10 MB. Resize it in Word and submit again.');
+  }
+
+  const number = imageContext.images.length + 1;
+  const path = '/assets/images/blog/' + imageContext.slug + '-image-' + number + '.' + extension;
+  imageContext.images.push({ path: path.replace(/^\//, ''), bytes: bytes });
+  const alt = String(image.getAltDescription() || image.getAltTitle() || ('Article image ' + number))
+    .replace(/\]/g, '\\]').replace(/[\r\n]+/g, ' ');
+  return '![' + alt + '](' + path + ')';
+}
+
 function writePostToGitHub_(slug, markdown) {
-  const token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
   const path = BLOG_REPOSITORY.directory + '/' + slug + '.md';
+  const bytes = Utilities.newBlob(markdown, 'text/plain').getBytes();
+  writeGitHubFile_(path, bytes, 'Publish blog article: ' + slug);
+}
+
+function writeAssetToGitHub_(asset) {
+  writeGitHubFile_(asset.path, asset.bytes, 'Add article image: ' + asset.path.split('/').pop());
+}
+
+function writeGitHubFile_(path, bytes, message) {
+  const token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
   const endpoint = 'https://api.github.com/repos/' + BLOG_REPOSITORY.owner + '/' +
     BLOG_REPOSITORY.repo + '/contents/' + path.split('/').map(encodeURIComponent).join('/');
   const headers = {
@@ -231,8 +283,8 @@ function writePostToGitHub_(slug, markdown) {
   }
 
   const payload = {
-    message: (sha ? 'Update' : 'Add') + ' blog article: ' + slug,
-    content: Utilities.base64Encode(Utilities.newBlob(markdown, 'text/plain').getBytes()),
+    message: (sha ? 'Update ' : 'Add ') + message,
+    content: Utilities.base64Encode(bytes),
     branch: BLOG_REPOSITORY.branch
   };
   if (sha) payload.sha = sha;

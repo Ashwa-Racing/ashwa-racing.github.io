@@ -26,6 +26,8 @@
 
   const renderInline = value => {
     let text = escapeHTML(value);
+    text = text.replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+|\/[^\s)]*|assets\/[^\s)]*)\)/g,
+      '<img src="$2" alt="$1" loading="lazy" decoding="async">');
     text = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^\s)]*|#[^\s)]*)\)/g,
       '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     text = text.replace(/`([^`]+)`/g, '<code>$1</code>');

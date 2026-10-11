@@ -25,7 +25,7 @@ This lets the team submit a Word `.docx` through a Google Form without GitHub ac
 
 ## What authors submit
 
-Authors enter the title, publication date (`YYYY-MM-DD`), author, category, short summary, and optional cover image URL, then attach the `.docx`. The publisher converts it to a temporary Google Doc and reads its paragraphs directly. It preserves headings, paragraphs, lists, bold, italic, and links; table rows become simple bullet rows. Keep the cover image separate and provide a public URL in the cover field; embedded Word images are not included in the article.
+Authors enter the title, publication date (`YYYY-MM-DD`), author, category, short summary, and optional cover image URL, then attach the `.docx`. The publisher converts it to a temporary Google Doc and reads its paragraphs directly. It preserves headings, paragraphs, lists, bold, italic, links, and embedded images; table rows become simple bullet rows. Embedded images are committed to the site with the article. The optional cover image URL is still used for blog cards and social previews. Images must be JPG, PNG, GIF, or WebP and no larger than 10 MB each.
 
 The date and title form the article filename. Submitting the same date and title updates that article. A successful submission sends a confirmation email; conversion, validation, or GitHub errors send an error email and are recorded in the Apps Script execution log.
 
