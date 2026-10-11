@@ -1,171 +1,92 @@
-<!-- subsystem.html -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Subsystems | Ashwa Racing</title>
-
-  <link rel="canonical" href="https://ashwaracing.org/subsystem" />
-
-  <meta name="description" content="Explore the subsystems of Ashwa Racing, from chassis, suspension, and powertrain engineering to electronics, software, finance, and sponsorship operations. Discover the multidisciplinary team structure behind our Formula Student race cars." />
-
+  <meta name="description" content="Meet the engineering and operations teams that design, build, and race Ashwa Racing's Formula Student cars.">
+  <link rel="canonical" href="https://ashwaracing.org/subsystem">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Ashwa Racing">
+  <meta property="og:title" content="Subsystems | Ashwa Racing">
+  <meta property="og:description" content="Meet the engineering and operations teams that design, build, and race Ashwa Racing's Formula Student cars.">
+  <meta property="og:url" content="https://ashwaracing.org/subsystem">
+  <meta property="og:image" content="https://assets.ashwaracing.org/images/favicon/header.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Subsystems | Ashwa Racing">
+  <meta name="twitter:description" content="Meet the engineering and operations teams that design, build, and race Ashwa Racing's Formula Student cars.">
+  <meta name="twitter:image" content="https://assets.ashwaracing.org/images/favicon/header.png">
   <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
-
-<link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script>(()=>{let t=null;try{t=localStorage.getItem('ashwa-theme')}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark'})();</script>
+  <link rel="stylesheet" href="assets/css/components/loader.css">
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=3">
   <link rel="stylesheet" href="assets/css/components/footer.css">
-<link rel="stylesheet" href="assets/css/pages/subsystem.css" />
-
-<script>(()=>{let t=null;try{t=localStorage.getItem("ashwa-theme")}catch(e){}document.documentElement.dataset.theme=t==="light"?"light":"dark"})();</script>
-
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/components/subsystem-refresh.css">
+  <link rel="stylesheet" href="assets/css/pages/subsystem-landing.css">
 </head>
+<body class="site-subsystem-page subsystem-landing-page">
+  <div id="main-header"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z"/></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l-1.41-1.41"/></svg>
+  </button>
 
-<body class="site-subsystem-page">
-
-  <div id="main-header"></div><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l-1.41-1.41"/></svg></button>
-
-  <!-- HERO -->
-  <main class="subsystem-page-main">
-    <section class="proj-hero">
-    <div class="proj-hero-bg"></div>
-    <div class="proj-hero-overlay"></div>
-    <div class="proj-hero-grid"></div>
-
-    <div class="proj-hero-content">
-      <div class="proj-eyebrow">
-        <span class="eyebrow-dash"></span>
-        ASHWA RACING
+  <main class="ss-page subsystem-landing">
+    <section class="ss-hero subsystem-landing-hero" aria-labelledby="subsystem-title">
+      <div class="subsystem-landing-copy">
+        <p class="ss-eyebrow">Ashwa Racing <span aria-hidden="true">/</span> How we work</p>
+        <h1 id="subsystem-title">One team.<br><em>Many disciplines.</em></h1>
+        <p class="ss-hero-intro">A Formula Student car comes together through the work of many teams. Explore the people and practices behind every system, from the first design decisions to race day.</p>
+        <a class="subsystem-landing-cta" href="#engineering">Explore our teams <span aria-hidden="true">↓</span></a>
       </div>
+      <figure class="subsystem-landing-image">
+        <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1400,format=avif/images/prototypes/RZ-X8-H/event/10.jpg" alt="Ashwa Racing Formula Student car on track" fetchpriority="high">
+        <figcaption><span>ASHWA RACING</span><span>ENGINEERING / 01</span></figcaption>
+      </figure>
+      <span class="subsystem-landing-index" aria-hidden="true">RVCE · FORMULA STUDENT</span>
+    </section>
 
-      <h1 class="proj-hero-title">
-        SUBSYSTEMS <em>OVERVIEW</em>
-      </h1>
-
-      <p class="proj-hero-desc">
-        Explore the engineering and management divisions that power Ashwa Racing.
-      </p>
-    </div>
-  </section>
-
-  <!-- SUBSYSTEM GRID -->
-  <section class="all-progs">
-    <div class="all-progs-header">
-      <div class="section-label">
-        <span class="label-dash"></span>
-        DIVISIONS
-      </div>
-      <h2 class="all-progs-title">
-        TEAM <em>STRUCTURE</em>
-      </h2>
-    </div>
-
-    <div class="all-progs-grid">
-
-      <!-- CHASSIS -->
-      <div class="prog-card card-chassis" onclick="goToPage('chassis-workshop.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-car-side"></i></div>
-          <div class="prog-card-code">CHASSIS</div>
-          <div class="prog-card-title">Chassis & Workshop</div>
-          <div class="prog-card-desc">Structural engineering and workshop infrastructure.</div>
+    <section class="subsystem-landing-section" id="engineering" aria-labelledby="engineering-title">
+      <div class="subsystem-landing-inner">
+        <header class="subsystem-landing-heading">
+          <div><p class="subsystem-landing-kicker">01 / Vehicle development</p><h2 id="engineering-title">Engineering <em>the car.</em></h2></div>
+          <p>Six specialist teams turn engineering fundamentals into a car that can perform, endure, and be maintained at competition.</p>
+        </header>
+        <div class="subsystem-landing-grid">
+          <a class="subsystem-card" href="chassis-workshop.html"><span class="subsystem-card-index">01</span><span class="subsystem-card-code">CHASSIS / WORKSHOP</span><h3>Chassis &amp; Workshop</h3><p>Designing the car's structure and building the workshop systems that bring it to life.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
+          <a class="subsystem-card" href="engine.html"><span class="subsystem-card-index">02</span><span class="subsystem-card-code">POWERTRAIN</span><h3>Engine</h3><p>Developing and refining the power unit for performance, reliability, and response.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
+          <a class="subsystem-card" href="suspension-admin.html"><span class="subsystem-card-index">03</span><span class="subsystem-card-code">VEHICLE DYNAMICS</span><h3>Suspension &amp; Admin</h3><p>Shaping handling and keeping the technical programme coordinated.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
+          <a class="subsystem-card" href="brakes-logistics.html"><span class="subsystem-card-index">04</span><span class="subsystem-card-code">SAFETY / OPERATIONS</span><h3>Brakes &amp; Logistics</h3><p>Engineering dependable stopping performance and supporting the team on the move.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
+          <a class="subsystem-card" href="drivetrain-hr.html"><span class="subsystem-card-index">05</span><span class="subsystem-card-code">POWER TRANSMISSION</span><h3>Drivetrain &amp; HR</h3><p>Delivering power to the wheels while building the people and processes behind the car.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
+          <a class="subsystem-card" href="electrical-testing.html"><span class="subsystem-card-index">06</span><span class="subsystem-card-code">ELECTRICAL / TEST</span><h3>Electrical &amp; Testing</h3><p>Connecting the car's electrical systems and validating their behaviour on track.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
         </div>
       </div>
+    </section>
 
-      <!-- ENGINE -->
-      <div class="prog-card card-engine" onclick="goToPage('engine.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-fire-alt"></i></div>
-          <div class="prog-card-code">ENGINE</div>
-          <div class="prog-card-title">Engine & Powertrain</div>
-          <div class="prog-card-desc">High-performance combustion optimization.</div>
+    <section class="subsystem-landing-section subsystem-landing-section--operations" aria-labelledby="operations-title">
+      <div class="subsystem-landing-inner">
+        <header class="subsystem-landing-heading">
+          <div><p class="subsystem-landing-kicker">02 / Team operations</p><h2 id="operations-title">Powering <em>the project.</em></h2></div>
+          <p>Strong engineering needs the right tools, resources, partnerships, and communication around it.</p>
+        </header>
+        <div class="subsystem-landing-grid subsystem-landing-grid--three">
+          <a class="subsystem-card" href="it.html"><span class="subsystem-card-index">07</span><span class="subsystem-card-code">DIGITAL SYSTEMS</span><h3>IT</h3><p>Building the software, infrastructure, and digital tools the team depends on.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
+          <a class="subsystem-card" href="finance.html"><span class="subsystem-card-index">08</span><span class="subsystem-card-code">RESOURCES</span><h3>Finance</h3><p>Planning budgets and resources to make ambitious engineering possible.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
+          <a class="subsystem-card" href="smp.html"><span class="subsystem-card-index">09</span><span class="subsystem-card-code">PARTNERSHIPS / OUTREACH</span><h3>Sponsorship &amp; Marketing</h3><p>Growing partner relationships and sharing Ashwa Racing's work with the world.</p><span class="subsystem-card-link">Explore team <b aria-hidden="true">↗</b></span></a>
         </div>
       </div>
-
-      <!-- SUSPENSION -->
-      <div class="prog-card card-suspension" onclick="goToPage('suspension-admin.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-ruler-combined"></i></div>
-          <div class="prog-card-code">SUSPENSION</div>
-          <div class="prog-card-title">Suspension & Handling</div>
-          <div class="prog-card-desc">Vehicle dynamics and handling optimization.</div>
-        </div>
-      </div>
-
-      <!-- BRAKES -->
-      <div class="prog-card card-brakes" onclick="goToPage('brakes-logistics.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-stop-circle"></i></div>
-          <div class="prog-card-code">BRAKES</div>
-          <div class="prog-card-title">Braking System</div>
-          <div class="prog-card-desc">Hydraulic safety and stopping performance.</div>
-        </div>
-      </div>
-
-      <!-- DRIVETRAIN -->
-      <div class="prog-card card-drivetrain" onclick="goToPage('drivetrain-hr.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-gears"></i></div>
-          <div class="prog-card-code">DRIVETRAIN</div>
-          <div class="prog-card-title">Power Transmission</div>
-          <div class="prog-card-desc">Transmission and torque delivery optimization.</div>
-        </div>
-      </div>
-
-      <!-- ELECTRICAL -->
-      <div class="prog-card card-electrical" onclick="goToPage('electrical-testing.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-bolt"></i></div>
-          <div class="prog-card-code">ELECTRICAL</div>
-          <div class="prog-card-title">Electronics & Sensors</div>
-          <div class="prog-card-desc">Data acquisition and system control.</div>
-        </div>
-      </div>
-
-      <!-- IT -->
-      <div class="prog-card card-it" onclick="goToPage('it.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-terminal"></i></div>
-          <div class="prog-card-code">IT</div>
-          <div class="prog-card-title">Digital Infrastructure</div>
-          <div class="prog-card-desc">Software, tools, and infrastructure management.</div>
-        </div>
-      </div>
-
-      <!-- FINANCE -->
-      <div class="prog-card card-finance" onclick="goToPage('finance.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-chart-line"></i></div>
-          <div class="prog-card-code">FINANCE</div>
-          <div class="prog-card-title">Budget & Resources</div>
-          <div class="prog-card-desc">Financial planning and cost optimization.</div>
-        </div>
-      </div>
-
-      <!-- SMP -->
-      <div class="prog-card card-smp" onclick="goToPage('smp.html')">
-        <div class="prog-card-content">
-          <div class="prog-card-icon"><i class="fas fa-handshake"></i></div>
-          <div class="prog-card-code">SMP</div>
-          <div class="prog-card-title">Sponsorship & Marketing</div>
-          <div class="prog-card-desc">Corporate relations, branding, and public outreach.</div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
+    </section>
   </main>
-    <div id="site-loader" aria-hidden="true"><div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div></div><footer id="main-footer"></footer>
 
-  <script src="assets/js/components/header.js"></script>
-  <script src="assets/js/pages/subsystem.js"></script>
-
-<script src="assets/js/components/theme.js" defer></script><script src="assets/js/components/loader.js" defer></script></body>
-
+  <footer id="main-footer"></footer>
+  <div id="site-loader" aria-hidden="true"><div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div></div>
+  <script src="assets/js/components/header.js" defer></script>
+  <script src="assets/js/components/theme.js" defer></script>
+  <script src="assets/js/components/loader.js" defer></script>
+</body>
 </html>
