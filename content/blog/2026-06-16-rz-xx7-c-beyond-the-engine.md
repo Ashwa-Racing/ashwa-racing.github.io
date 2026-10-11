@@ -3,7 +3,7 @@ title: "RZ-XX7-C : Beyond the Engine"
 date: 2026-06-16
 author: "Aditeya Sarkar"
 category: "Electrical & Testing"
-excerpt: "Ashwa Racing is building the RZ-XX7-C with a simplified, system-level electrical design: fewer boards, a single Interface Control Unit, a digital APPS, an upgraded BSPD, and a cheaper, more capable Relay Board.  Meanwhile, the IT team launched the club's open-source website and is starting work on an ERP system and driverless vehicle research."
+excerpt: "Ashwa Racing is building the RZ-XX7-C with a simplified, system-level electrical design: fewer boards, a single Interface Control Unit, a digital APPS, an upgraded BSPD, and a cheaper, more capable Relay Board.   Meanwhile, the IT team launched the club's open-source website and is starting work on an ERP system and driverless vehicle research."
 featured: false
 ---
 
@@ -23,6 +23,8 @@ Beyond its conventional functions, the MoTeC M800 is now also responsible for ac
 
 All data is transmitted over CAN 2.0 to our Interface Control Unit (ICU), which is our integrated Wireless Telemetry, IMU, Display, and RPM processing unit.
 
+![Article image 1](/assets/images/blog/2026-06-16-rz-xx7-c-beyond-the-engine-image-1.png)
+
 The Harness Schematic
 
 The Interface Control Unit (ICU) was developed with packaging and
@@ -33,9 +35,13 @@ three separate boards at the front of the vehicle, adding unnecessary
 
 complexity without providing meaningful benefits. The new ICU consolidates these functions into a single compact unit mounted directly behind the display. The ICU is powered directly from the low-voltage (LV+) supply (11–16 V), while the display is powered via the ICU's integrated 5 V buck converter through a USB-C connector.
 
+![Article image 2](/assets/images/blog/2026-06-16-rz-xx7-c-beyond-the-engine-image-2.png)
+
 3D Render of ICU (i) Bare (ii) Behind the display
 
 In addition to these changes, the vehicle now utilizes a digital APPS. Compared to the previous analog APPS, the digital one offers improved reliability and a more cost-effective solution.
+
+![Article image 3](/assets/images/blog/2026-06-16-rz-xx7-c-beyond-the-engine-image-3.png)
 
 3D Render of (i) APPS Board (ii) BSPD
 
@@ -47,13 +53,19 @@ into the BSPD, the need for a dedicated brake light actuation board has been eli
 
 We also replaced the power distribution board, which was abominably expensive and only partially functional, with the Relay Board at roughly one-eighth of the cost and twice the functionality. The Relay Board allows us to control all the cooling systems through the MoTeC ECU as well as manually by the driver.
 
+![Article image 4](/assets/images/blog/2026-06-16-rz-xx7-c-beyond-the-engine-image-4.png)
+
 Open-top render of  draft MoTeC and Conduit Box
 
 The IT team has been working around the clock to get our website up and running at [www.ashwaracing.org](http://www.ashwaracing.org) The website code is fully open source and available at our organization's [GitHub](https://github.com/Ashwa-Racing). The website is fully up and logs our current newsletters, along with a gallery with exclusive images, our prototypes from the beginning of the club, and other details. Do visit the website!
 
+![Article image 5](/assets/images/blog/2026-06-16-rz-xx7-c-beyond-the-engine-image-5.png)
+
 Snippet of our website!
 
 Apart from website development, the IT team has been working on a custom ERP software stack while simultaneously advancing the development of our DV systems. Currently, the team is in the pre-design phase, studying research papers, evaluating existing implementations, and analysing their results to establish a strong technical foundation.
+
+![Article image 6](/assets/images/blog/2026-06-16-rz-xx7-c-beyond-the-engine-image-6.png)
 
 Snippet of a paper we are referring
 
