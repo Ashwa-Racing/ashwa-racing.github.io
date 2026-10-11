@@ -10,29 +10,35 @@
 
     <meta name="description" content="Explore the Electrical & Testing subsystem at Ashwa Racing, developing high-performance vehicle electronics, embedded systems, custom ECUs, accumulator safety systems, and real-time data acquisition for Formula Student competition." />
 
-    <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg" />
-<link rel="shortcut icon" href="assets/images/favicon/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" href="https://assets.ashwaracing.org/images/favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg" />
+<link rel="shortcut icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="https://assets.ashwaracing.org/images/favicon/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="Ashwa Racing" />
-<link rel="manifest" href="assets/images/favicon/site.webmanifest" />
+<link rel="manifest" href="https://assets.ashwaracing.org/images/favicon/site.webmanifest" />
 
     <!-- CSS -->
-    <link rel="stylesheet" href="assets/css/pages/electrical-testing.css" />
-    <link rel="stylesheet" href="assets/css/components/header.css?v=2" />
-    <link rel="stylesheet" href="assets/css/components/footer.css" />
 
-    <!-- Fonts -->
+<link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
+  <link rel="stylesheet" href="assets/css/components/footer.css">
+<link rel="stylesheet" href="assets/css/pages/electrical-testing.css" />
+
+<!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"/>
 
+<script>(()=>{let t=null;try{t=localStorage.getItem("ashwa-theme")}catch(e){}document.documentElement.dataset.theme=t==="light"?"light":"dark"})();</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/components/subsystem-refresh.css">
 </head>
 
-<body>
+<body class="site-subsystem-page">
 
     <!-- HEADER -->
-    <div id="main-header"></div>
+    <div id="main-header"></div><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l-1.41-1.41"/></svg></button>
 
     <!-- MAIN CONTENT -->
     <main>
@@ -45,7 +51,7 @@
             <h1>Electrical & Testing</h1>
 
             <p class="subsystem-tagline">
-            Engineering the car’s electrical nervous system — encompassing custom power electronics, 
+            Engineering the car’s electrical nervous system — encompassing custom power electronics,
             accumulator architecture, embedded firmware, real-time data acquisition, and vehicle control software.
             </p>
 
@@ -55,8 +61,7 @@
         </div>
         </section>
 
-
-        <!-- RESPONSIBILITY -->
+<!-- RESPONSIBILITY -->
         <section class="subsystem-scope">
         <div class="container">
             <h2>Subsystem Scope & Ownership</h2>
@@ -82,8 +87,7 @@
         </div>
         </section>
 
-
-        <section class="subsystem-architecture">
+<section class="subsystem-architecture">
         <div class="container">
             <h2>System Architecture Overview</h2>
 
@@ -110,8 +114,7 @@
         </div>
         </section>
 
-
-        <!-- TESTING PHILOSOPHY -->
+<!-- TESTING PHILOSOPHY -->
         <section class="subsystem-testing">
             <div class="container">
                 <h2>Testing & Validation</h2>
@@ -169,23 +172,23 @@
                 <!-- RIGHT: VISUAL -->
                 <div class="tools-visual">
                     <div class="tool-card active">
-                        <img src="assets\images\subsystem\electrical\tools\stm32cubeide.png" alt="STM32CubeIDE">
+                        <img src="https://assets.ashwaracing.org/images/subsystem/electrical/tools/stm32cubeide.png" alt="STM32CubeIDE">
                     </div>
 
                     <div class="tool-card">
-                        <img src="assets/images/subsystem/electrical/tools/kicad.png" alt="KiCad">
+                        <img src="https://assets.ashwaracing.org/images/subsystem/electrical/tools/kicad.png" alt="KiCad">
                     </div>
 
                     <div class="tool-card">
-                        <img src="assets\images\subsystem\electrical\tools\ltspice.png" alt="LTspice">
+                        <img src="https://assets.ashwaracing.org/images/subsystem/electrical/tools/ltspice.png" alt="LTspice">
                     </div>
 
                     <div class="tool-card">
-                        <img src="assets/images/subsystem/electrical/tools/ndrive.png" alt="nDrive">
+                        <img src="https://assets.ashwaracing.org/images/subsystem/electrical/tools/ndrive.png" alt="nDrive">
                     </div>
 
                     <div class="tool-card">
-                        <img src="assets\images\subsystem\electrical\tools\motececu.png" alt="MoTeC ECU">
+                        <img src="https://assets.ashwaracing.org/images/subsystem/electrical/tools/motececu.png" alt="MoTeC ECU">
                     </div>
 
                 </div>
@@ -193,8 +196,7 @@
             </div>
         </section>
 
-
-        <!-- OUTCOMES -->
+<!-- OUTCOMES -->
         <section class="subsystem-outcomes">
         <div class="container">
             <h2>Engineering Outcomes</h2>
@@ -213,15 +215,14 @@
         </div>
         </section>
 
-
-    </main>
+</main>
 
     <!-- FOOTER -->
-    <footer id="main-footer"></footer>
+    <div id="site-loader" aria-hidden="true"><div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div></div><footer id="main-footer"></footer>
 
     <!-- JS -->
     <script src="assets/js/components/header.js"></script>
-    <script type="module" src="assets/js/pages/electrical-testing.js"></script>  
+    <script type="module" src="assets/js/pages/electrical-testing.js"></script>
 
-</body>
+<script src="assets/js/components/theme.js" defer></script><script src="assets/js/components/loader.js" defer></script></body>
 </html>

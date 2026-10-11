@@ -11,24 +11,28 @@
 
   <meta name="description" content="Explore the subsystems of Ashwa Racing, from chassis, suspension, and powertrain engineering to electronics, software, finance, and sponsorship operations. Discover the multidisciplinary team structure behind our Formula Student race cars." />
 
-  <link rel="icon" href="assets/images/favicon/favicon.ico">
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg">
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700;800&family=Barlow:wght@300;400;500&display=swap"
-    rel="stylesheet">
+<link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
+  <link rel="stylesheet" href="assets/css/components/footer.css">
+<link rel="stylesheet" href="assets/css/pages/subsystem.css" />
 
-  <link rel="stylesheet" href="assets/css/pages/subsystem.css" />
-  <link rel="stylesheet" href="assets/css/components/header.css?v=2" />
-  <link rel="stylesheet" href="assets/css/components/footer.css" />
+<script>(()=>{let t=null;try{t=localStorage.getItem("ashwa-theme")}catch(e){}document.documentElement.dataset.theme=t==="light"?"light":"dark"})();</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/components/subsystem-refresh.css">
 </head>
 
-<body>
+<body class="site-subsystem-page">
 
-  <div id="main-header"></div>
+  <div id="main-header"></div><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false"><svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z"/></svg><svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l-1.41-1.41"/></svg></button>
 
   <!-- HERO -->
-  <section class="proj-hero">
+  <main class="subsystem-page-main">
+    <section class="proj-hero">
     <div class="proj-hero-bg"></div>
     <div class="proj-hero-overlay"></div>
     <div class="proj-hero-grid"></div>
@@ -156,11 +160,12 @@
     </div>
   </section>
 
-  <footer id="main-footer"></footer>
+  </main>
+    <div id="site-loader" aria-hidden="true"><div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div></div><footer id="main-footer"></footer>
 
   <script src="assets/js/components/header.js"></script>
   <script src="assets/js/pages/subsystem.js"></script>
 
-</body>
+<script src="assets/js/components/theme.js" defer></script><script src="assets/js/components/loader.js" defer></script></body>
 
 </html>

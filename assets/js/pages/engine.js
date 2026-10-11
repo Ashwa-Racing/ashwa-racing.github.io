@@ -471,10 +471,10 @@ const pageContent = {
       content: `
             <div class="gallery-grid">
                  <div class="gallery-item">
-                    <img src="../assets/images/dummy1.png" alt="Team working on engine" onerror="this.onerror=null; this.src='https://via.placeholder.com/400x300?text=Engine+Workshop';">
+                    <img src="https://assets.ashwaracing.org/images/gallery/IMG_3970_Original.webp" alt="Ashwa Racing team working in the workshop" loading="lazy">
                  </div>
                  <div class="gallery-item">
-                    <img src="../assets/images/ashwa black.png" alt="Ashwa Car" style="object-fit: contain; background: white;">
+                    <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1200,format=auto/images/prototypes/RZ-X8-H/event/10.jpg" alt="Ashwa Racing Formula Student car" loading="lazy">
                  </div>
                  <div class="gallery-item">
                     <img src="https://via.placeholder.com/400x300?text=Track+Testing" alt="Car Running">
