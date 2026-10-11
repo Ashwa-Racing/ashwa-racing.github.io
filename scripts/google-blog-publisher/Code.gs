@@ -53,14 +53,17 @@ function publishBlogSubmission(event) {
 
   try {
     const answers = {};
+    const responseLabels = [];
     let uploadedFileIds = [];
     event.response.getItemResponses().forEach(itemResponse => {
-      const title = itemResponse.getItem().getTitle();
+      const title = String(itemResponse.getItem().getTitle() || '').trim();
+      const normalizedTitle = normalizeQuestion_(title);
       const response = itemResponse.getResponse();
-      if (title === BLOG_FORM.uploadQuestion) {
+      responseLabels.push(title || '(untitled question)');
+      if (normalizedTitle === normalizeQuestion_(BLOG_FORM.uploadQuestion)) {
         uploadedFileIds = Array.isArray(response) ? response : [response];
       } else {
-        answers[title] = Array.isArray(response) ? response.join(', ') : response;
+        answers[normalizedTitle] = Array.isArray(response) ? response.join(', ') : response;
       }
     });
 
@@ -72,11 +75,11 @@ function publishBlogSubmission(event) {
     const fileId = uploadedFileIds.find(Boolean);
     if (!fileId) throw new Error('Attach one DOCX file to the form submission.');
 
-    const title = requiredAnswer_(answers, BLOG_FORM.title);
-    const date = normalizeDate_(requiredAnswer_(answers, BLOG_FORM.date));
-    const author = requiredAnswer_(answers, BLOG_FORM.author);
-    const category = requiredAnswer_(answers, BLOG_FORM.category);
-    const excerpt = requiredAnswer_(answers, BLOG_FORM.excerpt);
+    const title = requiredAnswer_(answers, BLOG_FORM.title, responseLabels);
+    const date = normalizeDate_(requiredAnswer_(answers, BLOG_FORM.date, responseLabels));
+    const author = requiredAnswer_(answers, BLOG_FORM.author, responseLabels);
+    const category = requiredAnswer_(answers, BLOG_FORM.category, responseLabels);
+    const excerpt = requiredAnswer_(answers, BLOG_FORM.excerpt, responseLabels);
     const upload = DriveApp.getFileById(fileId);
     if (!/\.docx$/i.test(upload.getName())) {
       throw new Error('The upload must be a .docx file.');
@@ -189,9 +192,17 @@ function makeMarkdown_(post, body) {
   return lines.join('\n');
 }
 
-function requiredAnswer_(answers, question) {
-  const value = String(answers[question] || '').trim();
-  if (!value) throw new Error('Please complete the form field: ' + question + '.');
+function normalizeQuestion_(value) {
+  return String(value || '').normalize('NFKC').replace(/\u00a0/g, ' ')
+    .trim().replace(/\s+/g, ' ').toLowerCase();
+}
+
+function requiredAnswer_(answers, question, responseLabels) {
+  const value = String(answers[normalizeQuestion_(question)] || '').trim();
+  if (!value) {
+    throw new Error('Please complete the form field: ' + question +
+      '. Questions received by the trigger: ' + responseLabels.join(' | '));
+  }
   return value;
 }
 
