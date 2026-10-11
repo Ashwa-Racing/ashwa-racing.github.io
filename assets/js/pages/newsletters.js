@@ -31,6 +31,12 @@
     const type = typeFile.replace('.pdf', '');
     return { year, month, type, title: `${monthNames[Number(month)]} ${year}`, pdf: `${pdfBase}${year}/${file}`, cover: `${imageBase}${year}/${year}-${month}.png` };
   }).sort((a, b) => `${b.year}${b.month}`.localeCompare(`${a.year}${a.month}`));
+  const archiveGroups = new Map();
+  newsletters.forEach(item => {
+    const key = `${item.year}-${item.month}`;
+    if (!archiveGroups.has(key)) archiveGroups.set(key, []);
+    archiveGroups.get(key).push(item);
+  });
 
   const list = document.getElementById('list');
   const filterBar = document.getElementById('filter-bar');
@@ -62,6 +68,9 @@
       const first = group[0];
       const card = document.createElement('article');
       card.className = 'blog-card newsletter-card';
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.setAttribute('aria-label', `Read ${first.title} newsletter`);
       const image = document.createElement('div');
       image.className = 'blog-card-image';
       const img = document.createElement('img');
@@ -91,14 +100,213 @@
         link.textContent = typeNames[item.type] || item.type;
         link.setAttribute('aria-label', `Open ${item.title} ${typeNames[item.type] || item.type} newsletter PDF`);
         link.dataset.edition = String(index + 1).padStart(2, '0');
+        link.addEventListener('click', event => {
+          if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+          event.preventDefault();
+          openReader(item);
+        });
         links.appendChild(link);
       });
       body.append(kicker, heading, links);
       card.append(image, body);
+      card.addEventListener('click', event => {
+        if (event.target.closest('a')) return;
+        openReader(first);
+      });
+      card.addEventListener('keydown', event => {
+        if (event.target !== card || !['Enter', ' '].includes(event.key)) return;
+        event.preventDefault();
+        openReader(first);
+      });
       list.appendChild(card);
       requestAnimationFrame(() => card.classList.add('visible'));
     });
   };
+
+  const reader = document.getElementById('newsletter-reader');
+  const dialog = reader.querySelector('.reader-dialog');
+  const readerTitle = document.getElementById('reader-title');
+  const readerEdition = document.getElementById('reader-edition');
+  const downloadLink = document.getElementById('reader-download');
+  const fallbackLink = document.getElementById('reader-fallback');
+  const errorPanel = document.getElementById('reader-error');
+  const canvas = document.getElementById('reader-canvas');
+  const nextCanvas = document.getElementById('reader-canvas-next');
+  const sheet = document.getElementById('reader-sheet');
+  const nextSheet = document.getElementById('reader-sheet-next');
+  const stage = document.getElementById('reader-stage');
+  const pageCount = document.getElementById('reader-page-count');
+  const zoomLabel = document.getElementById('reader-zoom-label');
+  const recList = document.getElementById('reader-recommendations');
+  let pdfDocument = null;
+  let pageNumber = 1;
+  let zoom = 1;
+  let lastFocus = null;
+  let renderTasks = [];
+  let turnTimer = null;
+  let openRequest = 0;
+
+  if (window.pdfjsLib) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  function createRecommendations(current) {
+    const candidates = [...archiveGroups.entries()]
+      .filter(([key]) => key !== `${current.year}-${current.month}`)
+      .map(value => ({ value, order: Math.random() }))
+      .sort((a, b) => a.order - b.order)
+      .map(entry => entry.value)
+      .slice(0, 3);
+    recList.replaceChildren();
+    candidates.forEach(([, editions]) => {
+      const item = editions[Math.floor(Math.random() * editions.length)];
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'reader-rec-card';
+      const image = document.createElement('img');
+      image.src = item.cover;
+      image.alt = '';
+      image.loading = 'lazy';
+      image.addEventListener('error', () => { image.hidden = true; }, { once: true });
+      const text = document.createElement('span');
+      text.innerHTML = `<small>${typeNames[item.type] || item.type}</small><strong>${item.title}</strong>`;
+      button.append(image, text);
+      button.addEventListener('click', () => openReader(item));
+      recList.appendChild(button);
+    });
+  }
+
+  async function renderPage(page = pageNumber, animate = false) {
+    if (!pdfDocument || !stage.clientWidth || !stage.clientHeight) return;
+    pageNumber = Math.max(1, Math.min(pdfDocument.numPages, page));
+    const isMobile = window.matchMedia('(max-width: 760px)').matches;
+    const pageStep = isMobile ? 1 : 2;
+    const secondPageNumber = pageNumber + 1;
+    pageCount.textContent = isMobile || secondPageNumber > pdfDocument.numPages
+      ? `${pageNumber} / ${pdfDocument.numPages}`
+      : `${pageNumber}–${secondPageNumber} / ${pdfDocument.numPages}`;
+    nextSheet.hidden = isMobile || secondPageNumber > pdfDocument.numPages;
+    stage.classList.toggle('has-single-page', secondPageNumber > pdfDocument.numPages);
+    document.getElementById('reader-prev').disabled = pageNumber <= 1;
+    document.getElementById('reader-next').disabled = pageNumber + pageStep > pdfDocument.numPages;
+    document.getElementById('reader-page-prev').disabled = pageNumber <= 1;
+    document.getElementById('reader-page-next').disabled = pageNumber + pageStep > pdfDocument.numPages;
+
+    if (animate) {
+      sheet.classList.add('is-turning');
+      nextSheet.classList.add('is-turning');
+      clearTimeout(turnTimer);
+      await new Promise(resolve => setTimeout(resolve, 140));
+    }
+    renderTasks.forEach(task => task.cancel());
+    renderTasks = [];
+    try {
+      const slots = [{ number: pageNumber, canvas }];
+      if (!isMobile && secondPageNumber <= pdfDocument.numPages) slots.push({ number: secondPageNumber, canvas: nextCanvas });
+      await Promise.all(slots.map(async slot => {
+        const pageData = await pdfDocument.getPage(slot.number);
+        const baseViewport = pageData.getViewport({ scale: 1 });
+        const slotWidth = isMobile ? stage.clientWidth - 32 : stage.clientWidth / 2 - 24;
+        const fit = Math.min(slotWidth / baseViewport.width, (stage.clientHeight - 26) / baseViewport.height);
+        const outputScale = Math.min(window.devicePixelRatio || 1, 1.5);
+        const viewport = pageData.getViewport({ scale: fit * zoom });
+        slot.canvas.width = Math.floor(viewport.width * outputScale);
+        slot.canvas.height = Math.floor(viewport.height * outputScale);
+        slot.canvas.style.width = `${Math.floor(viewport.width)}px`;
+        slot.canvas.style.height = `${Math.floor(viewport.height)}px`;
+        const task = pageData.render({ canvasContext: slot.canvas.getContext('2d'), viewport, transform: outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null });
+        renderTasks.push(task);
+        await task.promise;
+      }));
+      if (animate) turnTimer = setTimeout(() => { sheet.classList.remove('is-turning'); nextSheet.classList.remove('is-turning'); }, 20);
+    } catch (error) {
+      if (error?.name !== 'RenderingCancelledException') console.warn('Newsletter page render failed:', error);
+    }
+  }
+
+  async function openReader(item) {
+    const requestId = ++openRequest;
+    lastFocus = document.activeElement;
+    reader.hidden = false;
+    document.body.classList.add('reader-open');
+    dialog.focus();
+    readerTitle.textContent = item.title;
+    readerEdition.textContent = `Ashwa Racing · ${typeNames[item.type] || item.type} edition`;
+    downloadLink.href = item.pdf;
+    fallbackLink.href = item.pdf;
+    errorPanel.hidden = true;
+    canvas.hidden = false;
+    nextCanvas.hidden = false;
+    recList.innerHTML = '<p class="reader-rec-loading">Finding another issue to read…</p>';
+    createRecommendations(item);
+    if (pdfDocument) { pdfDocument.destroy(); pdfDocument = null; }
+    pageNumber = 1;
+    zoom = 1;
+    zoomLabel.textContent = 'FIT';
+    pageCount.textContent = 'Loading';
+
+    if (!window.pdfjsLib) {
+      errorPanel.hidden = false;
+      canvas.hidden = true;
+      nextCanvas.hidden = true;
+      pageCount.textContent = 'PDF';
+      return;
+    }
+    try {
+      const loadedDocument = await window.pdfjsLib.getDocument({ url: item.pdf, withCredentials: false }).promise;
+      if (requestId !== openRequest || reader.hidden) { loadedDocument.destroy(); return; }
+      pdfDocument = loadedDocument;
+      await renderPage(1);
+    } catch (error) {
+      if (requestId !== openRequest || reader.hidden) return;
+      console.warn('Newsletter PDF could not be loaded in the reader:', error);
+      errorPanel.hidden = false;
+      canvas.hidden = true;
+      nextCanvas.hidden = true;
+      pageCount.textContent = 'PDF';
+    }
+  }
+
+  function closeReader() {
+    openRequest++;
+    reader.hidden = true;
+    document.body.classList.remove('reader-open');
+    if (pdfDocument) { pdfDocument.destroy(); pdfDocument = null; }
+    renderTasks.forEach(task => task.cancel());
+    renderTasks = [];
+    lastFocus?.focus?.();
+  }
+
+  function turnPage(direction) {
+    if (!pdfDocument) return;
+    const nextPage = pageNumber + direction * (window.matchMedia('(max-width: 760px)').matches ? 1 : 2);
+    if (nextPage < 1 || nextPage > pdfDocument.numPages) return;
+    renderPage(nextPage, true);
+  }
+
+  document.querySelectorAll('[data-reader-close]').forEach(button => button.addEventListener('click', closeReader));
+  document.getElementById('reader-prev').addEventListener('click', () => turnPage(-1));
+  document.getElementById('reader-next').addEventListener('click', () => turnPage(1));
+  document.getElementById('reader-page-prev').addEventListener('click', () => turnPage(-1));
+  document.getElementById('reader-page-next').addEventListener('click', () => turnPage(1));
+  document.getElementById('reader-zoom-out').addEventListener('click', () => { zoom = Math.max(.7, zoom - .15); zoomLabel.textContent = `${Math.round(zoom * 100)}%`; renderPage(); });
+  document.getElementById('reader-zoom-in').addEventListener('click', () => { zoom = Math.min(1.8, zoom + .15); zoomLabel.textContent = `${Math.round(zoom * 100)}%`; renderPage(); });
+  document.addEventListener('keydown', event => {
+    if (reader.hidden) return;
+    if (event.key === 'Escape') closeReader();
+    else if (event.key === 'ArrowRight') turnPage(1);
+    else if (event.key === 'ArrowLeft') turnPage(-1);
+    else if (event.key === 'Tab') {
+      const focusable = [...dialog.querySelectorAll('a[href],button:not(:disabled),[tabindex]:not([tabindex="-1"])')]
+        .filter(element => !element.hidden && element.getClientRects().length);
+      if (!focusable.length) { event.preventDefault(); dialog.focus(); return; }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
+  });
+  window.addEventListener('resize', () => { if (!reader.hidden) renderPage(); });
 
   filterBar.addEventListener('click', event => {
     const button = event.target.closest('button[data-year]');

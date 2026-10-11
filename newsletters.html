@@ -53,10 +53,48 @@
       </div>
     </section>
   </main>
+  <div class="newsletter-reader" id="newsletter-reader" hidden>
+    <button class="reader-backdrop" type="button" data-reader-close aria-label="Close newsletter reader"></button>
+    <section class="reader-dialog" role="dialog" aria-modal="true" aria-labelledby="reader-title" tabindex="-1">
+      <header class="reader-header">
+        <div class="reader-heading"><p class="reader-eyebrow" id="reader-edition">Ashwa Racing Archive</p><h2 id="reader-title">Newsletter</h2></div>
+        <div class="reader-actions">
+          <a id="reader-download" href="#" target="_blank" rel="noopener noreferrer" download>Open PDF <span aria-hidden="true">↗</span></a>
+          <button type="button" class="reader-close" data-reader-close aria-label="Close reader">×</button>
+        </div>
+      </header>
+      <div class="reader-body-grid">
+        <div class="reader-reading-column">
+          <div class="reader-workspace">
+            <button class="reader-page-nav" id="reader-prev" type="button" aria-label="Previous spread">←</button>
+            <div class="reader-stage" id="reader-stage">
+              <div class="reader-page-sheet" id="reader-sheet"><canvas id="reader-canvas"></canvas></div>
+              <div class="reader-page-sheet reader-page-sheet-next" id="reader-sheet-next"><canvas id="reader-canvas-next"></canvas></div>
+              <div class="reader-error" id="reader-error" hidden><p>This PDF could not be rendered here.</p><a id="reader-fallback" href="#" target="_blank" rel="noopener noreferrer">Open the newsletter PDF</a></div>
+            </div>
+            <button class="reader-page-nav" id="reader-next" type="button" aria-label="Next spread">→</button>
+          </div>
+          <div class="reader-controls">
+            <span class="reader-page-label">PAGE</span>
+            <button type="button" id="reader-page-prev" aria-label="Previous spread">−</button>
+            <span id="reader-page-count" aria-live="polite">— / —</span>
+            <button type="button" id="reader-page-next" aria-label="Next spread">+</button>
+            <span class="reader-control-divider"></span>
+            <button type="button" id="reader-zoom-out" aria-label="Zoom out">−</button><span id="reader-zoom-label">FIT</span><button type="button" id="reader-zoom-in" aria-label="Zoom in">+</button>
+          </div>
+        </div>
+        <section class="reader-recommendations" aria-labelledby="reader-recommendations-title">
+          <div class="reader-rec-heading"><p class="newsletter-card-kicker">Keep reading</p><h3 id="reader-recommendations-title">From the archive</h3></div>
+          <div class="reader-recommendation-grid" id="reader-recommendations"></div>
+        </section>
+      </div>
+    </section>
+  </div>
   <footer id="main-footer"></footer>
   <div id="site-loader" aria-hidden="true">
     <div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
   <script src="assets/js/pages/newsletters.js" defer></script>
   <script src="assets/js/components/header.js" defer></script>
   <script src="assets/js/components/theme.js" defer></script>
