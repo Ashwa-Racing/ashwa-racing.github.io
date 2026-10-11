@@ -130,13 +130,83 @@ function convertDocxToMarkdown_(wordFile) {
   }, wordFile.getBlob(), { fields: 'id' });
 
   try {
-    return DriveApp.getFileById(converted.id)
-      .getAs('text/markdown')
-      .getDataAsString('UTF-8')
-      .trim();
+    return googleDocToMarkdown_(converted.id);
   } finally {
     DriveApp.getFileById(converted.id).setTrashed(true);
   }
+}
+
+function googleDocToMarkdown_(documentId) {
+  const body = DocumentApp.openById(documentId).getBody();
+  const lines = [];
+
+  for (let index = 0; index < body.getNumChildren(); index += 1) {
+    const element = body.getChild(index);
+    const type = element.getType();
+
+    if (type === DocumentApp.ElementType.PARAGRAPH) {
+      const paragraph = element.asParagraph();
+      const text = styledElementToMarkdown_(paragraph).trim();
+      if (!text) continue;
+
+      const heading = paragraph.getHeading();
+      const headingLevels = {
+        TITLE: 1,
+        SUBTITLE: 2,
+        HEADING1: 1,
+        HEADING2: 2,
+        HEADING3: 3,
+        HEADING4: 4,
+        HEADING5: 4,
+        HEADING6: 4
+      };
+      const headingLevel = headingLevels[String(heading)];
+      lines.push(headingLevel ? '#'.repeat(headingLevel) + ' ' + text : text);
+    } else if (type === DocumentApp.ElementType.LIST_ITEM) {
+      const item = element.asListItem();
+      const text = styledElementToMarkdown_(item).trim();
+      if (text) lines.push('  '.repeat(item.getNestingLevel()) + '- ' + text);
+    } else if (type === DocumentApp.ElementType.TABLE) {
+      const table = element.asTable();
+      for (let rowIndex = 0; rowIndex < table.getNumRows(); rowIndex += 1) {
+        const row = table.getRow(rowIndex);
+        const cells = [];
+        for (let cellIndex = 0; cellIndex < row.getNumCells(); cellIndex += 1) {
+          const cellText = row.getCell(cellIndex).getText().trim();
+          if (cellText) cells.push(cellText);
+        }
+        if (cells.length) lines.push('- ' + cells.join(' — '));
+      }
+    }
+  }
+
+  const markdown = lines.join('\n\n').trim();
+  if (!markdown) throw new Error('The DOCX converted, but no readable text was found.');
+  return markdown;
+}
+
+function styledElementToMarkdown_(container) {
+  let output = '';
+  for (let index = 0; index < container.getNumChildren(); index += 1) {
+    const child = container.getChild(index);
+    if (child.getType() !== DocumentApp.ElementType.TEXT) continue;
+
+    const text = child.asText();
+    const value = text.getText();
+    const boundaries = text.getTextAttributeIndices();
+    for (let run = 0; run < boundaries.length; run += 1) {
+      const start = boundaries[run];
+      const end = run + 1 < boundaries.length ? boundaries[run + 1] : value.length;
+      let part = value.slice(start, end);
+      const attributes = text.getAttributes(start);
+      const link = attributes[DocumentApp.Attribute.LINK_URL];
+      if (link) part = '[' + part + '](' + link + ')';
+      if (attributes[DocumentApp.Attribute.BOLD]) part = '**' + part + '**';
+      if (attributes[DocumentApp.Attribute.ITALIC]) part = '*' + part + '*';
+      output += part;
+    }
+  }
+  return output;
 }
 
 function writePostToGitHub_(slug, markdown) {
