@@ -61,16 +61,6 @@ function getRoleClass(member) {
   return "";
 }
 
-// Human-readable badge text for top roles
-function getBadgeText(member) {
-  const roles = member.roles.map(r => r.toLowerCase());
-  if (roles.some(r => r.includes("team captain")))   return { text: "Team Captain",   cls: "badge-command" };
-  if (roles.some(r => r.includes("chief engineer"))) return { text: "Chief Engineer", cls: "badge-command" };
-  if (roles.some(r => r.includes("project manager"))) return { text: "Project Manager", cls: "badge-command" };
-  if (roles.some(r => r.includes("lead")))           return { text: "Subsystem Lead", cls: "badge-lead" };
-  return null;
-}
-
 // ─── Card Builder ──────────────────────────────────────────────
 function createMemberCard(member) {
   const card = document.createElement("div");
@@ -97,12 +87,6 @@ function createMemberCard(member) {
     ? `<a href="mailto:${member.social.gmail}" aria-label="Email"><i class="fas fa-envelope"></i></a>`
     : "";
 
-  // Role badge HTML
-  const badge = getBadgeText(member);
-  const badgeHTML = badge
-    ? `<div class="role-badge ${badge.cls}">${badge.text}</div>`
-    : "";
-
   // Easter egg canvas
   const easterEggCanvas = member.easterEgg
     ? `<div class="member-3d"><canvas></canvas></div>`
@@ -114,7 +98,7 @@ function createMemberCard(member) {
   card.innerHTML = `
     ${easterEggCanvas}
 
-    <div class="profile-header">
+    <div class="member-card-image">
       <div class="profile-img-container">
         <img
           src="${imgPath}"
@@ -123,25 +107,32 @@ function createMemberCard(member) {
           class="member-img"
         >
       </div>
-      ${badgeHTML}
-      <div class="profile-info-overlay">
-        <p class="member-name">${member.name}</p>
-        <p class="member-role">${member.roles.join(" · ")}</p>
-        <p class="member-subsystem">${uniqueSubs}</p>
-      </div>
+      <p class="member-name">${member.name}</p>
     </div>
-
-    <div class="member-experience">
-      <div class="exp-label">Contribution</div>
+    <div class="member-card-content">
+      <p class="member-role">${member.roles.join(" · ")}</p>
+      <p class="member-subsystem">${uniqueSubs}</p>
+      <div class="member-social">${linkedinLink}${githubLink}${gmailLink}</div>
+      <button class="member-expand" type="button" aria-expanded="false" hidden>Read contribution <span aria-hidden="true">+</span></button>
+    </div>
+    <div class="member-experience" aria-label="Contribution">
       <p>${member.experience}</p>
-    </div>
-
-    <div class="member-social">
-      ${linkedinLink}
-      ${githubLink}
-      ${gmailLink}
+      <button class="member-close" type="button" aria-label="Close contribution">Close <span aria-hidden="true">×</span></button>
     </div>
   `;
+
+  const expandButton = card.querySelector(".member-expand");
+  card.classList.add("has-more");
+  expandButton.hidden = false;
+  expandButton.addEventListener("click", () => {
+    const expanded = card.classList.toggle("is-expanded");
+    expandButton.setAttribute("aria-expanded", String(expanded));
+    expandButton.innerHTML = 'Read contribution <span aria-hidden="true">+</span>';
+  });
+  card.querySelector(".member-close").addEventListener("click", () => {
+    card.classList.remove("is-expanded");
+    expandButton.setAttribute("aria-expanded", "false");
+  });
 
   // Image error fallback — try space/underscore x webp/jpg combos, then default
   const img = card.querySelector(".member-img");

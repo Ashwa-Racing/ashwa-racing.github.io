@@ -1,169 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Team | Ashwa Racing</title>
-
-  <link rel="canonical" href="https://ashwaracing.org/team" />
-
-  <meta name="description" content="Meet Ashwa Racing's Formula Student team: student engineers, subsystem leads, designers, and team members building and competing with our race cars at RV College of Engineering." />
-
-  <link rel="icon" href="assets/images/favicon/favicon.ico">
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg">
-
+  <meta name="description" content="Meet the student engineers, designers, and leaders behind Ashwa Racing at RV College of Engineering.">
+  <link rel="canonical" href="https://ashwaracing.org/team">
+  <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
+  <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://unpkg.com/three@0.158.0/build/three.min.js"></script>
-
-  <link rel="stylesheet" href="assets/css/components/header.css?v=2" />
-  <link rel="stylesheet" href="assets/css/pages/team.css" />
-  <link rel="stylesheet" href="assets/css/components/footer.css" />
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {}
+      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+    })();
+  </script>
+  <link rel="stylesheet" href="assets/css/components/loader.css">
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
+  <link rel="stylesheet" href="assets/css/components/footer.css">
+  <link rel="stylesheet" href="assets/css/pages/team.css">
 </head>
+<body class="team-page">
+  <div id="main-header"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
+  </button>
 
-<body>
-<div id="main-header"></div>
-
-<!-- HERO -->
-<section class="team-hero">
-  <div class="team-hero-bg" style="background-image:url('https://assets.ashwaracing.org/cdn-cgi/image/width=1440,format=avif/images/prototypes/RZ-X6-H/postevent/5.jpg')"></div>
-  <div class="hero-grid-overlay"></div>
-  <div class="hero-stripe"></div>
-  <div class="hero-stripe hero-stripe--secondary"></div>
-
-  <div class="team-hero-content">
-    <div class="hero-eyebrow">
-      <span class="eyebrow-line"></span>
-      ASHWA RACING · EST. 2003
-    </div>
-    <h1 class="hero-title">
-      <span>THE<em>PEOPLE</em></span>
-      <span>BEHIND<br>THE CAR</span>
-    </h1>
-    <p class="hero-desc">Engineers, designers, and leaders driving Ashwa Racing forward — one lap at a time.</p>
-    <div class="hero-stats">
-      <div class="stat">
-        <span class="stat-num">80+</span>
-        <span class="stat-label">Members</span>
+  <main>
+    <section class="team-hero" aria-labelledby="team-title">
+      <div class="team-hero__content">
+        <p class="team-eyebrow">RV College of Engineering <span>·</span> Est. 2003</p>
+        <h1 id="team-title">Driven by<br><em>people.</em></h1>
+        <p class="team-hero__intro">A team of student engineers, designers, and problem-solvers building what comes next in motorsport.</p>
+        <a class="team-hero__link" href="#filters-start">Meet the team <span aria-hidden="true">↓</span></a>
       </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <span class="stat-num">9</span>
-        <span class="stat-label">Subsystems</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat">
-        <span class="stat-num">P6</span>
-        <span class="stat-label">Formula Bharat 2026</span>
-      </div>
-    </div>
-  </div>
+      <div class="team-hero__image" role="img" aria-label="Ashwa Racing team and car at a competition"></div>
+      <div class="team-hero__index" aria-hidden="true">ASHWA / PEOPLE / 01</div>
+    </section>
 
-  <div class="hero-scroll-hint">
-    <span>SCROLL</span>
-    <div class="scroll-bar"></div>
-  </div>
-</section>
-
-<!-- FILTERS -->
-<section class="team-filters" id="filters-start">
-  <div class="filters-label">FILTER</div>
-
-  <div class="team-filters-inner">
-    <div class="filter-group">
-      <div class="filter-group-label">SEASON</div>
-      <div class="filter-row">
-        <button class="nav-arrow" id="year-left" aria-label="Previous year"><i class="fas fa-chevron-left"></i></button>
-        <div id="year-filter" class="filter-scroll">
-          <div class="year-item spacer"></div>
-          <!-- Years injected dynamically by team.js -->
-          <div class="year-item spacer"></div>
+    <section class="team-filters" id="filters-start" aria-label="Filter team roster">
+      <div class="team-filters__inner">
+        <div class="filter-group">
+          <div class="filter-group-label">Season</div>
+          <div class="filter-row">
+            <button class="nav-arrow" id="year-left" type="button" aria-label="Previous season"><i class="fas fa-chevron-left"></i></button>
+            <div id="year-filter" class="filter-scroll"><div class="year-item spacer"></div><div class="year-item spacer"></div></div>
+            <button class="nav-arrow" id="year-right" type="button" aria-label="Next season"><i class="fas fa-chevron-right"></i></button>
+          </div>
         </div>
-        <button class="nav-arrow" id="year-right" aria-label="Next year"><i class="fas fa-chevron-right"></i></button>
-      </div>
-    </div>
-
-    <div class="filter-divider"></div>
-
-    <div class="filter-group">
-      <div class="filter-group-label">SUBSYSTEM</div>
-      <div class="filter-row">
-        <button class="nav-arrow" id="subsystem-left" aria-label="Previous subsystem"><i class="fas fa-chevron-left"></i></button>
-        <div id="subsystem-filter" class="filter-scroll">
-          <div class="year-item spacer"></div>
-          <div class="year-item" data-subsystem="All" data-desc="All team members across every subsystem.">
-            <button class="filter-btn active">All</button>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <div class="filter-group-label">Subsystem</div>
+          <div class="filter-row">
+            <button class="nav-arrow" id="subsystem-left" type="button" aria-label="Previous subsystem"><i class="fas fa-chevron-left"></i></button>
+            <div id="subsystem-filter" class="filter-scroll">
+              <div class="year-item spacer"></div>
+              <div class="year-item" data-subsystem="All" data-desc="Meet the people working across every part of Ashwa Racing."><button type="button" class="filter-btn active">All</button></div>
+              <div class="year-item" data-subsystem="Leads" data-desc="The leadership team guiding the project and bringing every subsystem together."><button type="button" class="filter-btn">Leads</button></div>
+              <div class="year-item" data-subsystem="Chassis &amp; Workshop Management" data-desc="Designing and building the structure at the heart of every car."><button type="button" class="filter-btn">Chassis</button></div>
+              <div class="year-item" data-subsystem="Brakes &amp; Logistics" data-desc="Developing reliable braking systems and keeping the team moving."><button type="button" class="filter-btn">Brakes</button></div>
+              <div class="year-item" data-subsystem="Drivetrain &amp; Human Resources" data-desc="Powertrain development, team operations, and the systems that drive us forward."><button type="button" class="filter-btn">Drivetrain</button></div>
+              <div class="year-item" data-subsystem="Suspension &amp; Admin" data-desc="Tuning vehicle dynamics while keeping the project coordinated."><button type="button" class="filter-btn">Suspension</button></div>
+              <div class="year-item" data-subsystem="Electrical &amp; Testing" data-desc="Electrical systems, instrumentation, and track-side validation."><button type="button" class="filter-btn">Electrical</button></div>
+              <div class="year-item" data-subsystem="Engine" data-desc="Developing, tuning, and validating the heart of our combustion cars."><button type="button" class="filter-btn">Engine</button></div>
+              <div class="year-item" data-subsystem="IT" data-desc="Building the digital tools and systems that support the team."><button type="button" class="filter-btn">IT</button></div>
+              <div class="year-item" data-subsystem="Finance" data-desc="Planning the resources that turn ambitious engineering into reality."><button type="button" class="filter-btn">Finance</button></div>
+              <div class="year-item" data-subsystem="Sponsorship, Marketing &amp; Public Relations" data-desc="Sharing our work and building relationships with our partners."><button type="button" class="filter-btn">SMP</button></div>
+              <div class="year-item spacer"></div>
+            </div>
+            <button class="nav-arrow" id="subsystem-right" type="button" aria-label="Next subsystem"><i class="fas fa-chevron-right"></i></button>
           </div>
-          <div class="year-item" data-subsystem="Leads" data-desc="Leadership team responsible for overall project coordination and strategic direction.">
-            <button class="filter-btn">Leads</button>
-          </div>
-          <div class="year-item" data-subsystem="Chassis & Workshop Management" data-desc="Design and fabricate the vehicle's structural framework and roll cage.">
-            <button class="filter-btn">Chassis</button>
-          </div>
-          <div class="year-item" data-subsystem="Brakes & Logistics" data-desc="Design and test braking systems, manage logistics and procurement.">
-            <button class="filter-btn">Brakes</button>
-          </div>
-          <div class="year-item" data-subsystem="Drivetrain & Human Resources" data-desc="Develop powertrain components including transmission, differential, and drive shafts.">
-            <button class="filter-btn">Drivetrain</button>
-          </div>
-          <div class="year-item" data-subsystem="Suspension & Admin" data-desc="Engineer suspension geometry and components for optimal handling dynamics.">
-            <button class="filter-btn">Suspension</button>
-          </div>
-          <div class="year-item" data-subsystem="Electrical & Testing" data-desc="Design electrical systems, wiring harnesses, and conduct vehicle testing.">
-            <button class="filter-btn">Electrical</button>
-          </div>
-          <div class="year-item" data-subsystem="Engine" data-desc="Tune and optimize engine performance for maximum power output.">
-            <button class="filter-btn">Engine</button>
-          </div>
-          <div class="year-item" data-subsystem="IT" data-desc="Manage data acquisition, telemetry systems, and digital infrastructure.">
-            <button class="filter-btn">IT</button>
-          </div>
-          <div class="year-item" data-subsystem="Finance" data-desc="Handle budgeting, fundraising, and financial reporting for the team.">
-            <button class="filter-btn">Finance</button>
-          </div>
-          <div class="year-item" data-subsystem="Sponsorship, Marketing & Public Relations" data-desc="Manage sales, marketing, and public relations activities.">
-            <button class="filter-btn">SMP</button>
-          </div>
-          <div class="year-item spacer"></div>
         </div>
-        <button class="nav-arrow" id="subsystem-right" aria-label="Next subsystem"><i class="fas fa-chevron-right"></i></button>
+        <div id="subsystem-desc" class="subsystem-desc" aria-live="polite"><span class="desc-tag">All Subsystems</span><span class="desc-text">Meet the people working across every part of Ashwa Racing.</span></div>
       </div>
-    </div>
+    </section>
 
-    <div id="subsystem-desc" class="subsystem-desc">
-      <span class="desc-tag">ALL SUBSYSTEMS</span>
-      <span class="desc-text">All team members across every subsystem.</span>
-    </div>
+    <section class="team-section" aria-labelledby="roster-heading">
+      <header class="team-section-header">
+        <div><p class="section-label">The people behind the machine</p><h2 id="roster-heading">Full team</h2></div>
+        <p id="member-count" class="member-count" aria-live="polite">Loading roster</p>
+      </header>
+      <div id="member-profiles-grid" class="member-grid" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <button id="back-to-top" class="back-to-top" type="button" aria-label="Back to filters"><i class="fas fa-arrow-up"></i></button>
+  <footer id="main-footer"></footer>
+  <div id="site-loader" aria-hidden="true">
+    <div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div>
   </div>
-</section>
-
-<!-- TEAM SECTION -->
-<section class="team-section">
-  <div class="team-section-header">
-    <div class="section-meta">
-      <div class="section-label">ROSTER</div>
-      <h2 class="team-heading" id="roster-heading">Full Team</h2>
-    </div>
-    <div class="section-meta-right">
-      <div id="member-count" class="member-count">— members</div>
-      <div class="section-rule"></div>
-    </div>
-  </div>
-
-  <div id="member-profiles-grid" class="member-grid">
-    <!-- Injected by team.js -->
-  </div>
-</section>
-
-<button id="back-to-top" class="back-to-top" aria-label="Back to top">
-  <i class="fas fa-arrow-up"></i>
-</button>
-
-<footer id="main-footer"></footer>
-
-<script src="assets/js/components/header.js"></script>
-<script src="assets/js/pages/team.js"></script>
+  <script src="assets/js/components/header.js" defer></script>
+  <script src="assets/js/pages/team.js" defer></script>
+  <script src="assets/js/components/theme.js" defer></script>
+  <script src="assets/js/components/loader.js" defer></script>
 </body>
 </html>
