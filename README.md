@@ -1,39 +1,21 @@
-<div align="center">
+# Ashwa Racing Website
 
-<img src="assets/images/favicon/header.png" alt="Ashwa Racing" width="90" />
+The official website for Ashwa Racing, the Formula Student team of RV College of Engineering in Bengaluru. The site shares the team's cars, engineering work, members, sponsors, news, and ways to support the programme.
 
-# ASHWA RACING — WEBSITE
+[![Live website](https://img.shields.io/badge/website-ashwaracing.org-e8001d?style=flat-square)](https://ashwaracing.org)
+[![License: MIT](https://img.shields.io/badge/license-MIT-e8001d?style=flat-square)](LICENSE)
 
-### वेगः इतः आरभ्यते
-*Speed begins here.*
+**Live site:** [ashwaracing.org](https://ashwaracing.org) · **Repository:** [Ashwa-Racing/ashwa-racing.github.io](https://github.com/Ashwa-Racing/ashwa-racing.github.io) · **Contact:** [ashwa.smp@gmail.com](mailto:ashwa.smp@gmail.com)
 
-**The official site of RV College of Engineering's Formula Student team.**
+## About the site
 
-[![Live Site](https://img.shields.io/badge/ashwaracing.org-live-e8001d?style=for-the-badge&logo=googlechrome&logoColor=white)](https://ashwaracing.org)
-[![License: MIT](https://img.shields.io/badge/license-MIT-e8001d?style=for-the-badge&labelColor=1e1e1e)](LICENSE)
-[![Formula Student](https://img.shields.io/badge/formula%20student-RVCE-e8001d?style=for-the-badge&labelColor=1e1e1e)](https://ashwaracing.org)
+This is a static website built with HTML, CSS, and vanilla JavaScript. It has no frontend framework or runtime application server. Shared navigation and footer components are loaded by JavaScript, while the build script generates crawlable pages for blog posts and newsletters.
 
-</div>
+The site is published to [Cloudflare Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/). Most large photos and videos are served from the team's Cloudflare R2 asset domain.
 
-<img src="assets/images/heroimg/hero-desktop.jpg" alt="Ashwa Racing hero" width="100%" />
+## Run locally
 
-<br>
-
-Built and broken and rebuilt by whoever on the team has a free evening between builds, exams, and competition prep. No framework; a small Python script gathers the pages and assets into a clean Cloudflare Worker static-assets folder.
-
-<div align="center">
-
-`HTML` · `CSS` · `Vanilla JS` · `Cloudflare Workers` · `Cloudflare R2` · `GitHub Actions`
-
-</div>
-
----
-
-## Why so plain?
-
-Subsystem leads and recruits rotate through this repo every single year, most having never touched a JS framework in their life. A `.html` file with a matching `.css` and `.js` file is a shape anyone can read in five minutes, edit without breaking the build, and hand off to next year's batch without a training session. We'd rather have a codebase that survives team turnover than one that looks impressive for a semester.
-
-## Getting it running
+You need Python 3.10 or newer. Clone the repository, build the site, and start a local server:
 
 ```bash
 git clone https://github.com/Ashwa-Racing/ashwa-racing.github.io.git
@@ -42,149 +24,66 @@ python scripts/build_site.py
 python -m http.server 8000 --directory dist
 ```
 
-Opening files straight off disk (`file://`) mostly works, but the header/footer and a couple of other bits load via `fetch()`, which browsers block on `file://`. Any static server fixes it.
+Then open [http://localhost:8000](http://localhost:8000). Serve the generated `dist/` directory instead of opening HTML files directly, because the site loads shared components and data with `fetch()`.
 
----
+The build recreates `dist/` from the source pages, assets, and content. Do not edit generated files in `dist/`; make changes in the source files and rebuild.
 
-## What's in here
+## Project structure
 
-<details>
-<summary><b>Click to expand the full layout</b></summary>
-
-```
-ashwa-racing.github.io/
-├── index.html, about.html, team.html, alumni.html,
-│   subsystem.html, organization.html, projects.html, sponsors.html,
-│   sponsorship.html, smp.html,
-│   recruitment.html, contact.html, gallery.html, newsletters.html
-│
-├── aero.html, brakes-logistics.html, chassis-workshop.html,
-│   drivetrain-hr.html, electrical-testing.html, engine.html,
-│   finance.html, it.html, suspension-admin.html
-│                                   # one page per subsystem/division
-│
-├── components/
-│   ├── header.html                # shared nav, injected via fetch()
-│   └── footer.html
-│
+```text
+.
 ├── assets/
-│   ├── css/
-│   │   ├── components/            # header.css, footer.css
-│   │   └── pages/                 # one stylesheet per page
-│   ├── js/
-│   │   ├── components/            # header.js — injects header.html, nav state
-│   │   └── pages/                 # one script per page
-│   ├── data/, images/, videos/, icons/, pdfs/
-│
+│   ├── css/                 Shared styles and page styles
+│   ├── data/                Team, sponsor, project, newsletter, and blog data
+│   ├── images/              Site images
+│   ├── js/                  Shared scripts and page interactions
+│   └── videos/              Local video assets
+├── components/              Shared header and footer markup
+├── content/blog/             Markdown source for blog articles
 ├── scripts/
-│   ├── sync.py                    # nightly team-roster sync
-│   ├── upload_to_r2.py            # bulk-uploads media to Cloudflare R2
-│   └── audit.py                   # link/SEO/alt-text auditor → audit_report.md
-│
-├── .github/workflows/
-│   └── sync.yml                   # runs sync.py nightly
-│
-├── 404.html, robots.txt, sitemap.xml, wrangler.jsonc
-└── CODE_OF_CONDUCT.md, LICENSE
+│   ├── build_site.py         Builds the deployable static site
+│   ├── sync.py               Syncs team data from the team's Google Sheet
+│   ├── google-blog-publisher/ Google Form to blog publishing workflow
+│   └── crowdfunding-tracker/ Bank/UPI contribution tracking setup
+├── .github/workflows/        Scheduled team data sync
+├── wrangler.jsonc            Cloudflare Workers configuration
+└── *.html                    Source pages
 ```
 
-</details>
+## Build and deployment
 
-Subsystem pages all share one template — hero, technical overview, roster filtered to that division, related content. Copy the nearest existing one when adding a new division; don't start from a blank file.
+`scripts/build_site.py` copies the source pages and site assets into `dist/`, builds the blog index and individual blog pages from `content/blog/*.md`, creates shareable pages for newsletter issues listed in `assets/data/newsletters.json`, and writes the generated sitemap.
 
-<div align="center">
-<img src="assets/images/gallery/XX6C.webp" width="32%" alt="Ashwa Racing car" />
-<img src="assets/images/gallery/Costwin.webp" width="32%" alt="Ashwa Racing at competition" />
-<img src="assets/images/gallery/XX5C.webp" width="32%" alt="Ashwa Racing car" />
-</div>
+Cloudflare Workers Builds deploys the `main` branch with:
 
----
+| Setting | Value |
+| --- | --- |
+| Production branch | `main` |
+| Build command | `python3 scripts/build_site.py` |
+| Deploy command | `npx wrangler deploy` |
 
-## How the pieces fit together
+To deploy locally, install Node.js and npm, build first, authenticate Wrangler with the team's Cloudflare account, then run `npx wrangler deploy`.
 
-**Shared header and footer.** `header.html` / `footer.html` live once, in `components/`, and every page pulls them in at runtime:
+## Updating site content
 
-```js
-fetch('/components/header.html')
-  .then(r => r.text())
-  .then(html => document.getElementById('main-header').innerHTML = html);
-```
-
-Change the nav once, it updates on every page. The tradeoff is that `fetch()` needs a server, not `file://`.
-
-**Design tokens.** Shared colors, fonts, spacing, and theme rules live in `assets/css/components/base.css`; page styles build on those values. Header and footer styles include fallbacks for older pages that do not yet load the base stylesheet.
-
-**Team roster & alumni — automated, not hand-edited.** `assets/data/team.json` is synchronized every night by `scripts/sync.py`:
-
-- pulls responses from a Google Form via its Sheet's CSV export,
-- merges form responses into the existing roster by name — updated form fields are applied while manual-only fields survive,
-- pulls profile photos from a linked Drive folder,
-- keeps everyone in `team.json`; the site derives current members and alumni from each member's batch year,
-- commits the result back to `main` automatically (`.github/workflows/sync.yml`).
-
-<div align="center">
-<img src="assets/images/team/fullteam/2026-C.png" width="70%" alt="Full team photo" />
-</div>
-
-A few flags and manual overrides are preserved across every sync. Adding someone outside the form flow? Edit `assets/data/team.json`; the next sync merges cleanly around it.
-
-**Media hosting.** Car photography, team photos, and spotlight videos add up fast, and we've bloated `git` history with large media before. Everything now serves from Cloudflare R2 at `assets.ashwaracing.org`, with `scripts/upload_to_r2.py` as the bulk-upload tool. The repo's own `assets/images/` and `assets/videos/` still carry a good chunk of source material while migration finishes — expect that folder to shrink, not grow, over time.
-
-A couple of the spotlight videos, straight from the site:
-
-<div align="center">
-
-[![Watch: EV Spotlight](https://img.shields.io/badge/▶-EV%20Spotlight-e8001d?style=for-the-badge&labelColor=0a0a0a)](assets/videos/ev_spotlight.mp4)
-[![Watch: CV Spotlight](https://img.shields.io/badge/▶-CV%20Spotlight-e8001d?style=for-the-badge&labelColor=0a0a0a)](assets/videos/cv_spotlight.mp4)
-[![Watch: Hero Reel](https://img.shields.io/badge/▶-Hero%20Reel-e8001d?style=for-the-badge&labelColor=0a0a0a)](assets/videos/hero_vid.mp4)
-
-</div>
-
-**Newsletters.** `newsletters.html` renders our archive from `assets/data/newsletters.json`. To add an issue, upload its PDF and matching cover image to the asset host, add the PDF filename to that JSON array, and push. The site build reads this same file to generate each issue page and its sitemap entry.
-
-**Blog articles and sitemap.** The site build reads Markdown files in `content/blog/`, generates a crawlable page at `/blog/{filename}` for each article, and adds every article URL to the sitemap. Newsletter PDFs listed in the newsletter reader are likewise given shareable `/newsletters/{year}-{month}-{type}` pages and sitemap entries. Adding or removing a Markdown article or newsletter from its list is reflected in the next Cloudflare build. For contributors without GitHub access, `scripts/google-blog-publisher/` contains an Apps Script workflow for a Google Form: authors enter the article details, upload a `.docx`, and the script converts and submits it for publication. A maintainer sets up the form and its private GitHub token once; authors only need the responder link. See the [Google Form setup guide](scripts/google-blog-publisher/SETUP.md). Direct Markdown upload through the GitHub website remains available; see [`content/blog/README.md`](content/blog/README.md).
-
-**Blog update popup.** On page entry, the shared header reads the built `assets/data/blog.json` feed and shows the newest article in a small bottom-right popup. Each browser sees that article once; publishing a newer article makes the popup eligible to appear again. The popup does not check YouTube, Instagram, or LinkedIn.
-
-<div align="center">
-<img src="assets/images/newsletters/2026/2026-06.png" width="18%" alt="Newsletter cover" />
-<img src="assets/images/newsletters/2026/2026-03.png" width="18%" alt="Newsletter cover" />
-<img src="assets/images/newsletters/2026/2026-02.png" width="18%" alt="Newsletter cover" />
-<img src="assets/images/newsletters/2025/2025-12.png" width="18%" alt="Newsletter cover" />
-<img src="assets/images/newsletters/2025/2025-10.png" width="18%" alt="Newsletter cover" />
-</div>
-
-**Site audit.** `scripts/audit.py` crawls every page checking for broken internal/external links, missing `<title>`/meta description/viewport, and missing `alt` text, then writes `audit_report.md`. Run `python scripts/audit.py .` before a big push if pages or assets have moved around.
-
----
-
-## Deployment
-
-The site deploys as a Cloudflare Worker with static assets. `python3 scripts/build_site.py` assembles the public site into `dist/`; `wrangler.jsonc` configures Wrangler to publish only that directory, keeping repository files such as workflows, scripts, and this README out of the deployment.
-
-Cloudflare Workers Builds uses:
-
-- Production branch: `main`
-- Build command: `python3 scripts/build_site.py`
-- Deploy command: `npx wrangler deploy`
-
-The nightly roster sync in `.github/workflows/sync.yml` commits changed `assets/data/team.json` data to `main`. Those commits trigger a new Worker build through the Cloudflare Git integration.
+- **Blog:** Add a Markdown article under `content/blog/`. See the [blog authoring guide](content/blog/README.md) for front matter and supported formatting. For team members who submit through Google Forms, see the [blog publisher setup](scripts/google-blog-publisher/SETUP.md).
+- **Newsletters:** Add the issue PDF and cover image to the team's asset host, then add the PDF filename to `assets/data/newsletters.json`. The build generates its shareable page and sitemap entry.
+- **Team roster:** The scheduled workflow syncs roster data from the team's Google Sheet. To maintain it, configure the repository's GitHub Actions secrets: `SHEET_CSV_URL`, `DRIVE_ROOT_FOLDER_ID`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET_NAME`. The workflow can also be started manually from GitHub Actions.
+- **Crowdfunding:** The bank/UPI contribution tracker is not provisioned automatically. Follow the [tracker setup guide](scripts/crowdfunding-tracker/SETUP.md) to create the private ledger and public form under the team's Google account.
+- **Shared navigation and footer:** Edit `components/header.html` or `components/footer.html`. The corresponding shared scripts and styles are in `assets/js/components/` and `assets/css/components/`.
+- **Page layout and behavior:** Edit the root HTML page and its matching files under `assets/css/pages/` and `assets/js/pages/`.
 
 ## Contributing
 
-Most of us are picking this up between classes and car builds, so:
+1. Create a branch for your change.
+2. Make changes in the source files, not `dist/`.
+3. Build locally with `python scripts/build_site.py` and review the generated page in a local server.
+4. Open a pull request with a short summary and screenshots for visual changes.
 
-- Match the existing pattern for the page you're editing before inventing a new one.
-- New pages get a matching `assets/css/pages/*.css` and, if there's interactivity, `assets/js/pages/*.js` — same base filename as the HTML.
-- Run `scripts/audit.py` before opening a PR if you've touched links, images, or added a page.
-- New team member? Use the sync form — don't hand-edit `assets/data/team.json` unless there's a good reason to.
+For questions or to report a problem, [open a GitHub issue](https://github.com/Ashwa-Racing/ashwa-racing.github.io/issues) or email [ashwa.smp@gmail.com](mailto:ashwa.smp@gmail.com).
 
-Questions, broken things, ideas — open an issue, or ping IT/Web in the team group.
+Please follow the project's [Code of Conduct](CODE_OF_CONDUCT.md).
 
-<div align="center">
+## License
 
----
-
-**MIT Licensed** · Built by the students of **Ashwa Racing**, RVCE
-
-</div>
+This project is licensed under the [MIT License](LICENSE).
