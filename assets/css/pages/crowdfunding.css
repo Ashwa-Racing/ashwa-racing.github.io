@@ -7,9 +7,11 @@
 .cf-lead { max-width:58ch; margin-bottom:30px; color:rgba(255,255,255,.8); font-size:clamp(1rem,1.5vw,1.16rem); line-height:1.75; }
 .cf-hero .btn-solid { box-shadow:4px 4px 0 rgba(255,255,255,.18); }
 .cf-hero-note { position:absolute; right:var(--site-gutter); bottom:28px; left:var(--site-gutter); display:flex; justify-content:space-between; padding-top:12px; border-top:1px solid rgba(255,255,255,.28); color:rgba(255,255,255,.64); font-family:var(--display); font-size:.72rem; font-weight:700; letter-spacing:.16em; }
+.cf-story,.cf-impact,.cf-support { padding:clamp(64px,8vw,112px) 0; }
 .cf-story { background:var(--section-bg); }
 .cf-story-grid,.cf-support-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(36px,8vw,120px); align-items:center; }
-.cf-story h2,.cf-section-heading h2,.cf-support h2 { margin-top:14px; color:var(--text-strong); font-family:var(--display); font-size:clamp(2.8rem,5.5vw,5.3rem); font-weight:800; line-height:.92; letter-spacing:-.04em; text-transform:uppercase; }
+.cf-story h2,.cf-section-heading h2,.cf-support h2 { margin-top:14px; color:var(--text-strong); font-family:var(--display); font-size:clamp(2.5rem,4.8vw,4.65rem); font-weight:800; line-height:.94; letter-spacing:-.04em; text-transform:uppercase; }
+.cf-story h2 em,.cf-section-heading h2 em,.cf-support h2 em { display:inline-block; font-size:.72em; line-height:1; vertical-align:-.02em; }
 .cf-copy { max-width:62ch; color:var(--text-soft); font-size:1.03rem; line-height:1.75; }
 .cf-copy p+p { margin-top:16px; }
 .cf-text-link { display:inline-block; margin-top:24px; color:var(--text-strong); font-weight:700; text-decoration:none; }

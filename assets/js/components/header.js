@@ -67,6 +67,10 @@ async function loadLatestBlogUpdate() {
           <h2 class="site-update-toast__title"></h2>
           <p class="site-update-toast__message"></p>
           <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
+          <a class="site-update-toast__campaign" href="/crowdfunding.html">
+            <span class="site-update-toast__campaign-label">Support the next build</span>
+            <span class="site-update-toast__campaign-title">Help Ashwa Racing get to the grid <span aria-hidden="true">&rarr;</span></span>
+          </a>
         </div>
         <button class="site-update-toast__close" type="button" aria-label="Minimize update">×</button>`;
       toast.querySelector(".site-update-toast__eyebrow").textContent = `New on ${platform}`;
