@@ -28,6 +28,11 @@
 .cf-impact-card h3 { margin-bottom:10px; color:var(--text-strong); font-family:var(--display); font-size:1.5rem; font-weight:800; text-transform:uppercase; }
 .cf-impact-card p { max-width:34ch; color:var(--text-soft); font-size:.93rem; line-height:1.65; }
 .cf-transparency { max-width:82ch; margin-top:18px; color:var(--text-muted); font-size:.84rem; line-height:1.65; }
+.cf-rewards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; margin-top:42px; border:1px solid var(--border-strong); background:var(--border-strong); }
+.cf-rewards article { min-height:190px; padding:clamp(22px,3vw,34px); background:var(--card-bg); }
+.cf-rewards .cf-number { margin-bottom:18px; font-size:.76rem; font-weight:700; letter-spacing:.1em; }
+.cf-rewards h3 { margin-bottom:10px; color:var(--text-strong); font-family:var(--display); font-size:1.45rem; font-weight:800; text-transform:uppercase; }
+.cf-rewards p { max-width:45ch; color:var(--text-soft); font-size:.92rem; line-height:1.65; }
 .cf-support { border-top:1px solid var(--border); background:var(--section-bg); }
 .cf-support-grid { align-items:start; }
 .cf-support-copy { max-width:54ch; margin-top:24px; color:var(--text-soft); line-height:1.75; }
@@ -36,6 +41,9 @@
 .cf-status span { width:8px; height:8px; background:var(--red); box-shadow:0 0 0 4px var(--red-glow); }
 .cf-support-card h3 { margin-bottom:10px; color:var(--text-strong); font-family:var(--display); font-size:2rem; font-weight:800; text-transform:uppercase; }
 .cf-support-card>p { margin-bottom:24px; color:var(--text-soft); line-height:1.7; }
+.cf-steps { display:grid; gap:12px; margin:0 0 26px; padding:0; list-style:none; counter-reset:cf-step; }
+.cf-steps li { position:relative; padding:0 0 0 36px; color:var(--text-soft); font-size:.92rem; line-height:1.55; counter-increment:cf-step; }
+.cf-steps li::before { position:absolute; top:0; left:0; color:var(--red); content:"0" counter(cf-step); font-family:var(--racing); }
 .cf-email { display:block; width:max-content; max-width:100%; margin-top:20px; color:var(--text-strong); font-size:.9rem; text-decoration-color:var(--red); text-underline-offset:4px; }
 .cf-community { padding:28px 0; border-top:1px solid var(--border); background:var(--page-bg); }
 .cf-community-inner,.cf-community-inner>div { display:flex; align-items:center; justify-content:space-between; gap:24px; }
@@ -43,5 +51,5 @@
 .cf-community-inner a { color:var(--text-strong); font-family:var(--display); font-size:.82rem; font-weight:700; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
 .cf-community-inner a span { color:var(--red); }
 html[data-theme="light"] .cf-hero-image { background-image:linear-gradient(90deg,rgba(8,9,12,.86) 0%,rgba(8,9,12,.66) 47%,rgba(8,9,12,.14) 100%),linear-gradient(0deg,rgba(8,9,12,.38),transparent 55%),url("https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-XX6-C/event/3.JPG"); }
-@media(max-width:760px) { .cf-hero { min-height:590px; padding:104px 0 82px; } .cf-hero-image { background-position:58% center; } .cf-hero h1 { font-size:clamp(3.8rem,16vw,6rem); } .cf-hero-note { font-size:.6rem; } .cf-story-grid,.cf-support-grid { grid-template-columns:1fr; gap:28px; } .cf-section-heading { align-items:start; flex-direction:column; gap:18px; } .cf-impact-grid { grid-template-columns:1fr; } .cf-impact-card { min-height:unset; } .cf-impact-card+.cf-impact-card { border-top:1px solid var(--border-strong); border-left:0; } .cf-number { margin-bottom:14px; } .cf-community-inner { align-items:flex-start; flex-direction:column; } .cf-community-inner>div { flex-wrap:wrap; justify-content:flex-start; } }
+@media(max-width:760px) { .cf-hero { min-height:590px; padding:104px 0 82px; } .cf-hero-image { background-position:58% center; } .cf-hero h1 { font-size:clamp(3.8rem,16vw,6rem); } .cf-hero-note { font-size:.6rem; } .cf-story-grid,.cf-support-grid { grid-template-columns:1fr; gap:28px; } .cf-section-heading { align-items:start; flex-direction:column; gap:18px; } .cf-impact-grid { grid-template-columns:1fr; } .cf-impact-card { min-height:unset; } .cf-impact-card+.cf-impact-card { border-top:1px solid var(--border-strong); border-left:0; } .cf-rewards { grid-template-columns:1fr; } .cf-number { margin-bottom:14px; } .cf-community-inner { align-items:flex-start; flex-direction:column; } .cf-community-inner>div { flex-wrap:wrap; justify-content:flex-start; } }
 @media(prefers-reduced-motion:reduce) { .cf-text-link span { transition:none; } }
