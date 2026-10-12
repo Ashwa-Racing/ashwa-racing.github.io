@@ -1,0 +1,45 @@
+.cf-hero { position:relative; display:flex; align-items:center; min-height:min(660px, calc(88svh - var(--nav-h))); padding:clamp(100px,14vh,150px) 0 86px; overflow:hidden; background:var(--ink); }
+.cf-hero-image { position:absolute; inset:0; background:linear-gradient(90deg,rgba(8,9,12,.96) 0%,rgba(8,9,12,.78) 47%,rgba(8,9,12,.22) 100%),linear-gradient(0deg,rgba(8,9,12,.48),transparent 55%),url("https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-XX6-C/event/3.JPG") center 38%/cover; }
+.cf-hero-content { position:relative; z-index:1; }
+.cf-hero .label { margin-bottom:22px; }
+.cf-hero h1 { max-width:10ch; margin-bottom:24px; color:#fff; font-family:var(--display); font-size:clamp(4rem,10vw,8.5rem); font-weight:800; line-height:.82; letter-spacing:-.04em; text-transform:uppercase; }
+.cf-hero h1 em,.cf-section-heading h2 em,.cf-story h2 em,.cf-support h2 em { color:var(--red); font-family:var(--ashwa,"Samarkan",serif); font-style:italic; text-transform:none; letter-spacing:0; }
+.cf-lead { max-width:58ch; margin-bottom:30px; color:rgba(255,255,255,.8); font-size:clamp(1rem,1.5vw,1.16rem); line-height:1.75; }
+.cf-hero .btn-solid { box-shadow:4px 4px 0 rgba(255,255,255,.18); }
+.cf-hero-note { position:absolute; right:var(--site-gutter); bottom:28px; left:var(--site-gutter); display:flex; justify-content:space-between; padding-top:12px; border-top:1px solid rgba(255,255,255,.28); color:rgba(255,255,255,.64); font-family:var(--display); font-size:.72rem; font-weight:700; letter-spacing:.16em; }
+.cf-story { background:var(--section-bg); }
+.cf-story-grid,.cf-support-grid { display:grid; grid-template-columns:1fr 1fr; gap:clamp(36px,8vw,120px); align-items:center; }
+.cf-story h2,.cf-section-heading h2,.cf-support h2 { margin-top:14px; color:var(--text-strong); font-family:var(--display); font-size:clamp(2.8rem,5.5vw,5.3rem); font-weight:800; line-height:.92; letter-spacing:-.04em; text-transform:uppercase; }
+.cf-copy { max-width:62ch; color:var(--text-soft); font-size:1.03rem; line-height:1.75; }
+.cf-copy p+p { margin-top:16px; }
+.cf-text-link { display:inline-block; margin-top:24px; color:var(--text-strong); font-weight:700; text-decoration:none; }
+.cf-text-link span { margin-left:8px; color:var(--red); transition:margin .2s ease; }
+.cf-text-link:hover span { margin-left:14px; }
+.cf-impact { background:var(--page-bg); }
+.cf-section-heading { display:flex; justify-content:space-between; align-items:end; gap:36px; margin-bottom:38px; }
+.cf-section-heading h2 { margin-bottom:0; }
+.cf-section-heading>p { max-width:44ch; color:var(--text-soft); line-height:1.7; }
+.cf-impact-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border:1px solid var(--border-strong); }
+.cf-impact-card { min-height:228px; padding:28px clamp(20px,3vw,36px); background:var(--card-bg); }
+.cf-impact-card+.cf-impact-card { border-left:1px solid var(--border-strong); }
+.cf-number { display:block; margin-bottom:28px; color:var(--red); font-family:var(--racing); font-size:1.1rem; }
+.cf-impact-card h3 { margin-bottom:10px; color:var(--text-strong); font-family:var(--display); font-size:1.5rem; font-weight:800; text-transform:uppercase; }
+.cf-impact-card p { max-width:34ch; color:var(--text-soft); font-size:.93rem; line-height:1.65; }
+.cf-transparency { max-width:82ch; margin-top:18px; color:var(--text-muted); font-size:.84rem; line-height:1.65; }
+.cf-support { border-top:1px solid var(--border); background:var(--section-bg); }
+.cf-support-grid { align-items:start; }
+.cf-support-copy { max-width:54ch; margin-top:24px; color:var(--text-soft); line-height:1.75; }
+.cf-support-card { padding:clamp(24px,4vw,42px); border:1px solid var(--border-strong); border-top:3px solid var(--red); background:var(--card-bg); box-shadow:8px 8px 0 var(--shadow); }
+.cf-status { display:flex; align-items:center; gap:9px; margin-bottom:26px; color:var(--text-muted); font-family:var(--display); font-size:.7rem; font-weight:800; letter-spacing:.14em; }
+.cf-status span { width:8px; height:8px; background:var(--red); box-shadow:0 0 0 4px var(--red-glow); }
+.cf-support-card h3 { margin-bottom:10px; color:var(--text-strong); font-family:var(--display); font-size:2rem; font-weight:800; text-transform:uppercase; }
+.cf-support-card>p { margin-bottom:24px; color:var(--text-soft); line-height:1.7; }
+.cf-email { display:block; width:max-content; max-width:100%; margin-top:20px; color:var(--text-strong); font-size:.9rem; text-decoration-color:var(--red); text-underline-offset:4px; }
+.cf-community { padding:28px 0; border-top:1px solid var(--border); background:var(--page-bg); }
+.cf-community-inner,.cf-community-inner>div { display:flex; align-items:center; justify-content:space-between; gap:24px; }
+.cf-community-inner>p { color:var(--text-soft); font-family:var(--display); font-size:1.1rem; font-weight:700; text-transform:uppercase; }
+.cf-community-inner a { color:var(--text-strong); font-family:var(--display); font-size:.82rem; font-weight:700; letter-spacing:.08em; text-decoration:none; text-transform:uppercase; }
+.cf-community-inner a span { color:var(--red); }
+html[data-theme="light"] .cf-hero-image { background-image:linear-gradient(90deg,rgba(8,9,12,.86) 0%,rgba(8,9,12,.66) 47%,rgba(8,9,12,.14) 100%),linear-gradient(0deg,rgba(8,9,12,.38),transparent 55%),url("https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-XX6-C/event/3.JPG"); }
+@media(max-width:760px) { .cf-hero { min-height:590px; padding:104px 0 82px; } .cf-hero-image { background-position:58% center; } .cf-hero h1 { font-size:clamp(3.8rem,16vw,6rem); } .cf-hero-note { font-size:.6rem; } .cf-story-grid,.cf-support-grid { grid-template-columns:1fr; gap:28px; } .cf-section-heading { align-items:start; flex-direction:column; gap:18px; } .cf-impact-grid { grid-template-columns:1fr; } .cf-impact-card { min-height:unset; } .cf-impact-card+.cf-impact-card { border-top:1px solid var(--border-strong); border-left:0; } .cf-number { margin-bottom:14px; } .cf-community-inner { align-items:flex-start; flex-direction:column; } .cf-community-inner>div { flex-wrap:wrap; justify-content:flex-start; } }
+@media(prefers-reduced-motion:reduce) { .cf-text-link span { transition:none; } }
