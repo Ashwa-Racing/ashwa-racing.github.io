@@ -20,6 +20,77 @@ loadComponent("main-header", "components/header.html", () => {
 
 loadComponent("main-footer", "components/footer.html");
 
+loadLatestBlogUpdate();
+
+async function loadLatestBlogUpdate() {
+  try {
+    const response = await fetch("/assets/data/blog.json", { cache: "no-store", headers: { Accept: "application/json" } });
+    if (!response.ok) return;
+    const result = await response.json();
+    const post = Array.isArray(result.posts) ? result.posts[0] : null;
+    if (!post?.slug || !post?.title) return;
+    const update = {
+      id: `blog:${post.slug}:${post.updated || post.date || ""}`,
+      platform: "the blog",
+      title: post.title,
+      message: post.excerpt || "A new article has been published on the Ashwa Racing blog.",
+      url: `/blog-post?post=${encodeURIComponent(post.slug)}`,
+      linkLabel: "Read the article"
+    };
+    const storageKey = "ashwa-seen-blog-updates-v1";
+    let seenIds = [];
+    try {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      seenIds = Array.isArray(saved) ? saved : typeof saved === "string" ? [saved] : [];
+    } catch (error) {}
+    if (seenIds.includes(update.id)) return;
+    const { id, platform, title, message, url, linkLabel } = update;
+    if (![id, platform, title, message, url, linkLabel].every(value => typeof value === "string" && value.trim())) return;
+
+    const destination = new URL(url, window.location.origin);
+    if (!['http:', 'https:'].includes(destination.protocol)) return;
+
+    window.setTimeout(() => {
+      if (document.querySelector(".site-update-toast")) return;
+      const toast = document.createElement("aside");
+      toast.className = "site-update-toast";
+      toast.setAttribute("aria-label", "Latest from Ashwa Racing");
+      toast.setAttribute("role", "status");
+      toast.setAttribute("aria-live", "polite");
+      toast.innerHTML = `
+        <span class="site-update-toast__mark" aria-hidden="true"></span>
+        <div class="site-update-toast__content">
+          <p class="site-update-toast__eyebrow"></p>
+          <h2 class="site-update-toast__title"></h2>
+          <p class="site-update-toast__message"></p>
+          <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
+        </div>
+        <button class="site-update-toast__close" type="button" aria-label="Dismiss update">×</button>`;
+      toast.querySelector(".site-update-toast__eyebrow").textContent = `New on ${platform}`;
+      toast.querySelector(".site-update-toast__title").textContent = title;
+      toast.querySelector(".site-update-toast__message").textContent = message;
+      const link = toast.querySelector(".site-update-toast__link");
+      link.href = destination.href;
+      link.textContent = linkLabel;
+
+      const dismiss = () => {
+        try {
+          localStorage.setItem(storageKey, JSON.stringify([...new Set([...seenIds, id])].slice(-50)));
+        } catch (error) {}
+        toast.classList.add("is-leaving");
+        toast.addEventListener("transitionend", () => toast.remove(), { once: true });
+        window.setTimeout(() => toast.remove(), 350);
+      };
+      toast.querySelector(".site-update-toast__close").addEventListener("click", dismiss);
+      link.addEventListener("click", dismiss);
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add("is-visible"));
+    }, 900);
+  } catch (error) {
+    console.warn("Latest blog update could not be loaded:", error);
+  }
+}
+
 function initNav() {
   const $ = s => document.querySelector(s);
   const $$ = s => document.querySelectorAll(s);

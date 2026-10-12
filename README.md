@@ -144,6 +144,8 @@ A couple of the spotlight videos, straight from the site:
 
 **Blog articles.** The site build reads Markdown files in `content/blog/` and generates the JSON used by the blog pages. For contributors without GitHub access, `scripts/google-blog-publisher/` contains an Apps Script workflow for a Google Form: authors enter the article details, upload a `.docx`, and the script converts and submits it for publication. A maintainer sets up the form and its private GitHub token once; authors only need the responder link. See the [Google Form setup guide](scripts/google-blog-publisher/SETUP.md). Direct Markdown upload through the GitHub website remains available; see [`content/blog/README.md`](content/blog/README.md).
 
+**Blog update popup.** On page entry, the shared header reads the built `assets/data/blog.json` feed and shows the newest article in a small bottom-right popup. Each browser sees that article once; publishing a newer article makes the popup eligible to appear again. The popup does not check YouTube, Instagram, or LinkedIn.
+
 <div align="center">
 <img src="assets/images/newsletters/2026/2026-06.png" width="18%" alt="Newsletter cover" />
 <img src="assets/images/newsletters/2026/2026-03.png" width="18%" alt="Newsletter cover" />
