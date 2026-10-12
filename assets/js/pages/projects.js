@@ -89,10 +89,12 @@ const siteReady = new Promise(resolve => {
 
 let activeProgKey = "cv";
 let activeYear = null;
-let slideshowTimer = null;
 let renderToken = 0;
 let slideIndex = 0;
-let validImages = [];
+let imageRecords = [];
+let photoCarouselTimer = 0;
+const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
+let isCarouselPaused = prefersReducedMotion;
 
 
 /* ============================================================
@@ -133,6 +135,13 @@ const progImage =
   document.getElementById(
     "prog-image"
   );
+
+const photoLoading = document.getElementById("prog-photo-loading");
+const photoLoadingText = document.getElementById("prog-photo-loading-text");
+const photoLoadStatus = document.getElementById("prog-photo-status");
+const photoCarouselDots = document.getElementById("prog-carousel-dots");
+const photoCarouselHint = document.getElementById("prog-carousel-hint");
+const photoCarouselToggle = document.getElementById("prog-carousel-toggle");
 
 const progContent =
   document.getElementById(
@@ -189,30 +198,6 @@ function pad2(number) {
 }
 
 
-function preloadImages(paths) {
-  return Promise.all(
-    paths.map(
-      path =>
-        new Promise(resolve => {
-          const img =
-            new Image();
-
-          img.onload = () =>
-            resolve(path);
-
-          img.onerror = () =>
-            resolve(null);
-
-          img.src = path;
-        })
-    )
-  ).then(
-    results =>
-      results.filter(Boolean)
-  );
-}
-
-
 function resolveImage(path) {
   if (
     !path ||
@@ -229,13 +214,26 @@ function resolveImage(path) {
 }
 
 
+function optimizeProjectImage(path) {
+  try {
+    const url = new URL(path, window.location.href);
+    if (url.origin !== "https://assets.ashwaracing.org") return url.href;
+    const imagePath = url.pathname.match(/(?:\/cdn-cgi\/image\/[^/]+)?(\/images\/.*)$/i)?.[1];
+    if (!imagePath) return url.href;
+    return `${url.origin}/cdn-cgi/image/width=1400,format=auto,quality=82${imagePath}`;
+  } catch (error) {
+    return path;
+  }
+}
+
+
 function updateSlideCounter(
   index,
   total
 ) {
   if (slideCurrentEl) {
     slideCurrentEl.textContent =
-      pad2(index + 1);
+      total ? pad2(index + 1) : "00";
   }
 
   if (slideTotalEl) {
@@ -245,41 +243,177 @@ function updateSlideCounter(
 }
 
 
-function swapImage(
-  src,
-  alt,
-  token,
-  index,
-  total
-) {
-  if (
-    token !== renderToken ||
-    !progImage
-  ) {
+function setPhotoLoading(visible, message = "") {
+  if (!photoLoading) return;
+  photoLoading.hidden = !visible;
+  photoLoading.classList.toggle("is-error", message.includes("couldn't load"));
+  if (photoLoadingText && message) photoLoadingText.textContent = message;
+}
+
+
+function updatePhotoLoadStatus(token) {
+  if (token !== renderToken || !photoLoadStatus) return;
+  const ready = imageRecords.filter(record => record.status === "loaded").length;
+  const settled = imageRecords.filter(record => record.status === "loaded" || record.status === "failed").length;
+  const total = imageRecords.length;
+  photoLoadStatus.classList.toggle("is-loading", settled < total);
+  photoLoadStatus.textContent = !total
+    ? "No photos available"
+    : settled < total
+      ? `${ready} of ${total} photos ready`
+      : ready === total
+      ? `${total} photos · swipe or drag to browse`
+        : `${ready} of ${total} photos available`;
+}
+
+
+function loadProjectImage(index, token, identity, year) {
+  const record = imageRecords[index];
+  if (!record) return Promise.resolve(null);
+  if (record.status === "loaded" || record.status === "failed") return Promise.resolve(record);
+  if (record.promise) return record.promise;
+
+  record.status = "loading";
+  record.promise = new Promise(resolve => {
+    const image = new Image();
+    image.decoding = "async";
+    image.onload = () => {
+      record.status = "loaded";
+      record.image = image;
+      updatePhotoLoadStatus(token);
+      if (token === renderToken && slideIndex === index && progImage) {
+        progImage.src = record.src;
+        progImage.alt = `${identity.tag} · ${year} · Photo ${index + 1}`;
+        progImage.style.opacity = "1";
+        setPhotoLoading(false);
+        scheduleProjectPhotoAdvance();
+      }
+      resolve(record);
+    };
+    image.onerror = () => {
+      record.status = "failed";
+      updatePhotoLoadStatus(token);
+      if (token === renderToken && slideIndex === index) {
+        setPhotoLoading(true, "This photo couldn't load");
+      }
+      resolve(record);
+    };
+    image.src = record.src;
+  });
+  return record.promise;
+}
+
+
+function showProjectImage(index, token, identity, year) {
+  if (token !== renderToken || !imageRecords.length || !progImage) return;
+  clearTimeout(photoCarouselTimer);
+  slideIndex = (index + imageRecords.length) % imageRecords.length;
+  updateSlideCounter(slideIndex, imageRecords.length);
+  updatePhotoCarouselControls();
+
+  const record = imageRecords[slideIndex];
+  if (record.status === "loaded") {
+    progImage.style.opacity = "0.35";
+    progImage.src = record.src;
+    progImage.alt = `${identity.tag} · ${year} · Photo ${slideIndex + 1}`;
+    requestAnimationFrame(() => { progImage.style.opacity = "1"; });
+    setPhotoLoading(false);
+    scheduleProjectPhotoAdvance();
     return;
   }
 
-  progImage.style.opacity =
-    "0";
-
-  setTimeout(() => {
-    if (
-      token !== renderToken
-    ) {
-      return;
-    }
-
-    progImage.src = src;
-    progImage.alt = alt;
-    progImage.style.opacity =
-      "1";
-
-    updateSlideCounter(
-      index,
-      total
-    );
-  }, 280);
+  progImage.style.opacity = "0.22";
+  setPhotoLoading(true, `Loading photo ${slideIndex + 1} of ${imageRecords.length}`);
+  loadProjectImage(slideIndex, token, identity, year);
 }
+
+function updatePhotoCarouselControls() {
+  if (!photoCarouselDots) return;
+  const hasCarousel = imageRecords.length > 1;
+  photoCarouselDots.hidden = !hasCarousel;
+  if (photoCarouselHint) photoCarouselHint.hidden = !hasCarousel;
+  if (photoCarouselToggle) {
+    photoCarouselToggle.hidden = !hasCarousel;
+    updatePhotoCarouselToggle();
+  }
+  photoCarouselDots.replaceChildren();
+  if (!hasCarousel) return;
+
+  imageRecords.forEach((record, index) => {
+    const dot = document.createElement("button");
+    dot.type = "button";
+    dot.className = "prog-carousel-dot";
+    dot.setAttribute("aria-label", `Show photo ${index + 1} of ${imageRecords.length}`);
+    dot.setAttribute("aria-current", index === slideIndex ? "true" : "false");
+    dot.title = `Photo ${index + 1}`;
+    dot.addEventListener("click", () => {
+      showProjectImage(index, renderToken, PROGRAMMES[activeProgKey], activeYear);
+    });
+    photoCarouselDots.append(dot);
+  });
+}
+
+function updatePhotoCarouselToggle() {
+  if (!photoCarouselToggle) return;
+  photoCarouselToggle.setAttribute("aria-pressed", String(isCarouselPaused));
+  photoCarouselToggle.setAttribute("aria-label", isCarouselPaused ? "Play slideshow" : "Pause slideshow");
+  const icon = photoCarouselToggle.querySelector(".prog-carousel-toggle-icon");
+  const label = photoCarouselToggle.querySelector(".prog-carousel-toggle-label");
+  if (icon) icon.innerHTML = isCarouselPaused ? "&#9654;" : "&#10074;&#10074;";
+  if (label) label.textContent = isCarouselPaused ? "Play" : "Pause";
+}
+
+function scheduleProjectPhotoAdvance() {
+  clearTimeout(photoCarouselTimer);
+  if (isCarouselPaused || document.hidden || imageRecords.length < 2) return;
+  photoCarouselTimer = window.setTimeout(() => moveProjectPhoto(1), 6500);
+}
+
+
+function moveProjectPhoto(direction) {
+  if (imageRecords.length < 2 || !activeYear) return;
+  let nextIndex = slideIndex;
+  for (let step = 0; step < imageRecords.length; step++) {
+    nextIndex = (nextIndex + direction + imageRecords.length) % imageRecords.length;
+    if (imageRecords[nextIndex].status !== "failed") break;
+  }
+  showProjectImage(nextIndex, renderToken, PROGRAMMES[activeProgKey], activeYear);
+}
+
+photoCarouselToggle?.addEventListener("click", () => {
+  isCarouselPaused = !isCarouselPaused;
+  updatePhotoCarouselToggle();
+  if (isCarouselPaused) clearTimeout(photoCarouselTimer);
+  else scheduleProjectPhotoAdvance();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) clearTimeout(photoCarouselTimer);
+  else scheduleProjectPhotoAdvance();
+});
+
+
+const photoCarousel = document.getElementById("prog-image-wrap");
+let carouselPointerStart = null;
+photoCarousel?.addEventListener("pointerdown", event => {
+  if (event.target.closest("button") || imageRecords.length < 2) return;
+  carouselPointerStart = { x: event.clientX, y: event.clientY, id: event.pointerId };
+  photoCarousel.setPointerCapture?.(event.pointerId);
+});
+photoCarousel?.addEventListener("pointerup", event => {
+  if (!carouselPointerStart || carouselPointerStart.id !== event.pointerId) return;
+  const deltaX = event.clientX - carouselPointerStart.x;
+  const deltaY = event.clientY - carouselPointerStart.y;
+  carouselPointerStart = null;
+  if (Math.abs(deltaX) < 48 || Math.abs(deltaX) < Math.abs(deltaY)) return;
+  moveProjectPhoto(deltaX < 0 ? 1 : -1);
+});
+photoCarousel?.addEventListener("pointercancel", () => { carouselPointerStart = null; });
+photoCarousel?.addEventListener("keydown", event => {
+  if (event.target !== photoCarousel || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+  event.preventDefault();
+  moveProjectPhoto(event.key === "ArrowRight" ? 1 : -1);
+});
 
 
 /* ============================================================
@@ -341,15 +475,7 @@ function renderYear(
     renderToken;
 
   slideIndex = 0;
-  validImages = [];
-
-  if (slideshowTimer) {
-    clearInterval(
-      slideshowTimer
-    );
-
-    slideshowTimer = null;
-  }
+  imageRecords = [];
 
 
   /* Year badge */
@@ -517,96 +643,43 @@ function renderYear(
   activeYear = year;
 
 
-  /* Images */
-
+  /* Project photos load progressively; visitors control the gallery. */
   const rawImages = (
-    data.images ||
-    (
-      data.image
-        ? [data.image]
-        : []
-    )
-  ).map(resolveImage);
+    data.images || (data.image ? [data.image] : [])
+  ).map(path => optimizeProjectImage(resolveImage(path)));
 
+  imageRecords = rawImages.map(src => ({ src, status: "idle", promise: null, image: null }));
+  clearTimeout(photoCarouselTimer);
+  isCarouselPaused = prefersReducedMotion;
   if (progImage) {
-    progImage.style.opacity =
-      "0";
+    progImage.removeAttribute("src");
+    progImage.alt = "";
+    progImage.style.opacity = "0.22";
   }
+  updateSlideCounter(0, imageRecords.length);
+  updatePhotoLoadStatus(currentToken);
+  setPhotoLoading(Boolean(imageRecords.length), imageRecords.length ? `Loading photo 1 of ${imageRecords.length}` : "No photos available");
+  updatePhotoCarouselControls();
+  if (!imageRecords.length) return;
 
-  preloadImages(
-    rawImages
-  ).then(valid => {
-    if (
-      currentToken !==
-      renderToken
-    ) {
-      return;
-    }
-
-    validImages = valid;
-
-    if (!valid.length) {
-      if (progImage) {
-        progImage.src = "";
-        progImage.style.opacity =
-          "1";
-      }
-
-      updateSlideCounter(
-        0,
-        0
-      );
-
-      return;
-    }
-
-    slideIndex = 0;
-
-    swapImage(
-      valid[0],
-      `${identity.tag} — ${year}`,
-      currentToken,
-      0,
-      valid.length
-    );
-
-
-    /* Start slideshow only
-       when multiple images exist */
-
-    if (valid.length > 1) {
-      slideshowTimer =
-        setInterval(() => {
-          if (
-            currentToken !==
-            renderToken
-          ) {
-            clearInterval(
-              slideshowTimer
-            );
-
-            slideshowTimer =
-              null;
-
-            return;
-          }
-
-          slideIndex =
-            (
-              slideIndex + 1
-            ) %
-            valid.length;
-
-          swapImage(
-            valid[slideIndex],
-            `${identity.tag} — ${year}`,
-            currentToken,
-            slideIndex,
-            valid.length
-          );
-        }, 3500);
+  showProjectImage(0, currentToken, identity, year);
+  loadProjectImage(0, currentToken, identity, year).then(first => {
+    if (currentToken !== renderToken) return;
+    if (first?.status === "failed") {
+      const nextAvailable = imageRecords.findIndex(record => record.status !== "failed");
+      if (nextAvailable > 0) showProjectImage(nextAvailable, currentToken, identity, year);
     }
   });
+
+  const preloadRemaining = async () => {
+    for (let offset = 1; offset < imageRecords.length; offset += 2) {
+      if (currentToken !== renderToken) return;
+      await Promise.all(imageRecords.slice(offset, offset + 2).map((_, index) =>
+        loadProjectImage(offset + index, currentToken, identity, year)
+      ));
+    }
+  };
+  preloadRemaining();
 }
 
 

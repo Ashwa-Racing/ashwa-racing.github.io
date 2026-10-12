@@ -175,6 +175,10 @@
   loadMore = async () => {
     if (loadingBatch) return;
     loadingBatch = true;
+    const grid = section.querySelector('.gallery-stream');
+    const sentinel = section.querySelector('.gallery-load-sentinel');
+    grid?.setAttribute('aria-busy', 'true');
+    sentinel?.classList.add('is-loading');
     const next = [];
     const selected = new Set();
     let attempts = 0;
@@ -189,6 +193,8 @@
     }
     if (!next.length) {
       loadingBatch = false;
+      grid?.setAttribute('aria-busy', 'false');
+      sentinel?.classList.remove('is-loading');
       return;
     }
     const dimensions = await Promise.all(next.map(getPhotoDimensions));
@@ -204,7 +210,8 @@
     section.querySelector('.gallery-stream').appendChild(fragment);
     layoutMasonry();
     loadingBatch = false;
-    const sentinel = section.querySelector('.gallery-load-sentinel');
+    grid?.setAttribute('aria-busy', 'false');
+    sentinel?.classList.remove('is-loading');
     if (sentinelObserver && sentinel) {
       sentinelObserver.unobserve(sentinel);
       requestAnimationFrame(() => sentinelObserver.observe(sentinel));
@@ -243,7 +250,7 @@
     renderLightbox();
   };
 
-  section.innerHTML = '<div class="gallery-stream" aria-label="Ashwa Racing photo archive"></div><div class="gallery-load-sentinel" role="status" aria-label="Loading more photos" aria-live="polite"></div>';
+  section.innerHTML = '<div class="gallery-stream" aria-label="Ashwa Racing photo archive" aria-busy="false"></div><div class="gallery-load-sentinel" role="status" aria-label="Loading more photos" aria-live="polite"><span class="gallery-load-spinner" aria-hidden="true"></span><span class="gallery-load-label">Loading more photos</span></div>';
   document.getElementById('lbClose')?.addEventListener('click', closeLightbox);
   document.getElementById('lbBackdrop')?.addEventListener('click', closeLightbox);
   document.getElementById('lbPrev')?.addEventListener('click', () => stepLightbox(-1));

@@ -948,7 +948,12 @@ body {
 }
 .gallery-page .gallery-item.is-placard:hover img { filter: brightness(1.06); }
 .gallery-page .gallery-item.is-placard img.is-unavailable { visibility: hidden; }
-.gallery-page .gallery-load-sentinel { width: 100%; height: 1px; margin: 0; padding: 0; overflow: hidden; border: 0; color: transparent; font-size: 0; }
+.gallery-page .gallery-load-sentinel { position: relative; display: grid; width: 100%; height: 1px; margin: 0; padding: 0; place-items: center; overflow: hidden; border: 0; color: transparent; font-size: 0; transition: height .18s ease, margin .18s ease; }
+.gallery-page .gallery-load-sentinel.is-loading { height: 48px; margin-top: 18px; }
+.gallery-page .gallery-load-spinner { width: 30px; height: 30px; border: 2px solid var(--border-strong); border-top-color: var(--red); border-radius: 50%; opacity: 0; }
+.gallery-page .gallery-load-sentinel.is-loading .gallery-load-spinner { opacity: 1; animation: gallery-load-spin .8s linear infinite; }
+.gallery-page .gallery-load-label { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@keyframes gallery-load-spin { to { transform: rotate(360deg); } }
 .gallery-page .gallery-group { max-width: var(--content-width); margin: 0 auto clamp(48px, 6vw, 76px); }
 .gallery-page .gallery-group__head { padding: 0 0 16px; border-bottom-color: var(--border); }
 .gallery-page .gallery-group__eyebrow { color: var(--red); font-size: .68rem; font-weight: 700; letter-spacing: .16em; }
@@ -978,4 +983,5 @@ html[data-theme="light"] .gallery-page .gallery-hero__title { color: #fff; }
   .gallery-page .gallery-stream { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2px; }
 }
 @media (min-width: 621px) and (max-width: 980px) { .gallery-page .gallery-stream { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (prefers-reduced-motion: reduce) { .gallery-page .gallery-load-spinner { animation: none; border-top-color: var(--red); border-right-color: var(--red); } }
 @media (max-width: 380px) { .gallery-page .gallery-stream { grid-template-columns: 1fr; } }

@@ -160,16 +160,31 @@
     <div class="prog-split">
 
       <!-- Left: image panel -->
-      <div class="prog-image-panel" id="prog-image-wrap">
+      <div class="prog-image-panel" id="prog-image-wrap" role="region" aria-roledescription="carousel" aria-label="Project photos" tabindex="0">
         <div class="prog-image-accent" id="prog-image-accent"></div>
-        <img id="prog-image" src="" alt="" loading="lazy">
+        <img id="prog-image" src="" alt="" loading="lazy" draggable="false">
         <div class="prog-image-overlay"></div>
 
-        <!-- Slideshow counter -->
-        <div class="prog-slide-counter" id="prog-slide-counter" aria-hidden="true">
-          <span id="slide-current">01</span>
-          <span class="slide-sep">/</span>
-          <span id="slide-total">01</span>
+        <div class="prog-photo-loading" id="prog-photo-loading" role="status" aria-live="polite" hidden>
+          <span class="prog-photo-spinner" aria-hidden="true"></span>
+          <span id="prog-photo-loading-text">Loading project photo</span>
+        </div>
+
+        <div class="prog-photo-controls">
+          <div class="prog-photo-meta">
+            <div class="prog-slide-counter" id="prog-slide-counter" aria-label="Photo number">
+              <span id="slide-current">01</span>
+              <span class="slide-sep">/</span>
+              <span id="slide-total">01</span>
+            </div>
+            <span class="prog-photo-status" id="prog-photo-status" aria-live="polite"></span>
+          </div>
+          <div class="prog-carousel-dots" id="prog-carousel-dots" aria-label="Choose a project photo" hidden></div>
+          <span class="prog-carousel-hint" id="prog-carousel-hint" hidden>Swipe or drag to explore</span>
+          <button class="prog-carousel-toggle" id="prog-carousel-toggle" type="button" aria-label="Pause slideshow" aria-pressed="false" hidden>
+            <span class="prog-carousel-toggle-icon" aria-hidden="true">&#10074;&#10074;</span>
+            <span class="prog-carousel-toggle-label">Pause</span>
+          </button>
         </div>
 
         <!-- Year badge overlaid on image -->
