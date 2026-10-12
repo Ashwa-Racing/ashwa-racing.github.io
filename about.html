@@ -1,281 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About Us | Ashwa Racing</title>
-
-  <meta name="description" content="Ashwa Racing is the Formula Student team of RV College of Engineering. Since 2003, we have built combustion, hybrid, and electric race cars, run a driverless programme in development, and won two international Formula Hybrid + Electric championships." />
-
-  <link rel="canonical" href="https://ashwaracing.org/about" />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Ashwa Racing | RVCE Formula Student</title>
+  <meta name="description" content="Meet Ashwa Racing, RV College of Engineering's student motorsport team. Since 2003, we have designed, built, and raced Formula Student prototypes in India and around the world.">
+  <link rel="canonical" href="https://ashwaracing.org/about">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Ashwa Racing">
+  <meta property="og:title" content="About Ashwa Racing | RVCE Formula Student">
+  <meta property="og:description" content="Two decades of student-built race cars, engineering, and competition. Meet Ashwa Racing, the Formula Student team of RV College of Engineering.">
+  <meta property="og:url" content="https://ashwaracing.org/about">
+  <meta property="og:image" content="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif/images/prototypes/RZ-XX6-C/event/1.JPG">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="About Ashwa Racing | RVCE Formula Student">
+  <meta name="twitter:description" content="Two decades of student-built race cars, engineering, and competition.">
+  <meta name="twitter:image" content="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=avif/images/prototypes/RZ-XX6-C/event/1.JPG">
   <link rel="icon" href="https://assets.ashwaracing.org/images/favicon/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="https://assets.ashwaracing.org/images/favicon/favicon.svg">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap"
-    rel="stylesheet">
-
+  <link rel="preconnect" href="https://assets.ashwaracing.org">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
+  <script>(() => { let theme = null; try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {} document.documentElement.dataset.theme = theme === "light" ? "light" : "dark"; })();</script>
   <link rel="stylesheet" href="assets/css/components/loader.css">
-  <link rel="stylesheet" href="assets/css/components/header.css?v=3" />
-  <link rel="stylesheet" href="assets/css/components/footer.css" />
-  <link rel="stylesheet" href="assets/css/pages/about.css" />
+  <link rel="stylesheet" href="assets/css/components/base.css">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=3">
+  <link rel="stylesheet" href="assets/css/components/footer.css">
+  <link rel="stylesheet" href="assets/css/pages/about.css">
 </head>
-
-<body>
-
+<body class="about-page">
   <div id="main-header"></div>
+  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
+    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
+    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l1.41-1.41" /></svg>
+  </button>
+  <main>
+    <section class="about-hero" aria-labelledby="about-title">
+      <div class="about-hero__media" role="img" aria-label="Ashwa Racing's RZ-XX6-C Formula Student car"></div>
+      <div class="about-hero__content">
+        <p class="about-eyebrow">RV College of Engineering <span>·</span> Since 2003</p>
+        <h1 id="about-title">Built by<br><em>students.</em></h1>
+        <p class="about-hero__intro">We are Ashwa Racing: a student engineering team that designs, builds, and races Formula Student cars from Bengaluru, India.</p>
+        <a class="about-hero__link" href="#our-work">Discover our work <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="about-hero__index" aria-hidden="true">ASHWA / ENGINEERED TO COMPETE</div>
+    </section>
 
-  <!-- ═══════════════════════════════════════
-     HERO
-════════════════════════════════════════ -->
-  <section class="about-hero">
-    <div class="about-hero-bg" style="background-image:url('https://assets.ashwaracing.org/cdn-cgi/image/height=2000,format=avif/images/prototypes/RZ-X8-H/event/10.jpg')"></div>
-    <div class="about-hero-overlay"></div>
-    <div class="about-hero-grid"></div>
-    <div class="about-hero-stripe"></div>
+    <section class="about-stats" aria-label="Ashwa Racing at a glance">
+      <div class="about-stats__inner">
+        <div class="about-stat"><span class="about-stat__number">2003</span><span class="about-stat__label">Founded at RVCE</span></div>
+        <div class="about-stat"><span class="about-stat__number">20<sup>+</sup></span><span class="about-stat__label">Years on the grid</span></div>
+        <div class="about-stat"><span class="about-stat__number">20<sup>+</sup></span><span class="about-stat__label">Prototypes built</span></div>
+        <div class="about-stat"><span class="about-stat__number">6<sup>th</sup></span><span class="about-stat__label">Overall · Formula Bharat 2026</span></div>
+      </div>
+    </section>
 
-    <div class="about-hero-content">
-      <h1 class="about-hero-title">
-        वेगः इतः<em>आरभ्यते</em>
-      </h1>
-      <p class="about-hero-desc">
-        Ashwa Racing is the Formula Student team of RV College of Engineering, Bengaluru —
-        engineering combustion, hybrid, and electric race cars, a driverless programme now in
-        development, and a hyperloop pod, through two decades of competition.
-      </p>
-    </div>
+    <section class="about-intro about-section" aria-labelledby="origin-title">
+      <div class="about-section__heading">
+        <p class="section-label">01 / The team</p>
+        <h2 id="origin-title">One team.<br><em>Many disciplines.</em></h2>
+      </div>
+      <div class="about-intro__body">
+        <p class="about-lede">Ashwa Racing is the Formula Student team of RV College of Engineering. Since our founding in 2003, generations of students have taken on the full challenge of motorsport engineering: from first sketches and simulations to fabrication, testing, and the start line.</p>
+        <p>Our work brings mechanical, electrical, electronics, and software engineering together with planning, finance, and operations. Students own real decisions, learn from one another, and pass hard-won knowledge on to the next team.</p>
+        <a class="about-text-link" href="team.html">Meet the team <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
 
-    <!-- Inline stat strip -->
-    <div class="about-hero-stats">
-      <div class="hs"><span class="hs-num">2003</span><span class="hs-label">Founded</span></div>
-      <div class="hs-div"></div>
-      <div class="hs"><span class="hs-num">20<sup>+</sup></span><span class="hs-label">Prototypes Built</span></div>
-      <div class="hs-div"></div>
-      <div class="hs"><span class="hs-num">3</span><span class="hs-label">Powertrain Types</span></div>
-      <div class="hs-div"></div>
-      <div class="hs"><span class="hs-num">2</span><span class="hs-label">FH+E Hybrid Championships</span></div>
-      <div class="hs-div"></div>
-      <div class="hs"><span class="hs-num">45<sup>+</sup></span><span class="hs-label">Industry Sponsors</span></div>
-    </div>
-  </section>
+    <section class="about-work" id="our-work" aria-labelledby="work-title">
+      <div class="about-work__head">
+        <div><p class="section-label">02 / What we build</p><h2 id="work-title">Engineering<br><em>in motion.</em></h2></div>
+        <p>Every season starts with a new set of constraints. Our teams turn them into machines, systems, and ideas we can put to the test.</p>
+      </div>
+      <div class="about-programmes">
+        <article class="about-programme about-programme--feature">
+          <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1400,format=avif/images/prototypes/RZ-XX6-C/event/1.JPG" alt="RZ-XX6-C at Formula Bharat 2026" loading="lazy">
+          <div class="about-programme__body"><p class="about-programme__number">01 <span>Combustion</span></p><h3>RZ-XX6-C</h3><p>Our 2026 combustion prototype placed sixth overall at Formula Bharat, with fifth in Engineering Design Presentation and second in Business Plan Presentation.</p><a href="projects.html">Explore the car archive <span aria-hidden="true">↗</span></a></div>
+        </article>
+        <article class="about-programme">
+          <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1100,format=avif/images/prototypes/RZ-XX6-E/preevent/1.png" alt="Ashwa Racing's RZ-XX6-E electric Formula Student prototype" loading="lazy">
+          <div class="about-programme__body"><p class="about-programme__number">02 <span>Electric</span></p><h3>RZ-XX6-E</h3><p>Ashwa Racing's first fully electric prototype brings together a clean sheet chassis, custom high-voltage battery pack, electric powertrain, and in-house data acquisition.</p><a href="projects.html">See our projects <span aria-hidden="true">↗</span></a></div>
+        </article>
+        <article class="about-programme">
+          <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1100,format=avif/images/prototypes/RZ-X8-H/event/9.jpg" alt="Ashwa Racing hybrid Formula Student prototype" loading="lazy">
+          <div class="about-programme__body"><p class="about-programme__number">03 <span>Hybrid</span></p><h3>Systems, integrated</h3><p>Our hybrid programme combined combustion and electric power, earning back-to-back category championships at Formula Hybrid + Electric in 2020 and 2021.</p><a href="projects.html">Explore the car archive <span aria-hidden="true">↗</span></a></div>
+        </article>
+      </div>
+      <p class="about-work__note"><span>In development</span> Driverless systems extend our engineering work into perception, vehicle control, and autonomous driving.</p>
+    </section>
 
-  <section class="story-section">
+    <section class="about-legacy about-section" aria-labelledby="legacy-title">
+      <div class="about-legacy__image"><img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1400,format=avif/images/prototypes/RZ-05-C/1.jpg" alt="Ashwa Racing's first Formula Student prototype, RZ05" loading="lazy"><span>RZ05 · Our first prototype</span></div>
+      <div class="about-legacy__body"><p class="section-label">03 / A continuing story</p><h2 id="legacy-title">From the first<br><em>to the next.</em></h2><p>Our first prototype, RZ05, took Ashwa to Formula SAE Australasia in 2005, where the team received the Best Endeavour and Best Cost awards. Since then, every car has carried forward the work of the students who came before it.</p><p>That continuity is part of the engineering: document what you learn, build on it, and leave the next team a stronger starting point.</p><a class="about-text-link" href="projects.html">Trace the prototype history <span aria-hidden="true">↗</span></a></div>
+    </section>
 
-    <!-- Step 01 — Who We Are -->
-    <article class="story-step">
-      <div class="story-step-media">
-        <img src="https://assets.ashwaracing.org/cdn-cgi/image/height=1440,format=avif/images/prototypes/RZ-X8-C/EVENT/1.jpg" alt="Ashwa Racing team photo" loading="lazy">
-        <div class="story-step-tag">Est. 2003</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">01 — Origin</div>
-        <h2 class="step-heading">Who We<br><em>Are</em></h2>
-        <p>
-          Founded on 22 November 2003 under the Ashwa Mobility Foundation, Ashwa Racing is the
-          oldest technical student team at RV College of Engineering and one of India's premier
-          collegiate motorsports teams — with consistent national and international Formula
-          Student participation spanning over two decades.
-        </p>
-        <p>
-          Every member holds both a technical and a managerial role, with 120+ interdisciplinary
-          undergraduates spanning mechanical, electrical, electronics, and computer science
-          working across combustion, hybrid, electric, and driverless programmes at any given time.
-        </p>
-      </div>
-    </article>
+    <section class="about-beyond" aria-labelledby="beyond-title">
+      <div class="about-beyond__image" role="img" aria-label="Ashwa's hyperloop pod at European Hyperloop Week"></div>
+      <div class="about-beyond__body"><p class="section-label">04 / Beyond the circuit</p><h2 id="beyond-title">The same drive.<br><em>New frontiers.</em></h2><p>Our engineering community has also designed and built a hyperloop pod. The team was a finalist at European Hyperloop Week 2023 at ETH Zürich, taking student-built mobility research beyond the racetrack.</p><a class="about-text-link" href="organization.html">How Ashwa is organised <span aria-hidden="true">↗</span></a></div>
+    </section>
 
-    <!-- Step 02 — Mission & Vision -->
-    <article class="story-step story-step--reverse story-step--dark">
-      <div class="story-step-media">
-        <img src="https://assets.ashwaracing.org/cdn-cgi/image/height=1440,format=avif/images/prototypes/RZ-X8-H/event/9.jpg" alt="Mission and Vision" loading="lazy">
-        <div class="story-step-tag">Mission &amp; Vision</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">02 — Purpose</div>
-        <h2 class="step-heading">Built to<br><em>Lead.</em></h2>
-        <p>
-          Our vision is to become a national leader across Formula Student categories and drive
-          sustainable, autonomous mobility through student-led innovation.
-        </p>
-        <p>
-          Our mission is to provide industry-grade engineering exposure, foster academic-industry
-          collaboration, and develop high-performance prototypes — across every powertrain and
-          into driverless systems — that push the limits of what students can build.
-        </p>
-      </div>
-    </article>
-
-    <!-- Step 03 — History & Impact -->
-    <article class="story-step">
-      <div class="story-step-media">
-        <img src="https://assets.ashwaracing.org/cdn-cgi/image/height=1080,format=avif/images/team/fullteam/2025-C.png" alt="Ashwa Racing history" loading="lazy">
-        <div class="story-step-tag">20+ Prototypes</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">03 — Legacy</div>
-        <h2 class="step-heading">History &amp;<br><em>Impact</em></h2>
-        <p>
-          Over two decades, Ashwa Racing has built more than 20 prototype race cars across
-          combustion, hybrid, and electric powertrains — from the RZ05, Asia's first
-          student-built car at Formula SAE Australasia, to the current RZ-XX6-C combustion
-          platform and an active electric programme. Alumni now lead engineering teams across
-          India's top automotive and technology companies.
-        </p>
-      </div>
-    </article>
-
-    <!-- Step 03b — Four Powertrains (NEW) -->
-    <article class="story-step story-step--reverse story-step--dark">
-      <div class="story-step-media">
-        <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/CV.png" alt="Ashwa Racing combustion and electric prototypes" loading="lazy">
-        <div class="story-step-tag">Combustion · Hybrid · Electric · Hyperloop</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">04 — Powertrains</div>
-        <h2 class="step-heading">Four<br><em>Powertrains.</em></h2>
-        <p>
-          Ashwa Racing was the first Indian Formula Student team to design, build, and test
-          prototypes across all three powertrain categories. Our combustion line runs deepest —
-          the current RZ-XX6-C finished 6th overall at Formula Bharat 2026, with a top-5 result
-          in Engineering Design and 2nd in Business Plan Presentation. Our electric prototype
-          runs on an Emrax 208 motor with a custom-built high-voltage accumulator, and — like
-          our combustion car — every power electronics board, from the motor controller to the
-          BMS, is designed, assembled, and tested in-house.
-        </p>
-      </div>
-    </article>
-
-    <!-- Step 03c — Driverless / What's Next (NEW) -->
-    <article class="story-step">
-      <div class="story-step-media">
-        <video autoplay muted loop playsinline>
-          <source src="https://assets.ashwaracing.org/videos/output_detections_path_web.mp4" type="video/mp4">
-        </video>
-        <div class="story-step-tag">Coming Soon</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">05 — What's Next</div>
-        <h2 class="step-heading">Going<br><em>Driverless.</em></h2>
-        <p>
-          Our newest programme takes the car off the driver's hands. We're building a driverless
-          (DV) prototype on top of our existing platforms — a full autonomy stack covering
-          perception, SLAM, and path planning — alongside research into ML-based power
-          management and V2X communication suited to real-world Indian road conditions. It's the
-          next chapter of what a student-built Ashwa car can do.
-        </p>
-      </div>
-    </article>
-
-    <!-- Step 03d — Hyperloop (NEW) -->
-    <article class="story-step story-step--reverse story-step--dark">
-      <div class="story-step-media">
-        <img src="https://assets.ashwaracing.org/images/prototypes/RZ-XX3-HY/event/12.jpg" alt="Ashwa Mobility Foundation hyperloop prototype" loading="lazy">
-        <div class="story-step-tag">European Hyperloop Week 2024</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">06 — Beyond the Track</div>
-        <h2 class="step-heading">Into the<br><em>Tube.</em></h2>
-        <p>
-          Racing isn't the only frontier. Under the Ashwa Mobility Foundation, our hyperloop team
-          designed and built Ashwa's first hyperloop pod, then took it to European Hyperloop Week
-          2024 in Zürich — competing against 26+ university teams from around the world. It's the
-          same systems-engineering rigour we bring to the car, aimed at a completely different
-          mode of transport.
-        </p>
-      </div>
-    </article>
-
-    <!-- Step 03e — Beyond Formula Student (NEW) -->
-    <article class="story-step">
-      <div class="story-step-media">
-        <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1280,format=auto,quality=85/images/prototypes/RZ-20-CV/IMG_8665compressed.jpg" alt="Ashwa Mobility Foundation projects" loading="lazy">
-        <div class="story-step-tag">Ashwa Mobility Foundation</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">07 — More Programmes</div>
-        <h2 class="step-heading">More Than<br><em>One Car.</em></h2>
-        <p>
-          The Ashwa Mobility Foundation's scope reaches further still: a MotoStudent motorcycle
-          programme and an Open Source Vehicle (OSV) concept, both built by the same
-          student-engineering pipeline behind the race car and the hyperloop pod.
-        </p>
-      </div>
-    </article>
-
-    <!-- Step 03e — Hall of Fame (NEW) -->
-    <article class="story-step">
-      <div class="story-step-media">
-        <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=800,format=avif,quality=100/images/team/fullteam/2026-C.JPG" alt="Ashwa Racing awards" loading="lazy">
-        <div class="story-step-tag">20+ Years of Podiums</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">08 — Hall of Fame</div>
-        <h2 class="step-heading">Built to<br><em>Win.</em></h2>
-        <p>
-          Best Endeavour and Best Cost Awards at Formula SAE Australasia (2005). Best Asian Car
-          at Formula SAE Italy (2010, 2011). Two runner-up finishes at Formula Hybrid + Electric
-          USA (2017, 2018), including a perfect Project Management score in 2019. Back-to-back
-          <strong>1st place Hybrid Category championships in 2020 and 2021</strong>. A national
-          acceleration record at Formula Bharat in 2018. Every result, built by students.
-        </p>
-      </div>
-    </article>
-
-    <!-- Step 04 — Partners -->
-    <article class="story-step story-step--reverse story-step--dark">
-      <div class="story-step-media">
-        <img src="https://assets.ashwaracing.org/cdn-cgi/image/height=1080,format=avif/images/team/fullteam/2021-H.png" alt="Partner with Ashwa Racing" loading="lazy">
-        <div class="story-step-tag">45+ Sponsors</div>
-      </div>
-      <div class="story-step-content">
-        <div class="step-label">09 — Partners</div>
-        <h2 class="step-heading">Partner with<br><em>Us</em></h2>
-        <p>
-          Join our ecosystem of engineering excellence. Our partnerships fuel out-of-the-box
-          innovation, allowing us to build cutting-edge prototypes — across four programmes now —
-          while offering sponsors exceptional brand visibility and access to top engineering talent.
-        </p>
-        <a href="sponsorship.html" class="about-link">
-          Sponsorship Details
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            aria-hidden="true" width="16" height="16">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-          </svg>
-        </a>
-      </div>
-    </article>
-
-  </section>
-
+    <section class="about-cta" aria-labelledby="about-cta-title">
+      <p class="section-label">Be part of the next chapter</p><h2 id="about-cta-title">Good engineering<br>takes a <em>team.</em></h2>
+      <p>Follow our work, meet the people behind it, or help us build the next car.</p>
+      <div class="about-cta__links"><a href="team.html">Meet the team <span aria-hidden="true">↗</span></a><a href="sponsorship.html">Partner with us <span aria-hidden="true">↗</span></a></div>
+    </section>
+  </main>
   <footer id="main-footer"></footer>
-
+  <div id="site-loader" aria-hidden="true"><div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div></div>
+  <script src="assets/js/components/theme.js" defer></script>
   <script src="assets/js/components/header.js" defer></script>
   <script src="assets/js/components/loader.js" defer></script>
-
 </body>
-
-
-<div id="site-loader" aria-hidden="true">
-  <div class="loader-inner">
-    <div class="loader-brand">
-      <span class="loader-ashwa">Ashwa</span>
-      <span class="loader-racing">Racing</span>
-    </div>
-    <div class="loader-sponsor">
-      <div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div>
-      <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
-    </div>
-    <div class="loader-progress"><span class="loader-progress-bar"></span></div>
-    <div class="loader-meta">
-      <span id="loader-status">INITIALIZING</span>
-      <span id="loader-percent">00%</span>
-    </div>
-  </div>
-</div>
-
 </html>

@@ -128,8 +128,10 @@
   const readerTitle = document.getElementById('reader-title');
   const readerEdition = document.getElementById('reader-edition');
   const downloadLink = document.getElementById('reader-download');
+  const shareButton = document.getElementById('reader-share');
   const fallbackLink = document.getElementById('reader-fallback');
   const errorPanel = document.getElementById('reader-error');
+  const loadingPanel = document.getElementById('reader-loading');
   const canvas = document.getElementById('reader-canvas');
   const nextCanvas = document.getElementById('reader-canvas-next');
   const sheet = document.getElementById('reader-sheet');
@@ -237,17 +239,26 @@
     }
   }
 
-  async function openReader(item) {
+  function issueUrl(item) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('issue', `${item.year}-${item.month}-${item.type}`);
+    return url;
+  }
+
+  async function openReader(item, { updateUrl = true } = {}) {
     const requestId = ++openRequest;
     lastFocus = document.activeElement;
     reader.hidden = false;
     document.body.classList.add('reader-open');
     dialog.focus();
     readerTitle.textContent = item.title;
+    if (updateUrl) history.pushState({ newsletterReader: true }, '', issueUrl(item));
+    shareButton.textContent = 'Share issue';
     readerEdition.textContent = `Ashwa Racing · ${typeNames[item.type] || item.type} edition`;
     downloadLink.href = item.pdf;
     fallbackLink.href = item.pdf;
     errorPanel.hidden = true;
+    loadingPanel.hidden = false;
     canvas.hidden = false;
     nextCanvas.hidden = false;
     recList.innerHTML = '<p class="reader-rec-loading">Finding another issue to read…</p>';
@@ -259,9 +270,10 @@
     singlePageMode = false;
     dialog.classList.remove('is-expanded');
     reader.classList.remove('is-expanded');
-    pageCount.textContent = 'Loading';
+    pageCount.textContent = '— / —';
 
     if (!window.pdfjsLib) {
+      loadingPanel.hidden = true;
       errorPanel.hidden = false;
       canvas.hidden = true;
       nextCanvas.hidden = true;
@@ -273,9 +285,11 @@
       if (requestId !== openRequest || reader.hidden) { loadedDocument.destroy(); return; }
       pdfDocument = loadedDocument;
       await renderPage(1);
+      if (requestId === openRequest && !reader.hidden) loadingPanel.hidden = true;
     } catch (error) {
       if (requestId !== openRequest || reader.hidden) return;
       console.warn('Newsletter PDF could not be loaded in the reader:', error);
+      loadingPanel.hidden = true;
       errorPanel.hidden = false;
       canvas.hidden = true;
       nextCanvas.hidden = true;
@@ -289,12 +303,33 @@
     dialog.classList.remove('is-expanded');
     reader.classList.remove('is-expanded');
     reader.hidden = true;
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('issue')) {
+      url.searchParams.delete('issue');
+      history.replaceState({}, '', url);
+    }
     document.body.classList.remove('reader-open');
     if (pdfDocument) { pdfDocument.destroy(); pdfDocument = null; }
     renderTasks.forEach(task => task.cancel());
     renderTasks = [];
     lastFocus?.focus?.();
   }
+
+  shareButton.addEventListener('click', async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      shareButton.textContent = 'Link copied';
+    } catch (error) {
+      window.prompt('Copy this newsletter link:', url);
+    }
+  });
+  window.addEventListener('popstate', () => {
+    const key = new URL(window.location.href).searchParams.get('issue');
+    const item = newsletters.find(entry => `${entry.year}-${entry.month}-${entry.type}` === key);
+    if (item) openReader(item, { updateUrl: false });
+    else if (!reader.hidden) closeReader();
+  });
 
   function turnPage(direction) {
     if (!pdfDocument) return;
@@ -360,4 +395,7 @@
   });
 
   render(newsletters);
+  const initialIssue = new URL(window.location.href).searchParams.get('issue');
+  const initialItem = newsletters.find(item => `${item.year}-${item.month}-${item.type}` === initialIssue);
+  if (initialItem) openReader(initialItem, { updateUrl: false });
 })();

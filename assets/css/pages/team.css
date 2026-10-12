@@ -201,6 +201,8 @@ html[data-theme="light"] .team-section {
 .member-card-image::after { content: ""; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.78)); pointer-events: none; }
 .member-name { color: #fff; font: 700 clamp(1.08rem, 1.5vw, 1.35rem)/1.05 var(--display); letter-spacing: .02em; text-transform: uppercase; }
 .member-card-image .member-name { position: absolute; z-index: 1; inset: auto 15px 13px; }
+.member-profile-link { width: fit-content; text-decoration: none; }
+.member-profile-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .member-card-content { display: flex; min-height: 0; flex-direction: column; padding: 8px 13px; background: var(--card-bg); }
 .member-role { margin: 0; color: var(--text-muted); font: 700 .72rem/1.35 var(--display); letter-spacing: .11em; text-transform: uppercase; }
 .member-card.is-command .member-role { color: #e8c66f; }

@@ -69,6 +69,7 @@
       <header class="reader-header">
         <div class="reader-heading"><p class="reader-eyebrow" id="reader-edition">Ashwa Racing Archive</p><h2 id="reader-title">Newsletter</h2></div>
         <div class="reader-actions">
+          <button type="button" id="reader-share">Share issue</button>
           <a id="reader-download" href="#" target="_blank" rel="noopener noreferrer" download>Open PDF <span aria-hidden="true">↗</span></a>
           <button type="button" class="reader-close" data-reader-close aria-label="Close reader">×</button>
         </div>
@@ -80,6 +81,7 @@
             <div class="reader-stage" id="reader-stage">
               <div class="reader-page-sheet" id="reader-sheet"><canvas id="reader-canvas"></canvas></div>
               <div class="reader-page-sheet reader-page-sheet-next" id="reader-sheet-next"><canvas id="reader-canvas-next"></canvas></div>
+              <div class="reader-loading" id="reader-loading" role="status" aria-live="polite"><span class="reader-loading-spinner" aria-hidden="true"></span><span>Loading newsletter…</span></div>
               <div class="reader-error" id="reader-error" hidden><p>This PDF could not be rendered here.</p><a id="reader-fallback" href="#" target="_blank" rel="noopener noreferrer">Open the newsletter PDF</a></div>
             </div>
             <button class="reader-page-nav" id="reader-next" type="button" aria-label="Next spread">→</button>

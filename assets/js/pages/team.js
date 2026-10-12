@@ -36,6 +36,9 @@ const teamReady = loadTeam().catch(err => {
 // Initialised to null; set properly on first render from dynamic year list
 let activeYear      = null;
 let activeSubsystem = "All";
+const profileParams = new URLSearchParams(window.location.search);
+const profileName = profileParams.get("member");
+const profileYear = profileParams.get("year");
 
 // ─── DOM refs ──────────────────────────────────────────────────
 const grid        = document.getElementById("member-profiles-grid");
@@ -95,6 +98,9 @@ function createMemberCard(member) {
   // Subsystem display — strip duplicate entries cleanly
   const uniqueSubs = [...new Set(member.subsystem)].join(" · ");
 
+  const profileUrl = new URL(window.location.href);
+  profileUrl.searchParams.set("member", member.name);
+  profileUrl.searchParams.set("year", member.year);
   card.innerHTML = `
     ${easterEggCanvas}
 
@@ -107,7 +113,7 @@ function createMemberCard(member) {
           class="member-img"
         >
       </div>
-      <p class="member-name">${member.name}</p>
+      <a class="member-name member-profile-link" href="${profileUrl.pathname}?${profileUrl.searchParams.toString()}">${member.name}</a>
     </div>
     <div class="member-card-content">
       <p class="member-role">${member.roles.join(" · ")}</p>
@@ -188,7 +194,8 @@ function renderMembers(year, subsystem) {
     const results = teamData
       .filter(m =>
         m.year === year &&
-        (subsystem === "All" || m.subsystem.includes(subsystem))
+        (subsystem === "All" || m.subsystem.includes(subsystem)) &&
+        (!profileName || (m.name === profileName && (!profileYear || m.year === profileYear)))
       )
       .sort((a, b) => roleSortWeight(a) - roleSortWeight(b));
 
@@ -396,13 +403,15 @@ window.addEventListener("load", async () => {
   });
 
   // Activate the first available year
-  const firstYearItem = [...yearFilter.children].find(el => el.dataset.year);
+  const firstYearItem = [...yearFilter.children].find(el => el.dataset.year === profileYear)
+    || [...yearFilter.children].find(el => el.dataset.year);
   if (firstYearItem) {
     activeYear = firstYearItem.dataset.year;
     firstYearItem.querySelector(".filter-btn").classList.add("active");
   }
 
   renderMembers(activeYear, activeSubsystem);
+  if (profileName) document.getElementById("filters-start").scrollIntoView({ block: "start" });
 
   // Centre the active filter items on load
   setTimeout(() => {
