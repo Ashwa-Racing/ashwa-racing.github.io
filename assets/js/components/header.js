@@ -51,19 +51,19 @@ async function loadLatestBlogUpdate() {
       toast.className = "site-update-toast";
       if (minimizedId === id) toast.classList.add("is-minimized");
       toast.setAttribute("aria-label", "Latest from Ashwa Racing");
-      toast.setAttribute("role", "status");
+      toast.setAttribute("role", "region");
       toast.setAttribute("aria-live", "polite");
       toast.innerHTML = `
         <span class="site-update-toast__mark" aria-hidden="true"></span>
         <div class="site-update-toast__content">
           <p class="site-update-toast__eyebrow"></p>
           <h2 class="site-update-toast__title"></h2>
+          <p class="site-update-toast__message"></p>
+          <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
           <a class="site-update-toast__campaign" href="/crowdfunding.html" target="_blank" rel="noopener noreferrer">
             <span class="site-update-toast__campaign-label">Support the next build</span>
             <span class="site-update-toast__campaign-title">Help Ashwa Racing get to the grid <span aria-hidden="true">&rarr;</span></span>
           </a>
-          <p class="site-update-toast__message"></p>
-          <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
         </div>
         <button class="site-update-toast__close" type="button" aria-label="Minimize update">×</button>`;
       toast.querySelector(".site-update-toast__eyebrow").textContent = `New on ${platform}`;
