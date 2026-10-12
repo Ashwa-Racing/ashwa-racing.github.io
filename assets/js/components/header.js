@@ -44,6 +44,8 @@ async function loadLatestBlogUpdate() {
       seenIds = Array.isArray(saved) ? saved : typeof saved === "string" ? [saved] : [];
     } catch (error) {}
     if (seenIds.includes(update.id)) return;
+    let minimizedId = "";
+    try { minimizedId = localStorage.getItem("ashwa-minimized-blog-update") || ""; } catch (error) {}
     const { id, platform, title, message, url, linkLabel } = update;
     if (![id, platform, title, message, url, linkLabel].every(value => typeof value === "string" && value.trim())) return;
 
@@ -54,6 +56,7 @@ async function loadLatestBlogUpdate() {
       if (document.querySelector(".site-update-toast")) return;
       const toast = document.createElement("aside");
       toast.className = "site-update-toast";
+      if (minimizedId === id) toast.classList.add("is-minimized");
       toast.setAttribute("aria-label", "Latest from Ashwa Racing");
       toast.setAttribute("role", "status");
       toast.setAttribute("aria-live", "polite");
@@ -65,7 +68,7 @@ async function loadLatestBlogUpdate() {
           <p class="site-update-toast__message"></p>
           <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
         </div>
-        <button class="site-update-toast__close" type="button" aria-label="Dismiss update">×</button>`;
+        <button class="site-update-toast__close" type="button" aria-label="Minimize update">×</button>`;
       toast.querySelector(".site-update-toast__eyebrow").textContent = `New on ${platform}`;
       toast.querySelector(".site-update-toast__title").textContent = title;
       toast.querySelector(".site-update-toast__message").textContent = message;
@@ -73,16 +76,25 @@ async function loadLatestBlogUpdate() {
       link.href = destination.href;
       link.textContent = linkLabel;
 
-      const dismiss = () => {
+      const minimizeButton = toast.querySelector(".site-update-toast__close");
+      const setMinimized = minimized => {
+        toast.classList.toggle("is-minimized", minimized);
+        minimizeButton.textContent = minimized ? "AR" : "×";
+        minimizeButton.setAttribute("aria-label", minimized ? "Show latest blog update" : "Minimize update");
+        try {
+          if (minimized) localStorage.setItem("ashwa-minimized-blog-update", id);
+          else localStorage.removeItem("ashwa-minimized-blog-update");
+        } catch (error) {}
+      };
+      minimizeButton.textContent = minimizedId === id ? "AR" : "×";
+      minimizeButton.setAttribute("aria-label", minimizedId === id ? "Show latest blog update" : "Minimize update");
+      minimizeButton.addEventListener("click", () => setMinimized(!toast.classList.contains("is-minimized")));
+      link.addEventListener("click", () => {
         try {
           localStorage.setItem(storageKey, JSON.stringify([...new Set([...seenIds, id])].slice(-50)));
+          localStorage.removeItem("ashwa-minimized-blog-update");
         } catch (error) {}
-        toast.classList.add("is-leaving");
-        toast.addEventListener("transitionend", () => toast.remove(), { once: true });
-        window.setTimeout(() => toast.remove(), 350);
-      };
-      toast.querySelector(".site-update-toast__close").addEventListener("click", dismiss);
-      link.addEventListener("click", dismiss);
+      });
       document.body.appendChild(toast);
       requestAnimationFrame(() => toast.classList.add("is-visible"));
     }, 900);
