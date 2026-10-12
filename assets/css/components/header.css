@@ -366,7 +366,7 @@
 .site-update-toast.is-minimized .site-update-toast__close { width: 100%; height: 100%; border: 0; border-radius: 50%; color: var(--text-strong); font: 800 .72rem/1 var(--display); letter-spacing: .08em; }
 .site-update-toast.is-minimized .site-update-toast__close:hover { background: var(--red); color: #fff; }
 @media (max-width: 480px) {
-  .site-update-toast { right: 12px; bottom: 12px; grid-template-columns: 7px minmax(0, 1fr) 26px; gap: 9px; width: min(320px, calc(100vw - 24px)); max-height: min(38vh, 230px); padding: 14px 12px 12px; }
+  .site-update-toast { right: 12px; bottom: 12px; grid-template-columns: 7px minmax(0, 1fr) 26px; gap: 9px; width: min(320px, calc(100vw - 24px)); max-height: min(52vh, 360px); overflow-y: auto; padding: 14px 12px 12px; }
   .site-update-toast__eyebrow { margin-bottom: 6px; font-size: .58rem; }
   .site-update-toast__title { display: -webkit-box; overflow: hidden; margin-bottom: 5px; font-size: 1rem; line-height: 1.08; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
   .site-update-toast__message { display: -webkit-box; overflow: hidden; font-size: .75rem; line-height: 1.4; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }

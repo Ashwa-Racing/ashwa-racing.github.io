@@ -37,15 +37,8 @@ async function loadLatestBlogUpdate() {
       url: `/blog/${encodeURIComponent(post.slug)}`,
       linkLabel: "Read the article"
     };
-    const storageKey = "ashwa-seen-blog-updates-v1";
-    let seenIds = [];
-    try {
-      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
-      seenIds = Array.isArray(saved) ? saved : typeof saved === "string" ? [saved] : [];
-    } catch (error) {}
-    if (seenIds.includes(update.id)) return;
     let minimizedId = "";
-    try { minimizedId = localStorage.getItem("ashwa-minimized-blog-update") || ""; } catch (error) {}
+    try { minimizedId = localStorage.getItem("ashwa-minimized-blog-update-v2") || ""; } catch (error) {}
     const { id, platform, title, message, url, linkLabel } = update;
     if (![id, platform, title, message, url, linkLabel].every(value => typeof value === "string" && value.trim())) return;
 
@@ -65,12 +58,12 @@ async function loadLatestBlogUpdate() {
         <div class="site-update-toast__content">
           <p class="site-update-toast__eyebrow"></p>
           <h2 class="site-update-toast__title"></h2>
-          <p class="site-update-toast__message"></p>
-          <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
-          <a class="site-update-toast__campaign" href="/crowdfunding.html">
+          <a class="site-update-toast__campaign" href="/crowdfunding.html" target="_blank" rel="noopener noreferrer">
             <span class="site-update-toast__campaign-label">Support the next build</span>
             <span class="site-update-toast__campaign-title">Help Ashwa Racing get to the grid <span aria-hidden="true">&rarr;</span></span>
           </a>
+          <p class="site-update-toast__message"></p>
+          <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
         </div>
         <button class="site-update-toast__close" type="button" aria-label="Minimize update">×</button>`;
       toast.querySelector(".site-update-toast__eyebrow").textContent = `New on ${platform}`;
@@ -86,19 +79,13 @@ async function loadLatestBlogUpdate() {
         minimizeButton.textContent = minimized ? "AR" : "×";
         minimizeButton.setAttribute("aria-label", minimized ? "Show latest blog update" : "Minimize update");
         try {
-          if (minimized) localStorage.setItem("ashwa-minimized-blog-update", id);
-          else localStorage.removeItem("ashwa-minimized-blog-update");
+          if (minimized) localStorage.setItem("ashwa-minimized-blog-update-v2", id);
+          else localStorage.removeItem("ashwa-minimized-blog-update-v2");
         } catch (error) {}
       };
       minimizeButton.textContent = minimizedId === id ? "AR" : "×";
       minimizeButton.setAttribute("aria-label", minimizedId === id ? "Show latest blog update" : "Minimize update");
       minimizeButton.addEventListener("click", () => setMinimized(!toast.classList.contains("is-minimized")));
-      link.addEventListener("click", () => {
-        try {
-          localStorage.setItem(storageKey, JSON.stringify([...new Set([...seenIds, id])].slice(-50)));
-          localStorage.removeItem("ashwa-minimized-blog-update");
-        } catch (error) {}
-      });
       document.body.appendChild(toast);
       requestAnimationFrame(() => toast.classList.add("is-visible"));
     }, 900);
