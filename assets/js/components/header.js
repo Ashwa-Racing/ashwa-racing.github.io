@@ -34,7 +34,7 @@ async function loadLatestBlogUpdate() {
       platform: "the blog",
       title: post.title,
       message: post.excerpt || "A new article has been published on the Ashwa Racing blog.",
-      url: `/blog-post?post=${encodeURIComponent(post.slug)}`,
+      url: `/blog/${encodeURIComponent(post.slug)}`,
       linkLabel: "Read the article"
     };
     const storageKey = "ashwa-seen-blog-updates-v1";

@@ -1,29 +1,15 @@
 (() => {
   'use strict';
 
+  async function init() {
+  const response = await fetch('assets/data/newsletters.json');
+  if (!response.ok) throw new Error(`Could not load newsletter data (${response.status}).`);
+  const files = await response.json();
+  if (!Array.isArray(files)) throw new Error('Newsletter data must be a JSON array.');
+
   const assetHost = 'https://assets.ashwaracing.org';
   const pdfBase = `${assetHost}/pdfs/newsletters/`;
   const imageBase = `${assetHost}/images/newsletters/`;
-  const files = [
-    '2026-06-general.pdf', '2026-03-general.pdf', '2026-02-general.pdf', '2026-01-general.pdf',
-    '2025-12-general.pdf', '2025-10-general.pdf', '2025-07-general.pdf', '2025-06-general.pdf',
-    '2025-05-general.pdf', '2025-04-general.pdf', '2025-03-general.pdf', '2025-02-general.pdf',
-    '2023-03-general.pdf', '2023-02-general.pdf', '2019-11-general.pdf', '2019-09-general.pdf',
-    '2019-08-general.pdf', '2019-03-general.pdf', '2018-12-general.pdf', '2018-11-general.pdf',
-    '2018-10-general.pdf', '2018-09-general.pdf', '2018-08-general.pdf', '2018-07-general.pdf',
-    '2018-06-general.pdf', '2018-05-general.pdf', '2018-03-general.pdf', '2018-02-general.pdf',
-    '2017-11-general.pdf', '2017-09-alumni.pdf', '2017-09-general.pdf', '2017-08-alumni.pdf',
-    '2017-08-general.pdf', '2017-07-alumni.pdf', '2017-07-general.pdf', '2017-06-general.pdf',
-    '2017-05-general.pdf', '2017-04-alumni.pdf', '2017-04-combustion.pdf', '2017-04-hybrid.pdf',
-    '2017-02-alumni.pdf', '2017-02-combustion.pdf', '2017-02-hybrid.pdf', '2016-12-combustion.pdf',
-    '2016-12-hybrid.pdf', '2016-11-alumni.pdf', '2016-11-combustion.pdf', '2016-11-hybrid.pdf',
-    '2016-10-alumni.pdf', '2016-10-combustion.pdf', '2016-10-hybrid.pdf', '2016-09-alumni.pdf',
-    '2016-09-combustion.pdf', '2016-09-hybrid.pdf', '2016-07-alumni.pdf', '2016-04-alumni.pdf',
-    '2015-12-alumni.pdf', '2015-12-combustion.pdf', '2015-12-hybrid.pdf', '2015-11-alumni.pdf',
-    '2015-11-combustion.pdf', '2015-11-hybrid.pdf', '2015-09-alumni.pdf', '2015-09-combustion.pdf',
-    '2015-09-hybrid.pdf', '2015-04-hybrid.pdf', '2015-03-hybrid.pdf', '2015-02-hybrid.pdf',
-    '2015-01-hybrid.pdf'
-  ];
   const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const typeNames = { general: 'General', hybrid: 'Hybrid', combustion: 'Combustion', alumni: 'Alumni' };
   const newsletters = files.map(file => {
@@ -94,11 +80,9 @@
       group.forEach((item, index) => {
         const link = document.createElement('a');
         link.className = 'newsletter-link';
-        link.href = item.pdf;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
+        link.href = issueUrl(item);
         link.textContent = typeNames[item.type] || item.type;
-        link.setAttribute('aria-label', `Open ${item.title} ${typeNames[item.type] || item.type} newsletter PDF`);
+        link.setAttribute('aria-label', `Read ${item.title} ${typeNames[item.type] || item.type} newsletter`);
         link.dataset.edition = String(index + 1).padStart(2, '0');
         link.addEventListener('click', event => {
           if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -240,9 +224,34 @@
   }
 
   function issueUrl(item) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('issue', `${item.year}-${item.month}-${item.type}`);
-    return url;
+    return `/newsletters/${item.year}-${item.month}-${item.type}`;
+  }
+
+  function setIssueMetadata(item) {
+    const canonical = item
+      ? `${window.location.origin}/newsletters/${item.year}-${item.month}-${item.type}`
+      : `${window.location.origin}/newsletters`;
+    const issueTitle = item
+      ? `${item.title} ${typeNames[item.type] || item.type} Newsletter | Ashwa Racing`
+      : 'Newsletters | Ashwa Racing';
+    const description = item
+      ? `Read the Ashwa Racing ${item.title} ${typeNames[item.type] || item.type} newsletter, with Formula Student engineering updates and team news.`
+      : 'Read newsletters from Ashwa Racing, with Formula Student engineering updates and team news.';
+    document.title = issueTitle;
+    const canonicalEl = document.querySelector('link[rel="canonical"]');
+    if (canonicalEl) canonicalEl.href = canonical;
+    const setMeta = (selector, value) => {
+      const element = document.head.querySelector(selector);
+      if (element) element.content = value;
+    };
+    setMeta('meta[name="description"]', description);
+    setMeta('meta[property="og:title"]', issueTitle);
+    setMeta('meta[property="og:description"]', description);
+    setMeta('meta[property="og:url"]', canonical);
+    setMeta('meta[property="og:image"]', item?.cover || `${assetHost}/images/favicon/header.png`);
+    setMeta('meta[name="twitter:title"]', issueTitle);
+    setMeta('meta[name="twitter:description"]', description);
+    setMeta('meta[name="twitter:image"]', item?.cover || `${assetHost}/images/favicon/header.png`);
   }
 
   async function openReader(item, { updateUrl = true } = {}) {
@@ -250,6 +259,7 @@
     lastFocus = document.activeElement;
     reader.hidden = false;
     document.body.classList.add('reader-open');
+    setIssueMetadata(item);
     dialog.focus();
     readerTitle.textContent = item.title;
     if (updateUrl) history.pushState({ newsletterReader: true }, '', issueUrl(item));
@@ -304,10 +314,16 @@
     reader.classList.remove('is-expanded');
     reader.hidden = true;
     const url = new URL(window.location.href);
-    if (url.searchParams.has('issue')) {
+    if (url.pathname.match(/^\/newsletters\/\d{4}-\d{2}-[a-z]+\/?$/)) {
+      url.pathname = '/newsletters';
+      url.searchParams.delete('issue');
+      history.replaceState({}, '', url);
+      document.querySelector('.newsletter-issue-landing')?.remove();
+    } else if (url.searchParams.has('issue')) {
       url.searchParams.delete('issue');
       history.replaceState({}, '', url);
     }
+    setIssueMetadata(null);
     document.body.classList.remove('reader-open');
     if (pdfDocument) { pdfDocument.destroy(); pdfDocument = null; }
     renderTasks.forEach(task => task.cancel());
@@ -325,7 +341,9 @@
     }
   });
   window.addEventListener('popstate', () => {
-    const key = new URL(window.location.href).searchParams.get('issue');
+    const url = new URL(window.location.href);
+    const routeKey = url.pathname.match(/^\/newsletters\/(\d{4}-\d{2}-[a-z]+)\/?$/)?.[1];
+    const key = url.searchParams.get('issue') || routeKey;
     const item = newsletters.find(entry => `${entry.year}-${entry.month}-${entry.type}` === key);
     if (item) openReader(item, { updateUrl: false });
     else if (!reader.hidden) closeReader();
@@ -395,7 +413,12 @@
   });
 
   render(newsletters);
-  const initialIssue = new URL(window.location.href).searchParams.get('issue');
+  const initialUrl = new URL(window.location.href);
+  const routeIssue = initialUrl.pathname.match(/^\/newsletters\/(\d{4}-\d{2}-[a-z]+)\/?$/)?.[1];
+  const initialIssue = initialUrl.searchParams.get('issue') || routeIssue;
   const initialItem = newsletters.find(item => `${item.year}-${item.month}-${item.type}` === initialIssue);
   if (initialItem) openReader(initialItem, { updateUrl: false });
+  }
+
+  init().catch(error => console.error('Newsletter archive could not be initialized:', error));
 })();

@@ -80,7 +80,7 @@
   };
 
   const postURL = slug =>
-    `blog-post?post=${encodeURIComponent(slug)}`;
+    `/blog/${encodeURIComponent(slug)}`;
 
   const renderFeatured = post => {
     if (!post) {
