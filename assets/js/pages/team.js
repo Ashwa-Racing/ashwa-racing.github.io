@@ -39,6 +39,7 @@ let activeSubsystem = "All";
 const profileParams = new URLSearchParams(window.location.search);
 const profileName = profileParams.get("member");
 const profileYear = profileParams.get("year");
+let profileDialog = null;
 
 // ─── DOM refs ──────────────────────────────────────────────────
 const grid        = document.getElementById("member-profiles-grid");
@@ -204,8 +205,7 @@ function renderMembers(year, subsystem) {
     const results = teamData
       .filter(m =>
         m.year === year &&
-        (subsystem === "All" || m.subsystem.includes(subsystem)) &&
-        (!profileName || (m.name === profileName && (!profileYear || m.year === profileYear)))
+        (subsystem === "All" || m.subsystem.includes(subsystem))
       )
       .sort((a, b) => roleSortWeight(a) - roleSortWeight(b));
 
@@ -244,6 +244,72 @@ function renderMembers(year, subsystem) {
 
     grid.style.opacity = "1";
   }, 160);
+}
+
+function closeMemberProfile() {
+  if (profileDialog?.open) profileDialog.close();
+}
+
+function finishMemberProfile() {
+  if (!profileDialog) return;
+
+  activeSubsystem = "All";
+  subFilter.querySelectorAll(".filter-btn").forEach(btn => {
+    const isAll = btn.closest(".year-item")?.dataset.subsystem === "All";
+    btn.classList.toggle("active", isAll);
+  });
+
+  const targetYear = profileDialog.dataset.year;
+  activeYear = targetYear;
+  yearFilter.querySelectorAll(".year-item").forEach(item => {
+    item.querySelector(".filter-btn")?.classList.toggle("active", item.dataset.year === targetYear);
+  });
+
+  const url = new URL(window.location.href);
+  url.searchParams.delete("member");
+  url.searchParams.set("year", targetYear);
+  window.history.replaceState({}, "", `${url.pathname}?${url.searchParams.toString()}${url.hash}`);
+  renderMembers(targetYear, "All");
+  document.getElementById("filters-start")?.scrollIntoView({ block: "start", behavior: "smooth" });
+}
+
+function openMemberProfile(member) {
+  const dialog = document.createElement("dialog");
+  dialog.className = "member-profile-dialog";
+  dialog.setAttribute("aria-labelledby", "member-profile-title");
+  dialog.dataset.year = member.year;
+  dialog.innerHTML = `
+    <button class="member-profile-dialog__close" type="button" aria-label="Close ${member.name}'s profile">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <p class="member-profile-dialog__eyebrow">Ashwa Racing · ${member.year}</p>
+    <div class="member-profile-dialog__content"></div>
+  `;
+
+  const card = createMemberCard(member);
+  card.classList.add("member-profile-feature");
+  const nameLink = card.querySelector(".member-profile-link");
+  const title = document.createElement("h2");
+  title.className = "member-name member-profile-link";
+  title.id = "member-profile-title";
+  title.textContent = member.name;
+  nameLink.replaceWith(title);
+  dialog.querySelector(".member-profile-dialog__content").appendChild(card);
+
+  dialog.querySelector(".member-profile-dialog__close").addEventListener("click", closeMemberProfile);
+  dialog.addEventListener("click", event => {
+    if (event.target === dialog) closeMemberProfile();
+  });
+  dialog.addEventListener("close", () => {
+    finishMemberProfile();
+    dialog.remove();
+    profileDialog = null;
+  }, { once: true });
+
+  document.body.appendChild(dialog);
+  profileDialog = dialog;
+  dialog.showModal();
+  dialog.querySelector(".member-profile-dialog__close").focus();
 }
 
 // ─── 3D Easter Egg ────────────────────────────────────────────
@@ -421,7 +487,22 @@ window.addEventListener("load", async () => {
   }
 
   renderMembers(activeYear, activeSubsystem);
-  if (profileName) document.getElementById("filters-start").scrollIntoView({ block: "start" });
+  if (profileName) {
+    const member = teamData.find(m => m.name === profileName && (!profileYear || m.year === profileYear));
+    if (member) {
+      activeYear = member.year;
+      const matchingYear = [...yearFilter.children].find(el => el.dataset.year === member.year);
+      if (matchingYear) {
+        yearFilter.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
+        matchingYear.querySelector(".filter-btn")?.classList.add("active");
+      }
+      openMemberProfile(member);
+    } else {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("member");
+      window.history.replaceState({}, "", `${url.pathname}?${url.searchParams.toString()}${url.hash}`);
+    }
+  }
 
   // Centre the active filter items on load
   setTimeout(() => {

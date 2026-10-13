@@ -233,12 +233,47 @@ html[data-theme="light"] .team-section {
 .back-to-top { position: fixed; z-index: 1000; right: var(--site-gutter); bottom: 24px; display: none; width: 44px; height: 44px; align-items: center; justify-content: center; color: #fff; background: var(--red); border: 0; cursor: pointer; box-shadow: 0 8px 24px rgba(232,0,29,.25); }
 .back-to-top:hover { background: var(--red-dark); }
 
+.member-profile-dialog {
+  position: fixed;
+  inset: 50% auto auto 50%;
+  width: min(900px, calc(100vw - 32px));
+  max-width: none;
+  max-height: min(780px, calc(100dvh - 32px));
+  overflow: auto;
+  padding: 28px;
+  transform: translate(-50%, -50%);
+  color: var(--text-strong);
+  background: var(--page-bg);
+  border: 1px solid var(--border-strong);
+  box-shadow: 0 24px 90px rgba(0,0,0,.65);
+}
+.member-profile-dialog::backdrop { background: rgba(0,0,0,.82); backdrop-filter: blur(7px); }
+.member-profile-dialog__eyebrow { margin: 0 52px 16px 0; color: var(--red); font: 700 .72rem/1.2 var(--display); letter-spacing: .16em; text-transform: uppercase; }
+.member-profile-dialog__close { position: absolute; z-index: 5; top: 16px; right: 16px; display: grid; width: 42px; height: 42px; place-items: center; color: var(--text-strong); background: var(--card-bg); border: 1px solid var(--border-strong); cursor: pointer; font-size: 1.8rem; line-height: 1; }
+.member-profile-dialog__close:hover { color: #fff; background: var(--red); border-color: var(--red); }
+.member-profile-feature { width: 100%; height: clamp(360px, 62vh, 560px); grid-template-columns: minmax(260px, .9fr) 1fr; grid-template-rows: 1fr; animation: none; }
+.member-profile-feature:hover { transform: none; }
+.member-profile-feature .member-card-image { min-height: 0; }
+.member-profile-feature .member-card-content { overflow: auto; justify-content: center; padding: clamp(22px, 4vw, 42px); }
+.member-profile-feature .member-role { font-size: .9rem; }
+.member-profile-feature .member-subsystem { margin-top: 12px; font-size: .95rem; }
+.member-profile-feature .member-social { gap: 9px; margin-top: 18px; }
+.member-profile-feature .member-social a { width: 40px; height: 40px; }
+.member-profile-feature.has-more .member-experience { position: static; display: block; max-height: none; overflow: visible; margin: 18px 0 0; padding: 18px 0 0; background: transparent; border-top: 1px solid var(--border); box-shadow: none; }
+.member-profile-feature.has-more .member-experience p { font-size: .9rem; }
+.member-profile-feature .member-close,
+.member-profile-feature .member-expand { display: none !important; }
+
 @media (min-width: 1500px) { .member-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
 @media (max-width: 1050px) {
   .team-hero { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 36px; }
   .member-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 @media (max-width: 760px) {
+  .member-profile-dialog { width: min(540px, calc(100vw - 20px)); max-height: calc(100dvh - 20px); padding: 22px 14px 14px; }
+  .member-profile-dialog__eyebrow { margin: 0 48px 12px 4px; }
+  .member-profile-feature { height: auto; min-height: 0; grid-template-columns: 1fr; grid-template-rows: minmax(230px, 36vh) auto; }
+  .member-profile-feature .member-card-content { min-height: 190px; padding: 20px; }
   .team-hero { min-height: 0; grid-template-columns: 1fr; gap: 22px; padding-top: 76px; padding-bottom: 42px; }
   .team-hero__content { justify-self: start; }
   .team-hero h1 { font-size: clamp(3.8rem, 14vw, 6rem); margin-bottom: 17px; }
