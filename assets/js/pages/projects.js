@@ -148,6 +148,14 @@ const progContent =
     "prog-content"
   );
 
+progContent?.addEventListener("click", event => {
+  const closeButton = event.target.closest("[data-close-technical-specs]");
+  const disclosure = closeButton?.closest(".prog-technical-disclosure");
+  if (!disclosure) return;
+  disclosure.open = false;
+  disclosure.querySelector(":scope > summary")?.focus();
+});
+
 const progImageAccent =
   document.getElementById(
     "prog-image-accent"
@@ -474,6 +482,10 @@ function renderYear(
   const currentToken =
     renderToken;
 
+  if (progContent) {
+    progContent.scrollTop = 0;
+  }
+
   slideIndex = 0;
   imageRecords = [];
 
@@ -519,12 +531,11 @@ function renderYear(
             </strong>
           </div>
 
+          ${specs.acceleration ? `
           <div class="prog-spec">
-            <span>0–100</span>
-            <strong>
-              ${escapeHTML(specs.acceleration || "—")}
-            </strong>
-          </div>
+            <span>${specs.accelerationLabel || "0–100"}</span>
+            <strong>${escapeHTML(specs.acceleration)}</strong>
+          </div>` : ""}
 
           <div class="prog-spec">
             <span>Top Speed</span>
@@ -533,10 +544,57 @@ function renderYear(
             </strong>
           </div>
 
+          ${specs.lateralAcceleration ? `<div class="prog-spec"><span>Lateral Acceleration</span><strong>${escapeHTML(specs.lateralAcceleration)}</strong></div>` : ""}
+          ${specs.fuelEconomy ? `<div class="prog-spec"><span>Fuel Economy</span><strong>${escapeHTML(specs.fuelEconomy)}</strong></div>` : ""}
+          ${specs.powerToWeight ? `<div class="prog-spec"><span>Power-to-weight</span><strong>${escapeHTML(specs.powerToWeight)}</strong></div>` : ""}
+
         </div>
       `
       : "";
 
+  const technicalDetailsHTML = Object.entries(data.technicalDetails || {})
+    .map(([group, items]) => `
+      <div class="prog-technical-group">
+        <h3>${escapeHTML(group)}</h3>
+        <ul>${items.map(item => `<li>${escapeHTML(item)}</li>`).join("")}</ul>
+      </div>
+    `).join("");
+  const technicalDetailsSection = technicalDetailsHTML
+    ? `<details class="prog-desc-disclosure prog-technical-disclosure"><summary>Technical specifications</summary><div class="prog-technical-details">${technicalDetailsHTML}</div><button class="prog-technical-close" type="button" data-close-technical-specs>Close technical specifications</button></details>`
+    : "";
+  const resultCategory = value => {
+    const text = String(value || "").toLowerCase();
+    if (/award|best asian/.test(text)) {
+      return `award:${text.replace(/formula[^-]*-?/g, "").replace(/award/g, "").replace(/[^a-z]+/g, " ").trim()}`;
+    }
+    if (/overall/.test(text)) return "overall";
+    if (/project management/.test(text)) return "project management";
+    if (/acceleration/.test(text)) {
+      const className = /electric/.test(text) ? "electric" : /hybrid/.test(text) ? "hybrid" : "";
+      return `acceleration ${className}`.trim();
+    }
+    if (/design/.test(text)) return "design";
+    if (/business/.test(text)) return "business";
+    if (/cost/.test(text)) return "cost";
+    if (/autocross/.test(text)) return "autocross";
+    if (/endurance/.test(text)) return "endurance";
+    if (/skidpad/.test(text)) return "skidpad";
+    if (/fuel efficiency/.test(text)) return "fuel efficiency";
+    if (/technical inspection/.test(text)) return "technical inspection";
+    return text.replace(/[^a-z0-9]+/g, " ").trim();
+  };
+  const resultEntries = (data.eventResults || []).map(({ event, result }) => ({
+    key: resultCategory(event),
+    html: `<li><strong>${escapeHTML(event)}</strong> - ${escapeHTML(result)}</li>`
+  }));
+  const resultKeys = new Set(resultEntries.map(entry => entry.key));
+  (data.achievements || []).forEach(achievement => {
+    const key = resultCategory(achievement);
+    if (resultKeys.has(key)) return;
+    resultKeys.add(key);
+    resultEntries.push({ key, html: `<li>${escapeHTML(achievement)}</li>` });
+  });
+  const resultItems = resultEntries.map(entry => entry.html).join("");
   const descriptionOpen =
     !window.matchMedia("(max-width: 860px)").matches;
 
@@ -563,15 +621,6 @@ function renderYear(
       )
       .join("");
 
-  const achievementItems =
-    (data.achievements || [])
-      .map(
-        achievement =>
-          `<li>${escapeHTML(achievement)}</li>`
-      )
-      .join("");
-
-
   /* Content */
 
   if (progContent) {
@@ -579,7 +628,7 @@ function renderYear(
       <div>
 
         <div class="prog-section-label">
-          Updates · ${escapeHTML(year)}
+          Specs · ${escapeHTML(year)}
         </div>
 
         <ul class="prog-changes">
@@ -595,16 +644,18 @@ function renderYear(
 
       ${specHTML}
 
+      ${technicalDetailsSection}
+
       ${badgeHTML}
 
       <div>
 
         <div class="prog-section-label">
-          Achievements
+          Results
         </div>
 
         <ul class="prog-achievements">
-          ${achievementItems}
+          ${resultItems}
         </ul>
 
       </div>

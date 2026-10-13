@@ -12,23 +12,110 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-05-C/7.jpg"
         ],
         "changes": [
+          "RZ05 Combustion - First generation prototype",
           "Founding prototype — RZ05 Combustion",
-          "Mild steel spaceframe chassis (TIG welded)",
-          "Honda CBR600 600cc powertrain integration",
+          "Mild steel spaceframe chassis (arc welded)",
+          "Yamaha R6 600cc powertrain integration",
           "In-house intake, exhaust & muffler development",
           "Double wishbone push-rod suspension architecture"
         ],
-        "desc": "RZ05 marked Ashwa Racing's historic debut at Formula SAE Australasia, becoming the first student-built Formula Student car from Asia to compete at the event. It laid the technical and competitive foundation of the combustion programme.",
+        "desc": "Ashwa Racing's first prototype, RZ05 Combustion, was the first student-built Formula Student vehicle in Asia to compete at Formula SAE Australasia. The event record lists Best Cost and Best Asian Team, while the founding account also reports a Best Endeavour Award. RZ05 established the foundation of Ashwa Racing's combustion programme.",
         "specs": {
           "weight": "350 kg",
-          "power": "60 HP",
-          "acceleration": "4.50s",
-          "topSpeed": "100 kmph"
+          "power": "65 HP",
+          "acceleration": "5.10s",
+          "accelerationLabel": "0-75 km/h",
+          "topSpeed": "100 km/h",
+          "lateralAcceleration": "1.4 g",
+          "fuelEconomy": "5 km/L",
+          "powerToWeight": "0.084"
+        },
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe, arc welded and powder coated",
+            "Aluminium honeycomb bulkhead",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 5-point harness"
+          ],
+          "Suspension": [
+            "Double wishbone, arc-welded suspension",
+            "In-house mild steel uprights and hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear mild steel bell cranks",
+            "Outboard Kinetic dampers and Kinetic springs"
+          ],
+          "Steering": [
+            "In-house custom rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Brakes": [
+            "Independent front Bajaj Pulsar brakes",
+            "Single rear Enfield brake mounted on the differential",
+            "Custom pedal box with three independent master cylinders"
+          ],
+          "Engine and drivetrain": [
+            "Yamaha R6, 600 cc, DOHC, four valves per cylinder",
+            "In-house RAM intake with K&N air filter",
+            "In-house 4-2-1 exhaust and stainless steel muffler",
+            "Chain drive",
+            "Engine-integrated 6-speed sequential gearbox"
+          ],
+          "Fuel and cooling": [
+            "Carburetted fuel system with custom fuel rail",
+            "8 litre fuel tank",
+            "Water cooled with a standard Maruti 800 radiator",
+            "Silicone radiator-routing bends"
+          ],
+          "Systems, wheels and driver apparel": [
+            "G-PRO DAQ-DASH",
+            "Aura 13-inch rims with JK Tyre semi-slick tyres",
+            "SFI-approved G-FORCE suit, arm restraints, shoes and helmet"
+          ]
         },
         "achievements": [
-          "Best Endeavour Award — Formula SAE Australasia",
-          "Best Cost Award — Formula SAE Australasia",
-          "First student formula entry from Asia at FSAE Australasia"
+          "Best Cost Award - Formula SAE Australasia",
+          "Best Endeavour Award - Formula SAE Australasia",
+          "Best Asian Team - Formula SAE Australasia",
+          "First student-built Formula Student vehicle in Asia to compete at Formula SAE Australasia"
+        ],
+        "eventResults": [
+          {
+            "event": "Business Presentation",
+            "result": "40/50"
+          },
+          {
+            "event": "Design Presentation",
+            "result": "80/150"
+          },
+          {
+            "event": "Cost Presentation",
+            "result": "99/100"
+          },
+          {
+            "event": "Acceleration",
+            "result": "DNF"
+          },
+          {
+            "event": "Skidpad",
+            "result": "DNF"
+          },
+          {
+            "event": "Autocross",
+            "result": "DNF"
+          },
+          {
+            "event": "Endurance",
+            "result": "DNF"
+          },
+          {
+            "event": "Overall Score",
+            "result": "219/1000"
+          },
+          {
+            "event": "Rank",
+            "result": "30/40"
+          }
         ]
       },
       "2006": {
@@ -45,23 +132,89 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-06-C/postevent/3.jpg"
         ],
         "changes": [
-          "RZ06 Combustion — second-generation platform",
-          "First student-built vehicle with carbon-fiber reinforced steel frame",
-          "Major structural redesign over RZ05",
-          "Improved weight reduction programme",
-          "Integration of MOTEC M800 programmable ECU"
+          "RZ06 Combustion - Second generation prototype",
+          "RZ06 Combustion - major leap in design over the RZ05 predecessor",
+          "First student-built vehicle with a carbon-fibre-reinforced steel frame",
+          "MOTEC M800 reprogrammable ECU integration",
+          "Honda CBR6 600 cc powertrain integration",
+          "Refined suspension, braking and cooling systems"
         ],
-        "desc": "RZ06 marked a significant technological leap over its predecessor. Featuring a carbon-fiber reinforced steel frame, it represented a major structural and design advancement for Ashwa Racing at Formula SAE Australasia.",
+        "desc": "RZ06 was described as a decade ahead in design compared with its predecessor, RZ05. It was the first student-built vehicle with a carbon-fibre-reinforced steel frame and secured the Best Asian Entry Award at Formula SAE Australasia.",
         "specs": {
           "weight": "300 kg",
           "power": "70 HP",
           "acceleration": "4.21s",
-          "topSpeed": "100 kmph"
+          "accelerationLabel": "0-75 km/h",
+          "topSpeed": "100 km/h",
+          "lateralAcceleration": "1.4 g",
+          "fuelEconomy": "6 km/L"
         },
         "achievements": [
-          "Best Asian Entry Award — Formula SAE Australasia",
-          "8th Place — Cost Event (FSAE Australasia)",
-          "Overall 20th Position — FSAE Australasia"
+          "Best Asian Entry Award - Formula SAE Australasia",
+          "8th Place - Cost Event (Formula SAE Australasia)",
+          "20th Overall - Formula SAE Australasia"
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe, arc welded and powder coated",
+            "Aluminium honeycomb bulkhead",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 5-point harness",
+            "Carbon-fibre-reinforced steel frame"
+          ],
+          "Engine": [
+            "Honda CBR6, 600 cc, DOHC, four valves per cylinder",
+            "In-house RAM intake with K&N air filter",
+            "In-house 4-2-1 exhaust and stainless steel muffler"
+          ],
+          "Suspension": [
+            "Double wishbone, arc-welded suspension",
+            "In-house aluminium uprights and hubs",
+            "In-house mild steel hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear aluminium bell cranks",
+            "Outboard Hunter dampers and custom-made springs"
+          ],
+          "Cooling": [
+            "Water cooled with a Dana radiator",
+            "Silicone radiator-routing bends"
+          ],
+          "Gearbox": [
+            "Integrated with the engine",
+            "6-speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front and rear dual-piston Wilwood calipers",
+            "Custom pedal box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "In-house custom rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Tyres": [
+            "BBS 13-inch rims",
+            "Hoosier slick tyres"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ]
+        },
+        "eventResults": [
+          {
+            "event": "Formula SAE Australasia - Overall rank",
+            "result": "20th"
+          },
+          {
+            "event": "Formula SAE Australasia - Cost Event",
+            "result": "8th"
+          },
+          {
+            "event": "Formula SAE Australasia - Best Asian Entry Award",
+            "result": "Awarded"
+          }
         ]
       },
       "2007": {
@@ -82,23 +235,75 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-07-C/5.jpg"
         ],
         "changes": [
-          "RZ07 Combustion — first European campaign",
+          "RZ07 Combustion - Third generation prototype",
+          "RZ07 Combustion ? Ashwa Racing's first European campaign",
           "Competed at Formula Student Germany",
-          "Refined structural weight reduction (280 kg total weight)",
-          "Improved acceleration performance (4.05 sec)",
-          "MOTEC M800 programmable ECU integration"
+          "Young Achiever Award from Rotary International (2007)",
+          "Robust industry-institute partnership platform",
+          "Honda CBR 600 cc powertrain with in-house intake and exhaust systems"
         ],
-        "desc": "RZ07 marked Ashwa Racing's first European competition appearance at Formula Student Germany. The car represented a major milestone in the team's global expansion and industry collaboration efforts.",
+        "desc": "The 2007 combustion prototype, RZ07, contested Ashwa Racing's first European event at Formula Student Germany. In 2007, the team also received Rotary International's Young Achiever Award for creating a robust industry-institute partnership platform.",
         "specs": {
           "weight": "280 kg",
           "power": "73 HP",
           "acceleration": "4.05s",
-          "topSpeed": "100 kmph"
+          "accelerationLabel": "0-75 km/h",
+          "topSpeed": "100 km/h",
+          "lateralAcceleration": "1.4 g",
+          "fuelEconomy": "6.5 km/L",
+          "powerToWeight": "0.11"
         },
         "achievements": [
-          "First European Campaign — Formula Student Germany",
-          "Young Achiever Award — Rotary International (2007)"
-        ]
+          "Formula Student Germany - Ashwa Racing's first European event",
+          "Young Achiever Award - Rotary International (2007)"
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe, TIG welded and powder coated",
+            "Aluminium honeycomb bulkhead",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 5-point harness"
+          ],
+          "Engine": [
+            "Honda CBR, 600 cc, DOHC, four valves per cylinder",
+            "In-house RAM intake with K&N air filter",
+            "In-house 4-2-1 exhaust and stainless steel muffler",
+            "Chain drive"
+          ],
+          "Suspension": [
+            "Double wishbone, arc-welded suspension",
+            "In-house aluminium uprights and mild steel hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear aluminium bell cranks",
+            "Outboard ZF Sachs adjustable dampers and custom-made springs"
+          ],
+          "Cooling": [
+            "Water cooled with a Dana radiator",
+            "Silicone radiator-routing bends"
+          ],
+          "Gearbox": [
+            "Integrated with the engine",
+            "6-speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front and rear dual-piston Wilwood calipers",
+            "Custom pedal box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "In-house custom rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Tyres": [
+            "BBS 13-inch rims",
+            "Continental slick tyres"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ]
+        }
       },
       "2008": {
         "images": [
@@ -112,23 +317,71 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-08-C/13.jpg"
         ],
         "changes": [
-          "RZ08 Combustion — evolutionary refinement of 2005–2007 platforms",
-          "Precision CNC manufacturing introduced across key components",
-          "Improved intake casting design for complex geometry",
-          "Enhanced partner and supplier integration programme",
-          "Further structural and weight optimisation"
+          "RZ08 Combustion - Fourth generation prototype",
+          "Combined design benchmarks from the 2005-2007 prototypes",
+          "Participated at Formula Student Germany",
+          "Strengthened partner, supplier, and vendor relations"
         ],
-        "desc": "RZ08 represented the consolidation of three years of combustion development. Competing at Formula Student Germany, the platform focused on precision manufacturing, improved intake architecture, and deeper industry collaboration.",
+        "desc": "Ashwa Racing's 2008 prototype, RZ08, brought together design benchmarks from the 2005-2007 prototypes and competed at Formula Student Germany. The team also worked to strengthen relationships with its partners, suppliers, and vendors.",
         "specs": {
           "weight": "260 kg",
           "power": "73 HP",
           "acceleration": "3.90s",
-          "topSpeed": "100 kmph"
+          "accelerationLabel": "0-75 km/h",
+          "topSpeed": "100 km/h",
+          "lateralAcceleration": "1.4 g",
+          "fuelEconomy": "6.5 km/L",
+          "powerToWeight": "0.127"
         },
         "achievements": [
-          "Competed at Formula Student Germany (Hockenheimring)",
-          "Pioneered in-house precision CNC machining and intake casting"
-        ]
+          "Participated at Formula Student Germany"
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe, TIG welded and powder coated",
+            "Aluminium honeycomb bulkhead",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 5-point harness"
+          ],
+          "Engine": [
+            "Honda CBR6, 600 cc, DOHC, four valves per cylinder",
+            "In-house RAM intake with K&N air filter",
+            "In-house 4-2-1 exhaust and stainless steel muffler"
+          ],
+          "Suspension": [
+            "Double wishbone, arc-welded suspension",
+            "In-house aluminium uprights and mild steel hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear aluminium bell cranks",
+            "Outboard ZF Sachs adjustable dampers and custom-made springs"
+          ],
+          "Cooling": [
+            "Water cooled with a Dana radiator",
+            "Silicone radiator-routing bends"
+          ],
+          "Gearbox": [
+            "Integrated with the engine",
+            "6-speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front and rear dual-piston Wilwood calipers",
+            "Custom pedal box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "In-house custom rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Tyres": [
+            "BBS 13-inch rims",
+            "Continental slick tyres"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ]
+        }
       },
       "2009": {
         "images": [
@@ -138,24 +391,74 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-09-C/EVENT/8.jpg"
         ],
         "changes": [
-          "RZ09 Combustion — Italy & Germany campaign year",
-          "Robust industry–institute partnership platform",
+          "RZ09 Combustion - Fifth generation prototype",
+          "Participated at Formula Student Italy 2009",
           "Refined intake RAM system with K&N air filter",
           "Aluminium honeycomb bulkhead integration",
-          "Further weight optimisation to 255 kg"
+          "Weight: 255 kg"
         ],
-        "desc": "The 2009 prototype, RZ09, marked Ashwa Racing's strong international presence — competing at Formula Student Germany and earning recognition in Italy. The platform demonstrated engineering maturity, strong industry collaboration, and competitive dynamic performance.",
+        "desc": "The 2009 RZ09 combustion prototype participated at Formula Student Italy. It featured a Honda CBR 600 cc engine, a 255 kg spaceframe chassis, and an in-house designed intake and exhaust system.",
         "specs": {
           "weight": "255 kg",
           "power": "70 HP",
           "acceleration": "3.89s",
-          "topSpeed": "100 kmph"
+          "accelerationLabel": "0-75 km/h",
+          "topSpeed": "100 km/h",
+          "lateralAcceleration": "1.4 G",
+          "fuelEconomy": "7 km/L",
+          "powerToWeight": "0.124"
         },
         "achievements": [
-          "Best Endeavour Award — Formula Student Italy",
-          "Young Achiever Award — Rotary International",
-          "Competed at Formula Student Germany"
-        ]
+          "Participated at Formula Student Italy 2009"
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe, TIG welded and powder coated",
+            "Aluminium honeycomb bulkhead",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 5-point harness"
+          ],
+          "Engine": [
+            "Honda CBR, 600 cc, DOHC, four valves per cylinder",
+            "In-house RAM intake with K&N air filter",
+            "In-house 4-2-1 exhaust and stainless steel muffler",
+            "Chain drive"
+          ],
+          "Suspension": [
+            "Double wishbone, arc-welded suspension",
+            "In-house aluminium uprights and mild steel hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear aluminium bell cranks",
+            "Outboard ZF Sachs adjustable dampers and custom-made springs"
+          ],
+          "Fuel system": [
+            "Fuel injection with multiport injection",
+            "Custom fuel rail",
+            "8 litre fuel tank"
+          ],
+          "Gearbox": [
+            "Integrated with the engine",
+            "6-speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front and rear dual-piston Wilwood calipers",
+            "Custom pedal box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "In-house custom rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Tyres": [
+            "BBS 13-inch rims",
+            "Continental slick tyres"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ]
+        }
       },
       "2010": {
         "images": [
@@ -167,24 +470,83 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X-C/8.jpg"
         ],
         "changes": [
-          "RZ10 — Rebranded next-generation combustion platform",
+          "RZX - Sixth generation combustion prototype",
+          "RZ10 - rollout of Ashwa Racing's newly branded RZX range",
           "Chromoly 4130 TIG-welded spaceframe chassis",
-          "Revamped ergonomic driver-focused cockpit",
-          "Improved self-sustaining business model integration",
-          "Refined intake RAM and exhaust 4-2-1 system"
+          "Revamped driver ergonomics and cockpit design",
+          "Focus on an economically self-sufficient business model",
+          "Refined in-house intake, exhaust and vehicle systems"
         ],
-        "desc": "The year 2010 saw the rollout of RZ10 — a newly branded evolution of Ashwa's combustion platform. With improved ergonomics, structural refinement using Chromoly 4130, and stronger systems integration, the car marked a mature phase of development.",
+        "desc": "The 2010 RZX marked the rollout of Ashwa Racing's newly branded range of prototypes. It brought together the design of its predecessors, with a focus on revised ergonomics and an economically self-sufficient business model.",
         "specs": {
           "weight": "250 kg",
           "power": "75 HP",
-          "acceleration": "3.85s",
-          "topSpeed": "110 kmph"
+          "topSpeed": "100 km/h",
+          "lateralAcceleration": "1.4 g",
+          "fuelEconomy": "7.5 km/L",
+          "powerToWeight": "0.136"
         },
         "achievements": [
           "Formula Student Italy Campaign",
           "First Chromoly 4130 spaceframe chassis in combustion lineage",
           "Highest power output in combustion lineage till 2010 (75 HP)"
-        ]
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Chromoly 4130 spaceframe, TIG welded and powder coated",
+            "Aluminium honeycomb bulkhead",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 5-point harness"
+          ],
+          "Engine": [
+            "Honda CBR6, 600 cc, DOHC, four valves per cylinder",
+            "In-house RAM intake with K&N air filter",
+            "In-house 4-2-1 exhaust and stainless steel muffler",
+            "Chain drive"
+          ],
+          "Suspension": [
+            "Double wishbone, arc-welded suspension",
+            "In-house aluminium uprights and mild steel hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear aluminium bell cranks",
+            "Outboard ZF Sachs adjustable dampers and custom-made springs"
+          ],
+          "Cooling": [
+            "Water cooled with a Dana radiator",
+            "Silicone radiator-routing bends"
+          ],
+          "Gearbox": [
+            "Integrated with the engine",
+            "6-speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front and rear dual-piston Wilwood calipers",
+            "Custom pedal box",
+            "Tilton 75 master cylinder with adjustable bias",
+            "Self-offset rotors made of 1040 steel"
+          ],
+          "Steering": [
+            "In-house custom rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Fuel system": [
+            "Fuel injection with multiport injection",
+            "Custom fuel rail",
+            "8 litre fuel tank"
+          ],
+          "Tyres": [
+            "BBS 13-inch rims",
+            "Continental slick tyres"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ],
+          "Driver apparel": [
+            "SFI-approved G-FORCE suit, arm restraints, shoes and helmet"
+          ]
+        }
       },
       "2011": {
         "images": [
@@ -193,46 +555,180 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X1-C/8.jpg"
         ],
         "changes": [
-          "RZX1 — First generation of the RZX combustion lineage",
-          "Continuation of Chromoly 4130 TIG-welded spaceframe",
-          "Refined intake RAM and exhaust systems",
-          "Ergonomic cockpit redesign",
-          "Pneumatically actuated paddle shift integration"
+          "RZX1 - Seventh generation prototype",
+          "RZX1 - continued design development from its predecessor",
+          "Chromoly 4130 TIG-welded chassis",
+          "Honda CBR6 600 cc engine with butterfly-valve throttle actuation",
+          "Torsen limited-slip differential and #520 chain drive",
+          "Pneumatically actuated paddle-shift gear changes"
         ],
-        "desc": "In 2011, Ashwa Racing introduced RZX1 — marking the transition into the RZX combustion series. The car competed at Formula Student Italy and carried forward structural and drivetrain refinements from RZ10 while improving ergonomics and systems integration.",
+        "desc": "The 2011 combustion prototype, RZX1, continued the design direction established by its predecessor and competed at Formula Student Italy.",
         "specs": {
           "weight": "280 kg",
           "power": "70 HP",
-          "acceleration": "4.10s",
-          "topSpeed": "120 kmph"
+          "topSpeed": "120 km/h",
+          "lateralAcceleration": "1.4 G",
+          "fuelEconomy": "7 km/L",
+          "powerToWeight": "178.5 BHP/tonne"
         },
         "achievements": [
-          "Competed at Formula Student Italy",
-          "Debut of pneumatic paddle-shift transmission"
-        ]
+          "Participated at Formula Student Italy"
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Chromoly 4130 spaceframe, TIG welded and powder coated",
+            "Aluminium honeycomb bulkhead",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 5-point harness"
+          ],
+          "Engine": [
+            "Honda CBR6, 600 cc, DOHC, four valves per cylinder",
+            "In-house RAM intake with K&N air filter",
+            "In-house 4-2-1 exhaust and stainless steel muffler",
+            "Butterfly-valve throttle actuation"
+          ],
+          "Suspension": [
+            "Double wishbone, arc-welded suspension",
+            "In-house aluminium uprights and mild steel hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear aluminium bell cranks",
+            "Outboard ZF Sachs adjustable dampers and custom-made springs"
+          ],
+          "Cooling": [
+            "Water cooled with a Dana radiator and thermostatically controlled electric fan"
+          ],
+          "Driveline and gearshift": [
+            "Torsen limited-slip differential, 3:1 bias ratio",
+            "#520 chain",
+            "Pneumatically actuated paddle shift"
+          ],
+          "Brakes": [
+            "Front and rear Wilwood PS-1 calipers (1.15-inch / 1-inch)",
+            "Custom pedal frame",
+            "Tilton 75 master cylinder with adjustable bias",
+            "Self-offset rotors made of 1040 steel"
+          ],
+          "Steering": [
+            "Custom rack and pinion",
+            "Steering wheel with FIA quick release",
+            "Static Ackermann: 113.04%"
+          ],
+          "Tyres": [
+            "BBS 13-inch rims",
+            "Continental slick tyres"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ],
+          "Fuel system": [
+            "Fuel injection with multiport injection",
+            "Custom fuel rail",
+            "8 litre fuel tank"
+          ],
+          "Driver apparel": [
+            "SFI-approved G-FORCE suit, arm restraints, shoes and helmet"
+          ],
+          "Additional listed specifications": [
+            "Detailed specifications list power as 75 HP (general specifications list 70 HP)",
+            "Detailed specifications list fuel economy as 7.5 km/L (general specifications list 7 km/L)"
+          ]
+        }
       },
       "2012": {
         "images": [
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X2-C/1.jpg"
         ],
         "changes": [
-          "RZX2 — Second generation RZX combustion platform",
-          "Competed at Formula Student Italy",
+          "RZX2 - Eighth generation prototype",
           "Completed technical inspection in 17 minutes (fastest at event)",
           "Refined ergonomics and systems integration",
           "MOTEC M800 ECU retained"
         ],
-        "desc": "RZX2 represented Ashwa Racing at Formula Student Italy in 2012. The car achieved 2nd place in the Cost Report and set the fastest technical inspection clearance at the event, demonstrating high design maturity and documentation precision.",
+        "desc": "The 2012 combustion prototype, RZX2, continued the design direction of its predecessor and competed at Formula Student Italy. It placed second in the Cost Event and completed technical inspection in 17 minutes, the fastest at the event.",
         "specs": {
           "weight": "302 kg",
           "power": "75 HP",
-          "acceleration": "4.00s",
-          "topSpeed": "120 kmph"
+          "topSpeed": "120 km/h",
+          "lateralAcceleration": "1.4 g",
+          "powerToWeight": "165.56 BHP/tonne",
+          "fuelEconomy": "7.5 km/L"
         },
         "achievements": [
-          "2nd Place — Cost Report (Formula Student Italy)",
-          "Fastest Technical Inspection Clearance — 17 Minutes",
-          "Competed at Formula Student Italy (Varano de' Melegari)"
+          "2nd Place - Cost Event (Formula Student Italy 2012)",
+          "Fastest technical inspection clearance - 17 minutes"
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "SAE 4130 steel tubular spaceframe, TIG welded and powder coated",
+            "Aluminium honeycomb bulkhead",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 5-point harness"
+          ],
+          "Engine": [
+            "Honda CBR6, 600 cc, DOHC, four valves per cylinder",
+            "In-house RAM intake with K&N air filter",
+            "In-house 4-2-1 exhaust and stainless steel muffler",
+            "Butterfly-valve throttle actuation"
+          ],
+          "Suspension": [
+            "Double wishbone, arc-welded suspension",
+            "In-house aluminium uprights and mild steel hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear aluminium bell cranks",
+            "Outboard ZF Sachs adjustable dampers and custom-made springs"
+          ],
+          "Driveline and gearshift": [
+            "Torsen limited-slip differential, 3:1 bias ratio",
+            "#520 chain",
+            "Pneumatically actuated paddle shift"
+          ],
+          "Brakes": [
+            "Front and rear Wilwood PS-1 calipers (1.15-inch / 1-inch)",
+            "Custom pedal frame",
+            "Tilton 75 master cylinder with adjustable bias",
+            "Self-offset rotors made of 1040 steel"
+          ],
+          "Steering": [
+            "Custom rack and pinion",
+            "Steering wheel with FIA quick release",
+            "Static Ackermann: 180.88%"
+          ],
+          "Tyres": [
+            "BBS 13-inch rims",
+            "Continental slick tyres"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ],
+          "Fuel system": [
+            "Fuel injection with multiport injection",
+            "Custom fuel rail",
+            "8 litre fuel tank"
+          ],
+          "Driver apparel": [
+            "SFI-approved G-FORCE suits",
+            "SFI-approved G-FORCE arm restraints",
+            "SFI-approved G-FORCE shoes",
+            "SFI-approved G-FORCE helmets"
+          ],
+          "Additional listed specifications": [
+            "Detailed specifications list weight as 280 kg (general specifications list 302 kg)",
+            "Detailed specifications list power-to-weight ratio as 178.5 BHP/tonne (general specifications list 165.56 BHP/tonne)"
+          ]
+        },
+        "eventResults": [
+          {
+            "event": "Formula Student Italy 2012 - Cost Event",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Student Italy 2012 - Technical inspection",
+            "result": "17 minutes (fastest at the event)"
+          }
         ]
       },
       "2014": {
@@ -248,32 +744,108 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X4-C/11.jpg"
         ],
         "changes": [
-          "RZX4 — Fourth generation RZX combustion platform",
-          "Secured Top Place in Design (2014 Combustion Prototype)",
-          "Refined 4130 SAE tubular spaceframe",
-          "Aluminium honeycomb bulkhead + FRP panels",
-          "Enhanced intake RAM and stainless 4-2-1 exhaust",
-          "Driver-focused ergonomic custom seat design"
+          "RZX4 - Ninth generation prototype",
+          "1st Place - Design Presentation at Formula Student India (2014 prototype)"
         ],
-        "desc": "RZX4 marked a major achievement in Ashwa Racing's combustion lineage by securing the top place in the Design event in 2014. The platform reflected engineering maturity, documentation strength, and optimized subsystem integration across chassis, suspension, drivetrain, and electronics.",
+        "desc": "The RZX4 combustion prototype secured 1st Place in the Design Presentation Event at Formula Student India in 2014.",
         "specs": {
           "weight": "300 kg",
           "power": "70 HP",
           "acceleration": "4.21s",
-          "topSpeed": "120 kmph"
+          "topSpeed": "120 km/h",
+          "lateralAcceleration": "1.4 G",
+          "fuelEconomy": "7 km/L",
+          "powerToWeight": "178.5 BHP/tonne"
         },
         "achievements": [
-          "1st Place — Design Presentation Event (2014 Prototype)",
-          "Successful international Formula Student campaign"
+          "1st Place - Design Presentation Event at Formula Student India (2014 prototype)"
         ],
-        "badge": "DESIGN WINNER"
+        "badge": "DESIGN WINNER",
+        "eventResults": [
+          {
+            "event": "Formula Student India 2014 - Design Presentation",
+            "result": "1st Place"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "SAE Steel 4130 Tubular Space Frame",
+            "Tig welded",
+            "Powder coated lacquer",
+            "Aluminium honeycomb bulk head",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 5 point harness"
+          ],
+          "Engine": [
+            "Honda CBR6 Engine Displacement : 600 cc",
+            "DOHC with 4 valves per cylinder",
+            "In house designed Intake-RAM system with K&N air filter",
+            "In house designed Exhaust 4-2-1",
+            "In house designed stainless steel Muffler",
+            "6 speed sequential gear shift",
+            "Butterfly valve throttle actuation"
+          ],
+          "Suspension": [
+            "Double wish bone Arc welded",
+            "Custom inhouse design - Aluminium Uprights Hubs",
+            "Custom inhouse design - M.S. Hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks -rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled - DANA Radiator with thermostatic electric controlled fan"
+          ],
+          "Driveline and gearshift": [
+            "Torsen (Limited Slip Differential) Bias Ratio 3:1",
+            "Chain #520",
+            "Pneumatically actuated gear shifts with paddle shift"
+          ],
+          "Brakes": [
+            "Calipers: Wilwood PS-1 1.15-inch/1-inch Front and Rear",
+            "Custom Pedal Frame",
+            "Tilton 75 Master cylinder with adjustable bias",
+            "Self offset rotors made of 1040 steel"
+          ],
+          "Steering": [
+            "Custom Rack and Pinion",
+            "Steering wheel with FIA-Quick release",
+            "Static Ackermann: 180.88%"
+          ],
+          "Tyres": [
+            "BBS 13 inch rims",
+            "CONTINENTAL slick tires"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M 800 Reprogrammable ECU",
+            "Custom made light interactive dash"
+          ],
+          "Fuel system": [
+            "Fuel injection",
+            "Multiport injection",
+            "Custom fuel rail",
+            "8 litre fuel tank"
+          ],
+          "Driver apparel": [
+            "SFI-approved-G-FORCE SUITS",
+            "SFI-approved-G-FORCE ARM RESTRAINTS",
+            "SFI-approved-G-FORCE SHOES",
+            "SFI-approved-G-FORCE HELMETS"
+          ],
+          "Additional listed specification": [
+            "Power-to-weight ratio: 0.105"
+          ]
+        }
       },
       "2015": {
         "images": [
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X5-C/11.webp"
         ],
         "changes": [
-          "RZX5 — Fifth generation RZX combustion platform",
+          "RZX5 - Tenth generation prototype",
           "Top Place in Design (2015 Combustion Prototype)",
           "2nd in Endurance",
           "2nd in Fuel Efficiency",
@@ -281,20 +853,94 @@
           "Refined suspension geometry and weight distribution",
           "Mature competition-ready systems integration"
         ],
-        "desc": "RZX5 marked one of Ashwa Racing's strongest competitive years in combustion. Securing Top Place in Design along with podium finishes in Endurance and Fuel Efficiency, the 2015 prototype demonstrated a balanced, highly integrated engineering platform.",
+        "desc": "RZX5 competed at Formula Student India, finishing 4th overall with 2nd place in Endurance and Fuel Efficiency.",
         "specs": {
           "weight": "310 kg",
-          "power": "75 HP",
-          "acceleration": "4.00s",
-          "topSpeed": "120 kmph"
+          "topSpeed": "0 km/h",
+          "lateralAcceleration": "1.4 G",
+          "powerToWeight": "144 BHP/tonne"
         },
         "achievements": [
-          "1st Place — Design Event (Formula Design Challenge 2015)",
-          "2nd Place — Endurance Event",
-          "2nd Place — Fuel Efficiency Event",
-          "4th Place Overall (Formula Design Challenge)"
+          "2nd Place - Endurance (Formula Student India)",
+          "2nd Place - Fuel Efficiency (Formula Student India)",
+          "4th Overall (Formula Student India)"
         ],
-        "badge": "MULTI-EVENT PODIUM"
+        "badge": "MULTI-EVENT PODIUM",
+        "eventResults": [
+          {
+            "event": "Formula Student India - Endurance",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Student India - Fuel Efficiency",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Student India - Overall",
+            "result": "4th Place"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "SAE Steel 4130 Tubular Space Frame",
+            "TIG welded",
+            "Powder-coated lacquer",
+            "Aluminium honeycomb bulk head",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 5 point harness"
+          ],
+          "Engine": [
+            "Honda CBR6 Engine Displacement : 600 cc",
+            "DOHC with 4 valves per cylinder",
+            "In house designed Intake-RAM system with K&N air filter",
+            "In house designed Exhaust 4-2-1",
+            "In house designed stainless steel Muffler"
+          ],
+          "Suspension": [
+            "Double wish bone Arc welded",
+            "Custom inhouse design - Aluminium Uprights Hubs",
+            "Custom inhouse design - M.S. Hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks -rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled mode",
+            "Dana radiator",
+            "Silicon bends for radiator routing"
+          ],
+          "Gearbox": [
+            "Integrated with Engine",
+            "6 speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front Dual Piston Willwood calliper",
+            "Rear Dual Piston Willwood calliper",
+            "Custom Pedal Box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "Custom Rack -pinion in house design",
+            "Steering wheel with FIA-Quick release"
+          ],
+          "Fuel system": [
+            "Fuel injection",
+            "Multiport injection",
+            "Custom fuel rail",
+            "8 litre fuel tank"
+          ],
+          "Tyres": [
+            "Keizer 4L 13-inch rims with zero offset",
+            "Continental slick tires"
+          ],
+          "Electrical power/control systems": [
+            "Power distribution: MOSFET (75A)",
+            "Wiring: 20, 18, and 10 AWG multi-strand wires"
+          ]
+        }
       },
       "2016": {
         "images": [
@@ -308,7 +954,7 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X6-C/EVENT/7.jpg"
         ],
         "changes": [
-          "RZX6 — Sixth generation combustion prototype",
+          "RZX6 — Eleventh generation combustion prototype",
           "6th Place in Design Event",
           "Improved power-to-weight ratio",
           "Refined suspension and drivetrain package",
@@ -317,16 +963,88 @@
         "desc": "RZX6 represented a major performance jump in the combustion platform. With a lighter 250 kg chassis and a strong 6th place Design finish, the 2016 prototype reflected improved systems integration and competitive engineering maturity.",
         "specs": {
           "weight": "250 kg",
-          "power": "53 HP",
-          "acceleration": "4.10s",
-          "topSpeed": "110 kmph"
+          "power": "73 HP",
+          "topSpeed": "110 kmph",
+          "lateralAcceleration": "1.4 G",
+          "powerToWeight": "212.85 BHP/tonne"
         },
         "achievements": [
-          "6th Place — Design Event (Student India 2016)",
-          "100 / 150 Points in Engineering Design",
-          "Total Score: 235 Points"
+          "22nd Overall - Formula Student Czech 2016 (235 pts)"
         ],
-        "badge": "DESIGN TOP 10"
+        "badge": "DESIGN TOP 10",
+        "eventResults": [
+          {
+            "event": "Formula Student Czech - Overall rank",
+            "result": "22"
+          },
+          {
+            "event": "Formula Student Czech - Total points",
+            "result": "235"
+          },
+          {
+            "event": "Formula Student Czech - Business event points",
+            "result": "58"
+          },
+          {
+            "event": "Formula Student Czech - Cost event points",
+            "result": "77"
+          },
+          {
+            "event": "Formula Student Czech - Design event points",
+            "result": "100"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "TIG welded",
+            "Powder coated lacquer",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 6 point harness"
+          ],
+          "Engine": [
+            "Honda CBR-600 Engine Displacement : 599 cc",
+            "DOHC with 4 valves per cylinder",
+            "In house designed Intake",
+            "In house designed Exhaust"
+          ],
+          "Suspension": [
+            "Double wish bone TIG welded",
+            "Custom inhouse design - Aluminium Uprights",
+            "Custom inhouse design - Hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks -rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled - Dana radiator with thermostatic electric controlled fan",
+            "Dry sump"
+          ],
+          "Gearbox": [
+            "Integrated with Engine",
+            "6 speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front Dual Piston Willwood calliper",
+            "Rear Dual Piston Willwood calliper",
+            "Custom Pedal Box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "Custom Rack -pinion in house design",
+            "Steering wheel with FIA-Quick release"
+          ],
+          "Tyres": [
+            "Keizer 13 inch rims",
+            "Continental C-13 slick tires"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M 800 Reprogrammable ECU"
+          ]
+        }
       },
       "2017": {
         "images": [
@@ -342,7 +1060,7 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X7-C/POST-EVENT/7.jpg"
         ],
         "changes": [
-          "RZX7 — Seventh generation combustion prototype",
+          "RZX7 — Twelfth generation combustion prototype",
           "Weight reduced to 230 kg",
           "Significant acceleration improvement (0–75 in 3.90s)",
           "Top speed increased to 120 kmph",
@@ -353,14 +1071,139 @@
           "weight": "230 kg",
           "power": "73 HP",
           "acceleration": "3.90s",
-          "topSpeed": "120 kmph"
+          "topSpeed": "120 kmph",
+          "lateralAcceleration": "1.4 G",
+          "fuelEconomy": "7 km/L",
+          "powerToWeight": "212.85 BHP/tonne"
         },
         "achievements": [
-          "Rank 11 Overall — Formula Student Italy 2017 (224.20 pts)",
-          "Rank 25 Overall — Formula Bharat 2017 (262.09 pts)",
-          "Lightest Combustion Spaceframe chassis (230 kg)"
+          "25th Overall - Formula Student Italy 2017 (262.09 pts)",
+          "11th Overall - Formula Bharat 2017 (224.20 pts)"
         ],
-        "badge": "PERFORMANCE UPGRADE"
+        "badge": "PERFORMANCE UPGRADE",
+        "eventResults": [
+          {
+            "event": "Formula Student Italy - Overall rank",
+            "result": "25"
+          },
+          {
+            "event": "Formula Student Italy - Total points",
+            "result": "262.09"
+          },
+          {
+            "event": "Formula Student Italy - Acceleration time",
+            "result": "5.800 s"
+          },
+          {
+            "event": "Formula Student Italy - Acceleration points",
+            "result": "4.50"
+          },
+          {
+            "event": "Formula Student Italy - Autocross time",
+            "result": "72.685 s"
+          },
+          {
+            "event": "Formula Student Italy - Autocross points",
+            "result": "31.140"
+          },
+          {
+            "event": "Formula Student Italy - Endurance points",
+            "result": "21.000"
+          },
+          {
+            "event": "Formula Student Italy - Skidpad time",
+            "result": "6.550 s"
+          },
+          {
+            "event": "Formula Student Italy - Skidpad points",
+            "result": "3.500"
+          },
+          {
+            "event": "Formula Student Italy - Business event points",
+            "result": "42.857"
+          },
+          {
+            "event": "Formula Student Italy - Cost event points",
+            "result": "69.1"
+          },
+          {
+            "event": "Formula Student Italy - Design event points",
+            "result": "90.0"
+          },
+          {
+            "event": "Formula Bharat - Overall rank",
+            "result": "11"
+          },
+          {
+            "event": "Formula Bharat - Total points",
+            "result": "224.20"
+          },
+          {
+            "event": "Formula Bharat - Business event points",
+            "result": "59.34"
+          },
+          {
+            "event": "Formula Bharat - Cost event points",
+            "result": "64.86"
+          },
+          {
+            "event": "Formula Bharat - Design event points",
+            "result": "95"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "TIG welded",
+            "Powder coated lacquer",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 6 point harness"
+          ],
+          "Engine": [
+            "Suzuki GSX-R600 Engine Displacement : 599 cc",
+            "DOHC with 4 valves per cylinder",
+            "In house designed Intake",
+            "In house designed Exhaust",
+            "Yoshimura Muffler"
+          ],
+          "Suspension": [
+            "Double wish bone TIG welded",
+            "Custom inhouse design - Aluminium Uprights",
+            "Custom inhouse design - Hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks -rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled - Dana radiator with thermostatic electric controlled fan",
+            "Dry sump"
+          ],
+          "Gearbox": [
+            "Integrated with Engine",
+            "6 speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front Dual Piston Willwood calliper",
+            "Rear Dual Piston Willwood calliper",
+            "Custom Pedal Box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "Custom Rack -pinion in house design",
+            "Steering wheel with FIA-Quick release"
+          ],
+          "Tyres": [
+            "Keizer 13 inch rims",
+            "Continental C-13 slick tires"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M 800 Reprogrammable ECU",
+            "custom made light interactive dash"
+          ]
+        }
       },
       "2018": {
         "images": [
@@ -376,7 +1219,7 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X8-C/PRE-EVENT/10.jpg"
         ],
         "changes": [
-          "RZX8C — Eighth generation combustion prototype",
+          "RZX8C — Thirteenth generation combustion prototype",
           "Fastest student combustion car in India (season highlight)",
           "Improved dynamic event scoring",
           "Strong Bharat overall finish (8th)",
@@ -387,14 +1230,165 @@
           "weight": "260 kg",
           "power": "73 HP",
           "acceleration": "3.90s",
-          "topSpeed": "120 kmph"
+          "topSpeed": "120 kmph",
+          "lateralAcceleration": "1.4 G",
+          "fuelEconomy": "7 km/L",
+          "powerToWeight": "212.85 BHP/tonne"
         },
         "achievements": [
           "Fastest Combustion Acceleration in India — 4.259s (Formula Bharat 2018)",
           "8th Place Overall — Formula Bharat 2018 (402.10 pts)",
           "Formula Student Italy 2018 Campaign"
         ],
-        "badge": "TOP 10 OVERALL"
+        "badge": "TOP 10 OVERALL",
+        "eventResults": [
+          {
+            "event": "Formula Student Italy - Overall rank",
+            "result": "40"
+          },
+          {
+            "event": "Formula Student Italy - Total points",
+            "result": "101.370"
+          },
+          {
+            "event": "Formula Student Italy - Acceleration time",
+            "result": "4.780 s"
+          },
+          {
+            "event": "Formula Student Italy - Acceleration points",
+            "result": "34.728"
+          },
+          {
+            "event": "Formula Student Italy - Autocross time",
+            "result": "69.398 s"
+          },
+          {
+            "event": "Formula Student Italy - Autocross points",
+            "result": "23.597"
+          },
+          {
+            "event": "Formula Student Italy - Endurance points",
+            "result": "7.000"
+          },
+          {
+            "event": "Formula Student Italy - Skidpad time",
+            "result": "8.230 s"
+          },
+          {
+            "event": "Formula Student Italy - Skidpad points",
+            "result": "3.500"
+          },
+          {
+            "event": "Formula Student Italy - Business event points",
+            "result": "42.424"
+          },
+          {
+            "event": "Formula Student Italy - Cost event points",
+            "result": "89.100"
+          },
+          {
+            "event": "Formula Student Italy - Design event points",
+            "result": "51.020"
+          },
+          {
+            "event": "Formula Bharat - Overall rank",
+            "result": "8"
+          },
+          {
+            "event": "Formula Bharat - Total points",
+            "result": "402.10"
+          },
+          {
+            "event": "Formula Bharat - Acceleration time",
+            "result": "4.259 s"
+          },
+          {
+            "event": "Formula Bharat - Acceleration points",
+            "result": "75"
+          },
+          {
+            "event": "Formula Bharat - Autocross time",
+            "result": "65.574 s"
+          },
+          {
+            "event": "Formula Bharat - Autocross points",
+            "result": "26.72"
+          },
+          {
+            "event": "Formula Bharat - Skidpad time",
+            "result": "7.014 s"
+          },
+          {
+            "event": "Formula Bharat - Skidpad points",
+            "result": "35.88"
+          },
+          {
+            "event": "Formula Bharat - Business event points",
+            "result": "73.50"
+          },
+          {
+            "event": "Formula Bharat - Cost event points",
+            "result": "86"
+          },
+          {
+            "event": "Formula Bharat - Design event points",
+            "result": "105"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "TIG welded",
+            "Powder coated lacquer",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 6 point harness"
+          ],
+          "Engine": [
+            "Suzuki GSX-R600 Engine Displacement : 599 cc",
+            "DOHC with 4 valves per cylinder",
+            "In house designed Intake",
+            "In house designed Exhaust",
+            "Yoshimura Muffler"
+          ],
+          "Suspension": [
+            "Double wish bone TIG welded",
+            "Custom inhouse design - Aluminium Uprights",
+            "Custom inhouse design - Hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks -rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled",
+            "Dana radiator",
+            "Silicon bends for radiator routing"
+          ],
+          "Gearbox": [
+            "Integrated with Engine",
+            "6 speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front Dual Piston Willwood calliper",
+            "Rear Dual Piston Willwood calliper",
+            "Custom Pedal Box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "Custom Rack -pinion in house design",
+            "Steering wheel with FIA-Quick release"
+          ],
+          "Tyres": [
+            "Keizer 13 inch rims",
+            "Continental C-13 slick tires"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M 800 Reprogrammable ECU",
+            "custom made light interactive dash"
+          ]
+        }
       },
       "2019": {
         "images": [
@@ -411,58 +1405,155 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X9-C/preevent/7.jpg"
         ],
         "changes": [
-          "RZX9C — Ninth generation combustion prototype",
-          "Improved static event performance",
-          "Top 10 static rank (9th overall static)",
-          "Refined chassis & driveline integration"
+          "RZX9C - Fourteenth generation combustion prototype",
+          "Suzuki GSX-R600 599cc engine with Yoshimura muffler",
+          "MOTEC M800 reprogrammable ECU and custom light interactive dash"
         ],
-        "desc": "RZX9C focused on strong static performance, achieving a top 10 static rank at Formula Bharat. The platform maintained consistent powertrain architecture while refining design and cost presentation.",
-        "specs": {
-          "weight": "260 kg",
-          "power": "73 HP",
-          "acceleration": "3.90s",
-          "topSpeed": "100 kmph"
-        },
+        "desc": "The RZX9C competed at Formula Bharat 2019, placing 13th overall with 249.97 points. It ranked 9th in static events and 12th in dynamic events.",
         "achievements": [
-          "Rank 13 Overall — Formula Bharat 2019 (249.97 pts)",
-          "Rank 9 in Static Events (Design: 110 pts)",
-          "Formula Student Italy 2019 Campaign"
+          "13th Overall - Formula Bharat 2019 (249.97 pts)",
+          "9th in Static Events (226.08 pts)",
+          "12th in Dynamic Events (53.89 pts)"
         ],
-        "badge": "STATIC STRENGTH"
+        "badge": "STATIC STRENGTH",
+        "eventResults": [
+          {
+            "event": "Acceleration time",
+            "result": "5.176 s"
+          },
+          {
+            "event": "Acceleration points",
+            "result": "53.893 pts"
+          },
+          {
+            "event": "Business Event",
+            "result": "46.08 pts"
+          },
+          {
+            "event": "Cost Event",
+            "result": "70 pts"
+          },
+          {
+            "event": "Design Event",
+            "result": "110 pts"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "TIG welded",
+            "Powder coated lacquer",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 6 point harness"
+          ],
+          "Engine": [
+            "Suzuki GSX-R600 Engine Displacement : 599 cc",
+            "DOHC with 4 valves per cylinder",
+            "In house designed Intake",
+            "In house designed Exhaust",
+            "Yoshimura Muffler"
+          ],
+          "Suspension": [
+            "Double wish bone TIG welded",
+            "Custom inhouse design – Aluminium Uprights",
+            "Custom inhouse design – Hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks -rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled",
+            "Dana radiator with silicone routing bends"
+          ],
+          "Gearbox": [
+            "Integrated with Engine",
+            "6 speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front Dual Piston Willwood calliper",
+            "Rear Dual Piston Willwood calliper",
+            "Custom Pedal Box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "Custom Rack -pinion in house design",
+            "Steering wheel with FIA-Quick release"
+          ],
+          "Tyres": [
+            "Keizer 13 inch rims",
+            "Continental C-13 slick tires"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M 800 Reprogrammable ECU",
+            "custom made light interactive dash"
+          ]
+        }
       },
       "2020": {
         "images": [
-          "assets/images/prototypes/RZ-20-CV/IMG_8243compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8290compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8305compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8376compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8394compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8421compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8665compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8667compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8674compressed.jpg",
-          "assets/images/prototypes/RZ-20-CV/IMG_8677compressed.jpg"
+          "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-XX-C/EVENT/1.jpg",
+          "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-XX-C/EVENT/2.jpg",
+          "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-XX-C/EVENT/3.jpg",
+          "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-XX-C/PRE-EVENT/1.jpg",
+          "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-XX-C/PRE-EVENT/2.jpg"
         ],
         "changes": [
-          "RZ-20C — Tenth generation combustion prototype",
-          "Overall 14th Rank at Formula Bharat 2020 Virtual Event",
-          "3rd Position in Business Presentation (73 pts)",
-          "Suzuki GSX-R600 599cc powertrain integration with Yoshimura Muffler",
-          "MOTEC M800 Reprogrammable ECU & light interactive dash"
+          "RZ-XX-C — 2020 combustion prototype",
+          "Suzuki GSX-R600 599cc engine with Yoshimura muffler",
+          "MOTEC M800 reprogrammable ECU and custom light interactive dash"
         ],
-        "desc": "The 2020 Combustion prototype featured a Suzuki GSX-R600 powertrain, custom TIG welded spaceframe, MOTEC M800 ECU, and custom light interactive dashboard. Competing virtually at Formula Bharat 2020, the team secured 3rd in Business Presentation and 14th overall.",
-        "specs": {
-          "weight": "250 kg",
-          "power": "73 HP",
-          "acceleration": "3.90s",
-          "topSpeed": "120 kmph"
-        },
+        "desc": "The RZ-XX-C competed at Formula Bharat 2020.",
         "achievements": [
-          "3rd Place — Business Presentation (73 pts, Formula Bharat 2020 Virtual)",
           "14th Overall — Formula Bharat 2020 (204 pts)",
-          "Cost Event Score — 87.03 pts"
+          "3rd Place - Business Event (73 pts)",
+          "Cost Event: 87.03 pts",
+          "Design Event: 44 pts"
         ],
-        "badge": "BUSINESS EVENT PODIUM"
+        "badge": "BUSINESS EVENT PODIUM",
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe, TIG welded and powder coated",
+            "FRP body panels",
+            "Custom seat based on driver ergonomics",
+            "FIA-approved 6-point harness"
+          ],
+          "Engine": [
+            "Suzuki GSX-R600, 599 cc, DOHC, four valves per cylinder",
+            "In-house designed intake and exhaust",
+            "Yoshimura muffler"
+          ],
+          "Suspension": [
+            "TIG-welded double wishbone suspension",
+            "In-house aluminium uprights and hubs",
+            "Outboard rod ends and push rods",
+            "Front and rear aluminium bell cranks",
+            "Outboard ZF Sachs adjustable dampers and custom-made springs"
+          ],
+          "Cooling": [
+            "Water cooled",
+            "Dana radiator with silicone routing bends"
+          ],
+          "Gearbox": [
+            "Engine-integrated 6-speed sequential gearbox"
+          ],
+          "Brakes": [
+            "Front and rear dual-piston Wilwood callipers",
+            "Custom pedal box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "In-house custom rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Wheels and electronics": [
+            "Keizer 13-inch rims with Continental C-13 slick tyres",
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light interactive dash"
+          ]
+        }
       },
       "2025": {
         "images": [
@@ -474,9 +1565,7 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-XX5-C/event/7.HEIC"
         ],
         "changes": [
-          "RZ-XX5-C — Ninth generation combustion prototype",
-          "Second Position in Cost Presentation",
-          "8th overall finish in Formula Bharat 2025"
+          "RZ-XX5-C — 18th combustion prototype"
         ],
         "desc": "RZ-XX5-C focused on dynamic performance, achieving a top 10 overall rank at Formula Bharat. The platform maintained consistent powertrain architecture while refining design and cost presentation.",
         "specs": {
@@ -488,7 +1577,7 @@
         "achievements": [
           "8th Place Overall — Formula Bharat 2025",
           "2nd Place — Cost & Manufacturing Presentation Event",
-          "Full Endurance Race Completion"
+          "One of four teams to race in Endurance"
         ],
         "badge": "ENDURANCE RUNNING CAR"
       },
@@ -505,13 +1594,10 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/width=1740,format=avif/images/prototypes/RZ-XX6-C/postevent/6.png"
         ],
         "changes": [
-          "RZ-XX6-C — Fourteenth generation combustion prototype",
-          "Continued Ashwa's strong finishes in Static Events",
-          "2nd Position in BPP",
-          "5th Position in EDP",
-          "Overall 6th position in Formula Bharat 2026"
+          "RZ-XX6-C — 19th combustion prototype",
+          "Continued Ashwa's strong finishes in Static Events"
         ],
-        "desc": "RZ-XX6-C was the first combustion prototype developed by 3rd years, focusing on experimental DAQ and Suspension setups.",
+        "desc": "RZ-XX6-C focused on experimental DAQ and Suspension setups.",
         "specs": {
           "weight": "250 kg",
           "power": "70 HP",
@@ -519,9 +1605,9 @@
           "topSpeed": "115 kmph"
         },
         "achievements": [
-          "5th Place — Engineering Design Presentation (Formula Bharat 2026)",
-          "6th Place Overall — Formula Bharat 2026",
-          "First 3rd-Year Student Led Combustion Prototype"
+          "2nd Position in BPP",
+          "5th Position in EDP",
+          "Overall 6th position in Formula Bharat 2026"
         ],
         "badge": "First 3rd year combustion prototype"
       }
@@ -539,24 +1625,86 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X5-H/preevent/6.jpg"
         ],
         "changes": [
-          "First ever Hybrid prototype",
-          "Transition from pure combustion to hybrid architecture",
-          "Integrated lithium-ion battery pack (75 cells)",
-          "International competition debut — USA"
+          "RZX5H - Ashwa Racing first hybrid prototype",
+          "Top 10 Overall - Formula Hybrid 2015",
+          "Lithium-ion battery system with 75 cells",
+          "Integrated combustion and electric systems"
         ],
-        "desc": "Ashwa Racing's first Hybrid prototype marked a major technological leap. Competing at Formula Hybrid New Hampshire, the team placed in the top ten overall, successfully integrating combustion and electric subsystems into a single competitive platform.",
+        "desc": "The RZX5H was Ashwa Racing's first hybrid prototype. It competed at Formula Hybrid 2015 in New Hampshire and placed in the top ten overall.",
         "specs": {
           "weight": "310 kg",
-          "power": "45 HP",
-          "acceleration": "4.50s",
-          "topSpeed": "74 kmph"
+          "topSpeed": "74 km/h",
+          "powerToWeight": "144 BHP/tonne"
         },
         "achievements": [
-          "Top 10 Overall — Formula Hybrid 2015 (New Hampshire, USA)",
-          "First International Hybrid Entry from India",
-          "Successful 75-Cell Li-ion Hybrid Integration"
+          "Top 10 Overall - Formula Hybrid 2015 (New Hampshire, USA)",
+          "Ashwa Racing first hybrid prototype"
         ],
-        "badge": "HYBRID DEBUT"
+        "badge": "HYBRID DEBUT",
+        "eventResults": [
+          {
+            "event": "Formula Hybrid 2015 - Overall",
+            "result": "Top 10"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Tubular space frame, SAE 1018 steel round tubing, 0.5 to 1.125 inch",
+            "TIG welded",
+            "Powder coated lacquer",
+            "Aluminium honeycomb bulkhead",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 6 point harness"
+          ],
+          "Engine": [
+            "Bajaj / Pulsar DTS-i, 220 cc single cylinder",
+            "Carburetted and servo actuated",
+            "Engine specification lists 5 gears"
+          ],
+          "Suspension": [
+            "Double wish bone arc welded",
+            "Custom inhouse design - Aluminium uprights and hubs",
+            "Custom inhouse design - M.S. hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks - rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling and lubrication": [
+            "Stock wet sump",
+            "Water cooled - DANA radiator with thermostatic electric controlled fan"
+          ],
+          "Gearbox": [
+            "Integrated with engine",
+            "Specification lists a 6 speed sequential gear shift (engine section lists 5 gears)"
+          ],
+          "Brakes": [
+            "Wilwood PS-1.15-inch / 1-inch front and rear calipers",
+            "Tilton 0.625-inch front and rear master cylinders with adjustable bias",
+            "Custom pedal frame, 2.1 kg",
+            "220 mm diameter 410 stainless steel floating rotors"
+          ],
+          "Steering": [
+            "Custom in-house rack-and-pinion design",
+            "Double Apex joints",
+            "Static Ackermann: 98.9%, non-adjustable"
+          ],
+          "Tyres": [
+            "Keizer 4L 13-inch rims with zero offset",
+            "R-13 Continental slick tyres"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ],
+          "Batteries and fuel system": [
+            "Lithium-ion, 5 Ah, 5 per pack, 75 cells in total",
+            "Gravity-fed fuel system",
+            "Custom aluminium fuel tank"
+          ]
+        }
       },
       "2016": {
         "images": [
@@ -574,24 +1722,92 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X6-H/postevent/7.jpg"
         ],
         "changes": [
-          "RZX6H — Refined hybrid architecture",
-          "Lean manufacturing optimizations",
-          "Improved static event strategy",
-          "Weight reduction vs previous hybrid"
+          "RZX6H - 2016 Hybrid prototype",
+          "Developed using optimized lean manufacturing methods",
+          "4th Overall - Formula Hybrid 2016",
+          "2nd Place - Design and Project Management"
         ],
-        "desc": "RZX6H marked a major competitive leap in the hybrid programme. With improved production techniques and optimized manufacturing processes, the team secured 4th overall at Formula Hybrid New Hampshire.",
+        "desc": "The RZX6H placed 4th Overall at Formula Hybrid 2016 in New Hampshire, with 2nd Place finishes in Design and Project Management. The 2016 season also focused on improved production techniques and optimized lean manufacturing.",
         "specs": {
           "weight": "280 kg",
           "power": "70 HP",
-          "acceleration": "4.20s",
-          "topSpeed": "95 kmph"
+          "fuelEconomy": "7 km/L",
+          "powerToWeight": "178.5 BHP/tonne"
         },
         "achievements": [
-          "4th Place Overall — Formula Hybrid 2016 (USA)",
-          "2nd Place — Engineering Design Presentation",
-          "2nd Place — Project Management Event"
+          "4th Place Overall - Formula Hybrid 2016",
+          "2nd Place - Design Event (163.69/200)",
+          "2nd Place - Project Management (94.17/100)"
         ],
-        "badge": "HYBRID BREAKTHROUGH"
+        "badge": "HYBRID BREAKTHROUGH",
+        "eventResults": [
+          {
+            "event": "Formula Hybrid 2016 - Overall",
+            "result": "4th Place"
+          },
+          {
+            "event": "Formula Hybrid 2016 - Design Event",
+            "result": "2nd Place (163.69/200)"
+          },
+          {
+            "event": "Formula Hybrid 2016 - Project Management",
+            "result": "2nd Place (94.17/100)"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "Arc welded",
+            "Powder coated lacquer",
+            "Aluminium honeycomb bulkhead",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 5 point harness"
+          ],
+          "Engine": [
+            "Honda CBR6 Engine Displacement : 600 cc",
+            "DOHC with 4 valves per cylinder",
+            "In house designed Intake-RAM system with K&N air filter",
+            "In house designed Exhaust 4-2-1",
+            "In house designed stainless steel Muffler"
+          ],
+          "Suspension": [
+            "Double wish bone arc welded",
+            "Custom inhouse design - Aluminium uprights and hubs",
+            "Custom inhouse design - M.S. hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks - rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled",
+            "Dana radiator",
+            "Silicon bends for radiator routing"
+          ],
+          "Gearbox": [
+            "Integrated with engine",
+            "6 speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front and rear dual-piston Willwood callipers",
+            "Custom pedal box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "Custom in-house rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Tyres": [
+            "BBS 13 inch rims",
+            "Hoosier slick tires"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M 800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ]
+        }
       },
       "2017": {
         "images": [
@@ -607,26 +1823,103 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X7-H/preevent/4.jpg"
         ],
         "changes": [
-          "RZX7H — Performance-optimized hybrid platform",
-          "Acceleration dominance in Electric class",
-          "Refined endurance reliability",
-          "Improved event execution strategy"
+          "RZX7H - 2017 Hybrid prototype",
+          "2nd Overall - Formula Hybrid, New Hampshire",
+          "2nd Place - Acceleration (Hybrid), Project Management, Autocross, and Endurance"
         ],
-        "desc": "RZX7H marked Ashwa Racing's first major hybrid podium at Formula Hybrid New Hampshire, finishing 2nd overall with strong dominance in dynamic events.",
+        "desc": "The RZX7H placed 2nd Overall at Formula Hybrid in New Hampshire. The overview lists 1st in Electric Acceleration, while the detailed event results list 2nd. It also placed 2nd in Hybrid Acceleration, Project Management, Autocross, and Endurance.",
         "specs": {
-          "weight": "290 kg",
-          "power": "72 HP",
-          "acceleration": "4.05s",
-          "topSpeed": "100 kmph"
+          "topSpeed": "100 km/h"
         },
         "achievements": [
-          "2nd Place OVERALL PODIUM — Formula Hybrid 2017 (USA)",
-          "1st Place — Electric Acceleration Event",
-          "2nd Place — Autocross Event",
-          "2nd Place — Endurance Event",
-          "2nd Place — Project Management Event"
+          "2nd Place Overall - Formula Hybrid 2017",
+          "Electric Acceleration - 1st in overview; 2nd in detailed results",
+          "2nd Place - Acceleration (Hybrid)",
+          "2nd Place - Project Management (94.32/100)",
+          "2nd Place - Autocross",
+          "2nd Place - Endurance"
         ],
-        "badge": "FIRST HYBRID PODIUM"
+        "badge": "FIRST HYBRID PODIUM",
+        "eventResults": [
+          {
+            "event": "Formula Hybrid 2017 - Overall",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Hybrid 2017 - Acceleration (Electric)",
+            "result": "1st in overview; 2nd in detailed results"
+          },
+          {
+            "event": "Formula Hybrid 2017 - Acceleration (Hybrid)",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Hybrid 2017 - Project Management",
+            "result": "2nd Place (94.32/100)"
+          },
+          {
+            "event": "Formula Hybrid 2017 - Autocross",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Hybrid 2017 - Endurance",
+            "result": "2nd Place"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "Arc welded",
+            "Powder coated lacquer",
+            "Aluminium honeycomb bulkhead",
+            "FRP panels",
+            "Custom made seat based on customer ergonomics",
+            "FIA approved 5 point harness"
+          ],
+          "Engine": [
+            "Honda CBR6 Engine Displacement : 600 cc",
+            "DOHC with 4 valves per cylinder",
+            "In house designed Intake-RAM system with K&N air filter",
+            "In house designed Exhaust 4-2-1",
+            "In house designed stainless steel Muffler"
+          ],
+          "Suspension": [
+            "Double wish bone arc welded",
+            "Custom inhouse design - Aluminium uprights and hubs",
+            "Custom inhouse design - M.S. hubs",
+            "Outboard rod ends",
+            "Push rods",
+            "Aluminium bell cranks - rear and front",
+            "Outboard ZF Sachs adjustable dampers",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled",
+            "Dana radiator",
+            "Silicon bends for radiator routing"
+          ],
+          "Gearbox": [
+            "Integrated with engine",
+            "6 speed sequential gear shift"
+          ],
+          "Brakes": [
+            "Front and rear dual-piston Willwood callipers",
+            "Custom pedal box",
+            "Master cylinder with adjustable bias"
+          ],
+          "Steering": [
+            "Custom in-house rack-and-pinion design",
+            "Steering wheel with FIA quick release"
+          ],
+          "Tyres": [
+            "BBS 13 inch rims",
+            "Hoosier slick tires"
+          ],
+          "Electrical and electronics": [
+            "MOTEC M 800 reprogrammable ECU",
+            "Custom light-interactive dash"
+          ]
+        }
       },
       "2018": {
         "images": [
@@ -650,26 +1943,121 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X8-H/preevent/10.jpg"
         ],
         "changes": [
-          "RZX8H — Second-generation competitive hybrid platform",
-          "2nd Overall at Formula Hybrid New Hampshire",
-          "Strong static + dynamic event balance",
-          "Improved accumulator packaging and hybrid integration"
+          "RZX8H - 2018 Hybrid prototype",
+          "2nd Overall - Formula Hybrid, New Hampshire",
+          "1st Place - Acceleration (Electric)",
+          "2nd Place - Acceleration (Hybrid), Project Management, Autocross, and Endurance",
+          "Electro-pneumatic clutch, active balancing BMS, and modular accumulator container"
         ],
-        "desc": "RZX8H reinforced Ashwa Racing's hybrid dominance with another 2nd Overall finish at Formula Hybrid New Hampshire. The platform demonstrated improved systems integration, high static scores, and consistent dynamic performance.",
+        "desc": "The RZX8H placed 2nd Overall at Formula Hybrid in New Hampshire. It earned 1st in Electric Acceleration and 2nd in Hybrid Acceleration, Design Presentation, Project Management, Autocross, and Endurance.",
         "specs": {
           "weight": "300 kg",
           "power": "73 HP",
-          "acceleration": "4.05s",
-          "topSpeed": "100 kmph"
+          "topSpeed": "100 km/h",
+          "fuelEconomy": "6.5 km/L",
+          "powerToWeight": "0.11"
         },
         "achievements": [
-          "2nd Place OVERALL PODIUM — Formula Hybrid 2018 (USA)",
-          "2nd Place — Design Presentation (183.24 / 200 pts)",
-          "2nd Place — Project Management (144.29 / 150 pts)",
-          "2nd Place — Acceleration Event",
-          "2nd Place — Endurance Event"
+          "2nd Place Overall - Formula Hybrid 2018",
+          "1st Place - Acceleration (Electric)",
+          "2nd Place - Acceleration (Hybrid)",
+          "2nd Place - Design Presentation (183.24/200)",
+          "2nd Place - Project Management (144.29/150)",
+          "2nd Place - Autocross",
+          "2nd Place - Endurance"
         ],
-        "badge": "CONSISTENT PODIUM"
+        "badge": "CONSISTENT PODIUM",
+        "eventResults": [
+          {
+            "event": "Formula Hybrid 2018 - Overall",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Hybrid 2018 - Acceleration (Electric)",
+            "result": "1st Place"
+          },
+          {
+            "event": "Formula Hybrid 2018 - Acceleration (Hybrid)",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Hybrid 2018 - Design Presentation",
+            "result": "2nd Place (183.24/200)"
+          },
+          {
+            "event": "Formula Hybrid 2018 - Project Management",
+            "result": "2nd Place (144.29/150)"
+          },
+          {
+            "event": "Formula Hybrid 2018 - Autocross",
+            "result": "2nd Place"
+          },
+          {
+            "event": "Formula Hybrid 2018 - Endurance",
+            "result": "2nd Place"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "TIG welded",
+            "Powder coated lacquer",
+            "Aluminium honeycomb impact attenuator",
+            "FRP panels",
+            "Custom made seat based on driver ergonomics",
+            "SFI approved 5 point harness"
+          ],
+          "Engine": [
+            "Honda CBR 250 R, 250 cc, 19 kW @ 8,500 rpm",
+            "DOHC with 4 valves",
+            "Custom electronic throttle body"
+          ],
+          "Suspension": [
+            "Unequal length double wishbone",
+            "Aluminium uprights and hubs",
+            "Front pull rod and rear push rod suspension",
+            "Aluminium bell crank",
+            "Adjustable dampers",
+            "Adjustable toe characteristics",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled",
+            "Dana radiator",
+            "Silicon bends for radiator routing"
+          ],
+          "Gearbox and driveline": [
+            "Torsen LSD differential",
+            "Sequential manual gearbox",
+            "Eccentric disc tensioner",
+            "Compound chain drive"
+          ],
+          "Brakes": [
+            "Floating stainless steel rotors",
+            "Dual-piston Wilwood calipers",
+            "Custom aluminium pedal frame",
+            "Dual Wilwood master cylinders with adjustable bias"
+          ],
+          "Steering": [
+            "Custom in-house rack-and-pinion design",
+            "Steering wheel with quick release"
+          ],
+          "Tyres": [
+            "Keizer 4L 13-inch rims with zero offset",
+            "R-13 Continental slick tyres"
+          ],
+          "Electrical and hybrid systems": [
+            "Stock ECU",
+            "Custom light-interactive dash",
+            "Liyuan batteries - 3,949 Wh",
+            "Driver motor: Saietta Agni 119R, 15.8 kW @ 2,850 rpm",
+            "Generator: Saietta Agni 119R",
+            "Electronic throttle control",
+            "Electro-pneumatic clutch",
+            "Active balancing BMS",
+            "Modular accumulator container"
+          ]
+        }
       },
       "2019": {
         "images": [
@@ -683,49 +2071,201 @@
           "https://assets.ashwaracing.org/cdn-cgi/image/height=1740,format=avif/images/prototypes/RZ-X9-H/preevent/3.webp"
         ],
         "changes": [
-          "3rd Overall — Formula Hybrid 2019",
-          "1st Place — Project Management (150/150)",
-          "2nd Place — Design (184.62/200)",
-          "Refined accumulator packaging and systems integration"
+          "RZ-X9H - 2019 Hybrid prototype",
+          "3rd Overall - Formula Hybrid 2019",
+          "1st Place - Project Management (150/150)",
+          "2nd Place - Design Presentation (184.62/200)"
         ],
-        "desc": "The 2019 Hybrid secured 3rd Overall at Formula Hybrid New Hampshire. With a perfect 150/150 in Project Management and strong Design performance, the platform reflected a highly mature development process and refined hybrid integration.",
+        "desc": "The RZ-X9H secured 3rd Overall at Formula Hybrid 2019 in New Hampshire, USA. The team placed 1st in Project Management with a perfect 150/150 and 2nd in Design Presentation with 184.62/200.",
         "specs": {
           "weight": "300 kg",
           "power": "73 HP",
-          "acceleration": "4.00s",
-          "topSpeed": "100 kmph"
+          "topSpeed": "100 km/h",
+          "fuelEconomy": "6.5 km/L",
+          "powerToWeight": "0.11"
         },
         "achievements": [
-          "3rd Place OVERALL PODIUM — Formula Hybrid 2019 (USA)",
-          "1st Place — Project Management (Perfect 150 / 150 pts)",
-          "2nd Place — Design Presentation (184.62 / 200 pts)"
+          "3rd Place Overall - Formula Hybrid 2019",
+          "1st Place - Project Management (150/150)",
+          "2nd Place - Design Presentation (184.62/200)"
         ],
-        "badge": "PROJECT MANAGEMENT MASTERCLASS"
+        "badge": "PROJECT MANAGEMENT MASTERCLASS",
+        "eventResults": [
+          {
+            "event": "Formula Hybrid 2019 - Overall",
+            "result": "3rd Place"
+          },
+          {
+            "event": "Formula Hybrid 2019 - Design Event",
+            "result": "2nd Place (184.62/200)"
+          },
+          {
+            "event": "Formula Hybrid 2019 - Project Management",
+            "result": "1st Place (150/150)"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "TIG welded",
+            "Powder coated lacquer",
+            "Aluminium honeycomb impact attenuator",
+            "FRP panels",
+            "Custom made seat based on driver ergonomics",
+            "SFI approved 5 point harness"
+          ],
+          "Engine": [
+            "Honda CBR 250 R, 250 cc, 19 kW @ 8,500 rpm",
+            "DOHC with 4 valves",
+            "Custom electronic throttle body"
+          ],
+          "Suspension": [
+            "Unequal length double wishbone",
+            "Aluminium uprights and hubs",
+            "Front pull rod and rear push rod suspension",
+            "Aluminium bell crank",
+            "Adjustable dampers",
+            "Adjustable toe characteristics",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled",
+            "Dana radiator",
+            "Silicon bends for radiator routing"
+          ],
+          "Gearbox and driveline": [
+            "Torsen LSD differential",
+            "Sequential manual gearbox",
+            "Eccentric disc tensioner",
+            "Compound chain drive"
+          ],
+          "Brakes": [
+            "Floating stainless steel rotors",
+            "Dual-piston Wilwood calipers",
+            "Custom aluminium pedal frame",
+            "Dual Wilwood master cylinders with adjustable bias"
+          ],
+          "Steering": [
+            "Custom in-house rack-and-pinion design",
+            "Steering wheel with quick release"
+          ],
+          "Tyres": [
+            "Keizer 4L 13-inch rims with zero offset",
+            "R-13 Continental slick tyres"
+          ],
+          "Electrical and hybrid systems": [
+            "Stock ECU",
+            "Custom light-interactive dash",
+            "Liyuan batteries - 3,949 Wh",
+            "Driver motor: Saietta Agni 119R, 15.8 kW @ 2,850 rpm",
+            "Generator: Saietta Agni 119R",
+            "Electronic throttle control",
+            "Modular accumulator container"
+          ]
+        }
       },
       "2020": {
         "images": [
           "assets/images/prototypes/RZ-XX-HY/IMG_4019.JPG"
         ],
         "changes": [
-          "RZ-XXH — Sixth generation hybrid prototype",
-          "Overall 1st Place Champion at Formula Hybrid 2020 (USA)",
-          "1st Place in Project Management (Perfect 150/150 score)",
-          "3rd Place in Design Presentation (164/200 score)",
-          "Modular Accumulator Container & Electronic Throttle Control"
+          "RZ-XXH - Sixth generation hybrid prototype",
+          "1st Overall - Formula Hybrid 2020",
+          "1st in Project Management (150/150)",
+          "3rd in Design Presentation (164/200)",
+          "Modular accumulator container and electronic throttle control"
         ],
-        "desc": "The RZ-XXH hybrid prototype achieved Ashwa Racing's historic 1st Place Overall victory at Formula Hybrid 2020 (held virtually in New Hampshire, USA). With a flawless 150/150 score in Project Management and 3rd in Design, RZ-XXH demonstrated world-class hybrid engineering and management excellence.",
+        "desc": "The RZ-XXH hybrid prototype competed in Formula Hybrid 2020, held online because of the COVID-19 pandemic. It finished 1st overall, winning Project Management with a perfect score and placing 3rd in Design Presentation.",
         "specs": {
           "weight": "300 kg",
           "power": "73 HP",
-          "acceleration": "4.00s",
-          "topSpeed": "100 kmph"
+          "topSpeed": "100 km/h",
+          "fuelEconomy": "6.5 km/L",
+          "powerToWeight": "0.11"
         },
         "achievements": [
-          "1st Place OVERALL WORLD CHAMPION — Formula Hybrid 2020 (USA)",
-          "1st Place — Project Management (Perfect 150 / 150 pts)",
-          "3rd Place — Design Presentation (164 / 200 pts)"
+          "1st Overall - Formula Hybrid 2020",
+          "1st Place - Project Management (150/150)",
+          "3rd Place - Design Presentation (164/200)"
         ],
-        "badge": "1ST PLACE OVERALL CHAMPION"
+        "badge": "1ST PLACE OVERALL CHAMPION",
+        "eventResults": [
+          {
+            "event": "Formula Hybrid 2020 - Overall",
+            "result": "1st Place"
+          },
+          {
+            "event": "Formula Hybrid 2020 - Project Management",
+            "result": "1st Place (150/150)"
+          },
+          {
+            "event": "Formula Hybrid 2020 - Design Presentation",
+            "result": "3rd Place (164/200)"
+          },
+          {
+            "event": "Formula Hybrid 2020 - Event format",
+            "result": "Online (COVID-19 pandemic)"
+          }
+        ],
+        "technicalDetails": {
+          "Chassis and bodywork": [
+            "Mild steel spaceframe",
+            "TIG welded",
+            "Powder coated lacquer",
+            "Aluminium honeycomb impact attenuator",
+            "FRP panels",
+            "Custom made seat based on driver ergonomics",
+            "SFI approved 5 point harness"
+          ],
+          "Engine": [
+            "Honda CBR 250 R, 250 cc, 19 kW @ 8,500 rpm",
+            "DOHC with 4 valves",
+            "Custom electronic throttle body"
+          ],
+          "Suspension": [
+            "Unequal length double wishbone",
+            "Aluminium uprights and hubs",
+            "Front pull rod and rear push rod suspension",
+            "Aluminium bell crank",
+            "Adjustable dampers",
+            "Adjustable toe characteristics",
+            "Custom made springs"
+          ],
+          "Cooling": [
+            "Water cooled",
+            "Dana radiator",
+            "Silicon bends for radiator routing"
+          ],
+          "Gearbox and driveline": [
+            "Torsen LSD differential",
+            "Sequential manual gearbox",
+            "Eccentric disc tensioner",
+            "Compound chain drive"
+          ],
+          "Brakes": [
+            "Floating stainless steel rotors",
+            "Dual-piston Wilwood calipers",
+            "Custom aluminium pedal frame",
+            "Dual Wilwood master cylinders with adjustable bias"
+          ],
+          "Steering": [
+            "Custom in-house rack-and-pinion design",
+            "Steering wheel with quick release"
+          ],
+          "Tyres": [
+            "Keizer 4L 13-inch rims with zero offset",
+            "R-13 Continental slick tyres"
+          ],
+          "Electrical and hybrid systems": [
+            "Stock ECU",
+            "Custom light-interactive dash",
+            "Liyuan batteries - 3,949 Wh",
+            "Driver motor: Saietta Agni 119R, 15.8 kW @ 2,850 rpm",
+            "Generator: Saietta Agni 119R",
+            "Electronic throttle control",
+            "Modular accumulator container"
+          ]
+        }
       }
     }
   },
@@ -772,8 +2312,7 @@
           "First prototype — competed at ETH Zurich"
         ],
         "desc": "Ashwa's entry into the Hyperloop space. A fully student built pod prototype developed for Hyperloop week at ETH Zurich.",
-        "specs": {
-        },
+        "specs": {},
         "achievements": [
           "Finalist at European Hyperloop Week 2023 (ETH Zurich, Switzerland)",
           "First Student Hyperloop Pod Prototype from Karnataka"
