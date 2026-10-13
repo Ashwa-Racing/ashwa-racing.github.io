@@ -95,6 +95,13 @@ function createMemberCard(member) {
     ? `<div class="member-3d"><canvas></canvas></div>`
     : "";
 
+  const hasExperience = Boolean(member.experience?.trim());
+  const experienceHTML = hasExperience
+    ? `<div class="member-experience" aria-label="Contribution">
+        <p>${member.experience}</p>
+        <button class="member-close" type="button" aria-label="Close contribution">Close <span aria-hidden="true">&times;</span></button>
+      </div>`
+    : "";
   // Subsystem display — strip duplicate entries cleanly
   const uniqueSubs = [...new Set(member.subsystem)].join(" · ");
 
@@ -119,33 +126,30 @@ function createMemberCard(member) {
       <p class="member-role">${member.roles.join(" · ")}</p>
       <p class="member-subsystem">${uniqueSubs}</p>
       <div class="member-social">${linkedinLink}${githubLink}${gmailLink}</div>
-      <button class="member-expand" type="button" aria-expanded="false" hidden>Read contribution <span aria-hidden="true">+</span></button>
+      ${hasExperience ? '<button class="member-expand" type="button" aria-expanded="false">Read contribution <span aria-hidden="true">+</span></button>' : ""}
     </div>
-    <div class="member-experience" aria-label="Contribution">
-      <p>${member.experience}</p>
-      <button class="member-close" type="button" aria-label="Close contribution">Close <span aria-hidden="true">×</span></button>
-    </div>
+    ${experienceHTML}
   `;
 
-  const expandButton = card.querySelector(".member-expand");
-  card.classList.add("has-more");
-  expandButton.hidden = false;
-  expandButton.addEventListener("click", () => {
-    const expanded = card.classList.toggle("is-expanded");
-    expandButton.setAttribute("aria-expanded", String(expanded));
-    expandButton.innerHTML = 'Read contribution <span aria-hidden="true">+</span>';
-  });
-  card.querySelector(".member-close").addEventListener("click", () => {
-    card.classList.remove("is-expanded");
-    expandButton.setAttribute("aria-expanded", "false");
-  });
+  if (hasExperience) {
+    const expandButton = card.querySelector(".member-expand");
+    card.classList.add("has-more");
+    expandButton.addEventListener("click", () => {
+      const expanded = card.classList.toggle("is-expanded");
+      expandButton.setAttribute("aria-expanded", String(expanded));
+    });
+    card.querySelector(".member-close").addEventListener("click", () => {
+      card.classList.remove("is-expanded");
+      expandButton.setAttribute("aria-expanded", "false");
+    });
+  }
 
   // Image error fallback — try space/underscore x webp/jpg combos, then default
   const img = card.querySelector(".member-img");
   img.addEventListener("error", function () {
     if (this.src.includes("default.webp")) return;
 
-    const stages = ["underscore-webp", "space-jpg", "underscore-jpg", "default"];
+    const stages = ["underscore-webp", "lowercase-webp", "lowercase-underscore-webp", "space-jpg", "underscore-jpg", "default"];
     const current = this.dataset.stage;
     const nextStage = current ? stages[stages.indexOf(current) + 1] : stages[0];
 
@@ -156,6 +160,12 @@ function createMemberCard(member) {
     switch (nextStage) {
       case "underscore-webp":
         this.src = `${base}${nameWithUnderscores}.webp`;
+        break;
+      case "lowercase-webp":
+        this.src = `${base}${nameWithSpaces.toLowerCase()}.webp`;
+        break;
+      case "lowercase-underscore-webp":
+        this.src = `${base}${nameWithUnderscores.toLowerCase()}.webp`;
         break;
       case "space-jpg":
         this.src = `${base}${nameWithSpaces}.jpg`;
