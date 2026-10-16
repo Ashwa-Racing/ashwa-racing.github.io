@@ -28,7 +28,7 @@ jobs:
 
       - name: Run sync script
         env:
-          SHEET_CSV_URL:        ${{ secrets.SHEET_CSV_URL }}
+          TEAM_DATA_CSV_URL:      ${{ secrets.TEAM_DATA_CSV_URL }}
           DRIVE_ROOT_FOLDER_ID: ${{ secrets.DRIVE_ROOT_FOLDER_ID }}
           R2_ACCOUNT_ID:        ${{ secrets.R2_ACCOUNT_ID }}
           R2_ACCESS_KEY_ID:     ${{ secrets.R2_ACCESS_KEY_ID }}

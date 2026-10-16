@@ -24,7 +24,7 @@ import requests
 import boto3
 
 # ─── Config ───────────────────────────────────────────────────
-SHEET_CSV_URL        = os.environ["SHEET_CSV_URL"]
+TEAM_DATA_CSV_URL = os.environ["TEAM_DATA_CSV_URL"]
 DRIVE_ROOT_FOLDER_ID = os.environ["DRIVE_ROOT_FOLDER_ID"]
 
 TEAM_JSON_PATH = "assets/data/team.json"
@@ -303,7 +303,7 @@ def load_team():
 # ─── Read Sheet ───────────────────────────────────────────────
 def read_sheet():
     print("📊 Fetching sheet CSV...")
-    r = requests.get(SHEET_CSV_URL, timeout=30)
+    r = requests.get(TEAM_DATA_CSV_URL, timeout=30)
     r.raise_for_status()
     rows = list(csv.DictReader(io.StringIO(r.text)))
     rows = [r for r in rows if r.get("Name", "").strip()]

@@ -6,13 +6,33 @@
  */
 
 const BLOG_FORM = {
+  route: 'What would you like to submit?',
+  routeTeam: 'Team data',
+  routeBlog: 'Blog / Newsletter',
   uploadQuestion: 'Article file (.docx)',
   title: 'Article title',
   date: 'Publication date',
   author: 'Author',
-  category: 'Category',
+  subsystem: 'Subsystem',
   excerpt: 'Short summary',
-  featured: 'Feature this article?'
+  featured: 'Feature this article?',
+  newsletterPdf: 'Newsletter PDF',
+  newsletterYear: 'Newsletter year',
+  newsletterMonth: 'Newsletter month',
+  newsletterType: 'Newsletter type'
+};
+
+const TEAM_FORM = {
+  name: 'Full Name (In normal, e.g. : Ashwa Racing )',
+  email: 'Ashwa Email ID (xxx.ashwa@gmail.com)',
+  year: 'Select Batch (Passing Year)',
+  roles: 'Select your team role(s)',
+  prototypes: 'Select Prototype(s) you worked on per Role (leave blank if N/A)',
+  subsystems: 'Select your Role in each Subsystem (leave blank if N/A)',
+  experience: 'Please list your contributions in a paragraph. If None, kindly write NA.',
+  photo: 'Kindly upload your pictures here',
+  linkedin: 'LinkedIN Account URL',
+  github: 'GitHUB Account URL'
 };
 
 const BLOG_REPOSITORY = {
@@ -29,8 +49,8 @@ function installBlogPublisher() {
   if (!form) throw new Error('Open this script from the blog submission Google Form.');
 
   const properties = PropertiesService.getScriptProperties();
-  if (!properties.getProperty('GITHUB_TOKEN')) {
-    throw new Error('Add GITHUB_TOKEN in Apps Script Project Settings before setup.');
+  if (!properties.getProperty('GITHUB_CONTENTS_TOKEN')) {
+    throw new Error('Add GITHUB_CONTENTS_TOKEN in Apps Script Project Settings before setup.');
   }
   ['R2_ACCOUNT_ID', 'R2_ACCESS_KEY_ID', 'R2_SECRET_ACCESS_KEY', 'R2_BUCKET_NAME']
     .forEach(name => {
@@ -38,6 +58,10 @@ function installBlogPublisher() {
         throw new Error('Add ' + name + ' in Apps Script Project Settings before setup.');
       }
     });
+  if (!properties.getProperty('TEAM_SHEET_ID')) {
+    throw new Error('Add TEAM_SHEET_ID in Apps Script Project Settings before setup.');
+  }
+  ensureTeamSheet_();
 
   form.setCollectEmail(true);
   const existing = ScriptApp.getProjectTriggers().some(trigger =>
@@ -54,9 +78,11 @@ function installBlogPublisher() {
 
 function publishBlogSubmission(event) {
   const respondent = String(event.response.getRespondentEmail() || '').trim().toLowerCase();
+  let selectedRoute = '';
 
   try {
     const answers = {};
+    const uploads = {};
     const responseLabels = [];
     let uploadedFileIds = [];
     event.response.getItemResponses().forEach(itemResponse => {
@@ -64,12 +90,23 @@ function publishBlogSubmission(event) {
       const normalizedTitle = normalizeQuestion_(title);
       const response = itemResponse.getResponse();
       responseLabels.push(title || '(untitled question)');
-      if (normalizedTitle === normalizeQuestion_(BLOG_FORM.uploadQuestion)) {
-        uploadedFileIds = Array.isArray(response) ? response : [response];
+      if ([BLOG_FORM.uploadQuestion, BLOG_FORM.newsletterPdf].some(q => normalizedTitle === normalizeQuestion_(q))) {
+        uploads[normalizedTitle] = Array.isArray(response) ? response : [response];
       } else {
-        answers[normalizedTitle] = Array.isArray(response) ? response.join(', ') : response;
+        answers[normalizedTitle] = response;
       }
     });
+
+    const route = String(answers[normalizeQuestion_(BLOG_FORM.route)] || '').trim();
+    selectedRoute = route;
+    if (normalizeQuestion_(route) === normalizeQuestion_(BLOG_FORM.routeTeam)) {
+      publishTeamSubmission_(answers, uploads, respondent);
+      return;
+    }
+    if (route && normalizeQuestion_(route) !== normalizeQuestion_(BLOG_FORM.routeBlog)) {
+      throw new Error('Choose Team data or Blog / Newsletter at the start of the form.');
+    }
+    uploadedFileIds = uploads[normalizeQuestion_(BLOG_FORM.uploadQuestion)] || [];
 
     if (!respondent.endsWith(ALLOWED_EMAIL_SUFFIX)) {
       trashUploads_(uploadedFileIds);
@@ -80,9 +117,9 @@ function publishBlogSubmission(event) {
     if (!fileId) throw new Error('Attach one DOCX file to the form submission.');
 
     const title = requiredAnswer_(answers, BLOG_FORM.title, responseLabels);
-    const date = normalizeDate_(requiredAnswer_(answers, BLOG_FORM.date, responseLabels));
+    const date = normalizeDate_(answerFor_(answers, BLOG_FORM.date));
     const author = requiredAnswer_(answers, BLOG_FORM.author, responseLabels);
-    const category = requiredAnswer_(answers, BLOG_FORM.category, responseLabels);
+    const subsystem = requiredAnswer_(answers, BLOG_FORM.subsystem, responseLabels);
     const excerpt = requiredAnswer_(answers, BLOG_FORM.excerpt, responseLabels);
     const upload = DriveApp.getFileById(fileId);
     if (!/\.docx$/i.test(upload.getName())) {
@@ -96,7 +133,7 @@ function publishBlogSubmission(event) {
       title: title,
       date: date,
       author: author,
-      category: category,
+      category: subsystem,
       excerpt: excerpt,
       cover: firstImage ? firstImage.url : '',
       coverAlt: firstImage ? firstImage.alt : '',
@@ -106,6 +143,9 @@ function publishBlogSubmission(event) {
     convertedArticle.images.forEach(writeAssetToR2_);
     writeMarkdownToR2_(slug, markdown);
     writePostToGitHub_(slug, markdown);
+    if ((uploads[normalizeQuestion_(BLOG_FORM.newsletterPdf)] || []).some(Boolean)) {
+      publishNewsletter_(answers, uploads);
+    }
     if (respondent) {
       MailApp.sendEmail(respondent, 'Your Ashwa Racing article was published',
         '“' + title + '” was accepted and sent to the website build. It should appear on the blog after the Cloudflare build completes.');
@@ -113,11 +153,119 @@ function publishBlogSubmission(event) {
   } catch (error) {
     console.error(error && error.stack ? error.stack : error);
     if (respondent) {
-      MailApp.sendEmail(respondent, 'Your Ashwa Racing article needs attention',
-        'The article was not published.\n\n' + String(error.message || error) + '\n\nPlease correct the form details or DOCX and submit again.');
+      const isTeam = normalizeQuestion_(selectedRoute) === normalizeQuestion_(BLOG_FORM.routeTeam);
+      MailApp.sendEmail(respondent, isTeam ? 'Your Ashwa Racing team submission needs attention' : 'Your Ashwa Racing article needs attention',
+        (isTeam ? 'The team data was not added.' : 'The article was not published.') + '\n\n' + String(error.message || error) + '\n\nPlease correct the form details or upload and submit again.');
     }
     throw error;
   }
+}
+
+function publishTeamSubmission_(answers, uploads, respondent) {
+  const name = requiredAnswer_(answers, TEAM_FORM.name, []);
+  const ashwaEmail = requiredAnswer_(answers, TEAM_FORM.email, []).toLowerCase();
+  if (!ashwaEmail.endsWith('.ashwa@gmail.com')) throw new Error('Enter your Ashwa email address in the team email field.');
+  const year = requiredAnswer_(answers, TEAM_FORM.year, []);
+  const photoIds = uploads[normalizeQuestion_(TEAM_FORM.photo)] || [];
+  if (!photoIds.find(Boolean)) throw new Error('Upload one team photo.');
+  const prototypeResponse = answers[normalizeQuestion_(TEAM_FORM.prototypes)] || [];
+  const subsystemResponse = answers[normalizeQuestion_(TEAM_FORM.subsystems)] || [];
+  const prototypes = parsePrototypeGrid_(prototypeResponse);
+  const subsystemRoles = parseSubsystemGrid_(subsystemResponse);
+  const chosenRoles = String(answers[normalizeQuestion_(TEAM_FORM.roles)] || 'Member / Part of team').split(/,\s*/).filter(Boolean);
+  const sheetId = PropertiesService.getScriptProperties().getProperty('TEAM_SHEET_ID');
+  if (!sheetId) throw new Error('Set TEAM_SHEET_ID in Apps Script Script Properties to the roster spreadsheet.');
+  const sheet = ensureTeamSheet_();
+  const photo = DriveApp.getFileById(photoIds.find(Boolean));
+  photo.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  const row = [name, year, chosenRoles.join(', '), subsystemRoles.join(', '), JSON.stringify(prototypes), String(answerFor_(answers, TEAM_FORM.experience) || ''), String(answerFor_(answers, TEAM_FORM.linkedin) || ''), String(answerFor_(answers, TEAM_FORM.github) || ''), ashwaEmail, '', '', photo.getId()];
+  sheet.appendRow(row);
+  if (respondent) MailApp.sendEmail(respondent, 'Your Ashwa Racing team data was received', 'Your team details were added to the roster update sheet.');
+}
+
+function ensureTeamSheet_() {
+  const sheetId = PropertiesService.getScriptProperties().getProperty('TEAM_SHEET_ID');
+  const spreadsheet = SpreadsheetApp.openById(sheetId);
+  let sheet = spreadsheet.getSheetByName('Parsed Team Data');
+  if (!sheet) sheet = spreadsheet.insertSheet('Parsed Team Data');
+  const headers = ['Name', 'Year', 'Roles', 'Subsystems', 'Prototype Roles', 'Experience', 'LinkedIn', 'GitHub', 'Email', 'Testimony', 'Current Job', 'Photo File ID'];
+  if (sheet.getLastRow() === 0) sheet.appendRow(headers);
+  const existingHeaders = sheet.getRange(1, 1, 1, headers.length).getDisplayValues()[0];
+  if (headers.some((header, index) => existingHeaders[index] !== header)) throw new Error('Parsed Team Data headers do not match the publisher setup guide.');
+  return sheet;
+}
+
+function parsePrototypeGrid_(value) {
+  const prototypes = ['Combustion', 'Hybrid', 'Electric', 'Hyperloop', 'Driverless'];
+  const roles = ['Member / Part of team', 'Team Captain', 'Chief Engineer', 'Project Manager'];
+  const responses = Array.isArray(value) ? value : String(value || '').split(/\s*,\s*/);
+  const result = {};
+  prototypes.forEach((prototype, index) => {
+    const role = String(responses[index] || '').trim();
+    if (roles.indexOf(role) !== -1) result[prototype] = role;
+  });
+  return result;
+}
+
+function parseSubsystemGrid_(value) {
+  const subsystems = ['Chassis & Workshop Management', 'Suspension & Admin', 'Drivetrain & Human Resources', 'Brakes & Logistics', 'Engine', 'Electrical & Testing', 'Sponsorship, Marketing & Public Relations', 'Finance', 'IT', 'Aero'];
+  const responses = Array.isArray(value) ? value : String(value || '').split(/\s*,\s*/);
+  const selected = [];
+  subsystems.forEach((subsystem, index) => {
+    const role = String(responses[index] || '').trim();
+    if (role) selected.push(subsystem);
+    if (/lead/i.test(role) && selected.indexOf('Leads') === -1) selected.push('Leads');
+  });
+  return selected;
+}
+
+function answerFor_(answers, question) {
+  const exact = normalizeQuestion_(question);
+  if (answers[exact] !== undefined) return answers[exact];
+  const key = Object.keys(answers).find(title => title.indexOf(exact) === 0 || exact.indexOf(title) === 0);
+  return key ? answers[key] : '';
+}
+
+function publishNewsletter_(answers, uploads) {
+  const fileIds = uploads[normalizeQuestion_(BLOG_FORM.newsletterPdf)] || [];
+  const pdfId = fileIds.find(Boolean);
+  if (!pdfId) return;
+  const year = requiredAnswer_(answers, BLOG_FORM.newsletterYear, []);
+  const month = requiredAnswer_(answers, BLOG_FORM.newsletterMonth, []);
+  const type = requiredAnswer_(answers, BLOG_FORM.newsletterType, []);
+  if (!/^20\d{2}$/.test(year) || !/^(0[1-9]|1[0-2])$/.test(month)) throw new Error('Newsletter year must be YYYY and month must be 01 through 12.');
+  if (!/^(general|hybrid|combustion|alumni)$/i.test(type)) throw new Error('Choose a supported newsletter type: General, Hybrid, Combustion, or Alumni.');
+  const filename = year + '-' + month + '-' + type.toLowerCase() + '.pdf';
+  const pdf = DriveApp.getFileById(pdfId);
+  if (pdf.getMimeType() !== 'application/pdf') throw new Error('Newsletter upload must be a PDF.');
+  const cover = drivePdfThumbnail_(pdfId);
+  putR2Object_('pdfs/newsletters/' + year + '/' + filename, pdf.getBlob().getBytes(), 'application/pdf');
+  putR2Object_('images/newsletters/' + year + '/' + year + '-' + month + '.png', cover.getBytes(), 'image/png');
+  const path = 'assets/data/newsletters.json';
+  const current = UrlFetchApp.fetch('https://api.github.com/repos/' + BLOG_REPOSITORY.owner + '/' + BLOG_REPOSITORY.repo + '/contents/' + path + '?ref=' + encodeURIComponent(BLOG_REPOSITORY.branch), {headers:{Authorization:'Bearer ' + PropertiesService.getScriptProperties().getProperty('GITHUB_CONTENTS_TOKEN'), Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
+  if (current.getResponseCode() !== 200) throw new Error('GitHub could not read the newsletter archive (' + current.getResponseCode() + ').');
+  const entry = JSON.parse(current.getContentText());
+  const list = JSON.parse(Utilities.newBlob(Utilities.base64Decode(entry.content.replace(/\n/g, ''))).getDataAsString());
+  if (!list.includes(filename)) list.push(filename);
+  writeGitHubFile_(path, Utilities.newBlob(JSON.stringify(list, null, 2) + '\n', 'application/json').getBytes(), 'Update newsletter archive for ' + year + '-' + month + '-' + type.toLowerCase());
+}
+
+function drivePdfThumbnail_(fileId) {
+  let thumbnailLink = '';
+  for (let attempt = 0; attempt < 4 && !thumbnailLink; attempt += 1) {
+    const file = Drive.Files.get(fileId, { fields: 'thumbnailLink' });
+    thumbnailLink = file.thumbnailLink || '';
+    if (!thumbnailLink && attempt < 3) Utilities.sleep(1000);
+  }
+  if (!thumbnailLink) throw new Error('Google Drive has not generated a preview image for this PDF yet. Please try the submission again in a minute.');
+  const response = UrlFetchApp.fetch(thumbnailLink, {
+    headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() },
+    muteHttpExceptions: true
+  });
+  if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
+    throw new Error('Could not retrieve the newsletter PDF preview image (' + response.getResponseCode() + ').');
+  }
+  return Utilities.newBlob(response.getContent(), response.getHeaders()['Content-Type'] || 'image/jpeg', 'newsletter-cover.png').getAs('image/png');
 }
 
 function trashUploads_(fileIds) {
@@ -343,7 +491,7 @@ function bytesToHex_(bytes) {
 }
 
 function writeGitHubFile_(path, bytes, message) {
-  const token = PropertiesService.getScriptProperties().getProperty('GITHUB_TOKEN');
+  const token = PropertiesService.getScriptProperties().getProperty('GITHUB_CONTENTS_TOKEN');
   const endpoint = 'https://api.github.com/repos/' + BLOG_REPOSITORY.owner + '/' +
     BLOG_REPOSITORY.repo + '/contents/' + path.split('/').map(encodeURIComponent).join('/');
   const headers = {
@@ -400,7 +548,7 @@ function normalizeQuestion_(value) {
 }
 
 function requiredAnswer_(answers, question, responseLabels) {
-  const value = String(answers[normalizeQuestion_(question)] || '').trim();
+  const value = String(answerFor_(answers, question) || '').trim();
   if (!value) {
     throw new Error('Please complete the form field: ' + question +
       '. Questions received by the trigger: ' + responseLabels.join(' | '));
@@ -409,6 +557,9 @@ function requiredAnswer_(answers, question, responseLabels) {
 }
 
 function normalizeDate_(value) {
+  if (value instanceof Date && !isNaN(value.getTime())) {
+    return Utilities.formatDate(value, Session.getScriptTimeZone(), 'yyyy-MM-dd');
+  }
   const date = String(value).trim();
   const match = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!match) throw new Error('Publication date must use YYYY-MM-DD.');

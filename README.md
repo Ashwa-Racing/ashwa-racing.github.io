@@ -43,7 +43,7 @@ The build recreates `dist/` from the source pages, assets, and content. Do not e
 ├── scripts/
 │   ├── build_site.py         Builds the deployable static site
 │   ├── sync.py               Syncs team data from the team's Google Sheet
-│   ├── google-blog-publisher/ Google Form to blog publishing workflow
+│   ├── google-blog-publisher/ Combined team, blog, and newsletter submission workflow
 │   └── crowdfunding-tracker/ Bank/UPI contribution tracking setup
 ├── .github/workflows/        Scheduled team data sync
 ├── wrangler.jsonc            Cloudflare Workers configuration
@@ -66,9 +66,9 @@ To deploy locally, install Node.js and npm, build first, authenticate Wrangler w
 
 ## Updating site content
 
-- **Blog:** Add a Markdown article under `content/blog/`. See the [blog authoring guide](content/blog/README.md) for front matter and supported formatting. For team members who submit through Google Forms, see the [blog publisher setup](scripts/google-blog-publisher/SETUP.md).
+- **Blog and newsletters:** Add a Markdown article under `content/blog/` or follow the [combined submission form setup](scripts/google-blog-publisher/SETUP.md) for team submissions. The form can publish a blog article and optionally a newsletter issue in one submission.
 - **Newsletters:** Add the issue PDF and cover image to the team's asset host, then add the PDF filename to `assets/data/newsletters.json`. The build generates its shareable page and sitemap entry.
-- **Team roster:** The scheduled workflow syncs roster data from the team's Google Sheet. To maintain it, configure the repository's GitHub Actions secrets: `SHEET_CSV_URL`, `DRIVE_ROOT_FOLDER_ID`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET_NAME`. The workflow can also be started manually from GitHub Actions.
+- **Team roster:** The scheduled workflow syncs normalized roster rows from the `Parsed Team Data` tab in the team's Google Sheet. Configure the repository's GitHub Actions secrets: `TEAM_DATA_CSV_URL`, `DRIVE_ROOT_FOLDER_ID`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET_NAME`. The workflow can also be started manually from GitHub Actions.
 - **Crowdfunding:** The bank/UPI contribution tracker is not provisioned automatically. Follow the [tracker setup guide](scripts/crowdfunding-tracker/SETUP.md) to create the private ledger and public form under the team's Google account.
 - **Shared navigation and footer:** Edit `components/header.html` or `components/footer.html`. The corresponding shared scripts and styles are in `assets/js/components/` and `assets/css/components/`.
 - **Page layout and behavior:** Edit the root HTML page and its matching files under `assets/css/pages/` and `assets/js/pages/`.
