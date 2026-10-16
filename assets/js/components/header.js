@@ -2,6 +2,12 @@
 
 const prefix = "/";
 
+// Sign-up boxes (components/signup.html) stay hidden until a mailing service (e.g. Brevo) is connected.
+// Set to true to preview them locally; submitting one sends and stores nothing yet.
+const SIGNUP_ENABLED = false;
+let signupTemplate = null;   // components/signup.html, fetched once per page.
+let signupCount = 0;         // Gives each box on a page its own ids.
+
 async function loadComponent(id, path, callback) {
   try {
     const html = await fetch(prefix + path).then(r => r.text());
@@ -18,9 +24,100 @@ loadComponent("main-header", "components/header.html", () => {
   markActivePage();
 });
 
-loadComponent("main-footer", "components/footer.html");
+loadComponent("main-footer", "components/footer.html", loadSignupBoxes);
+
+loadSignupBoxes();   // Slots written in the page itself (blog article end, newsletter reader).
 
 loadLatestBlogUpdate();
+
+// Fills every empty .signup-slot on the page with the shared sign-up box.
+async function loadSignupBoxes() {
+  if (!SIGNUP_ENABLED) return;
+  const slots = [...document.querySelectorAll(".signup-slot:not([data-signup-ready])")];
+  if (!slots.length) return;
+  slots.forEach(slot => { slot.dataset.signupReady = "true"; });
+
+  try {
+    signupTemplate ??= fetch(prefix + "components/signup.html").then(r => r.text());
+    const html = await signupTemplate;
+    slots.forEach(slot => {
+      slot.innerHTML = html;
+      initSignupBox(slot);
+    });
+  } catch (err) {
+    console.warn("signup load failed:", err);
+  }
+}
+
+function initSignupBox(slot) {
+  const box = slot.querySelector(".signup");
+  const form = slot.querySelector(".signup-form");
+  if (!box || !form) return;
+
+  // Per-spot wording and look, from the slot's data attributes.
+  const { signupTitle, signupAccent, signupText, signupVariant, signupHeadingLevel } = slot.dataset;
+  if (signupTitle) box.querySelector(".signup-title-text").textContent = signupTitle;
+  if (signupAccent) box.querySelector(".signup-title-accent").textContent = signupAccent;
+  if (signupText) box.querySelector(".signup-text").textContent = signupText;
+  if (signupVariant === "compact") box.classList.add("signup--compact");
+  if (signupHeadingLevel === "3") {
+    const heading = box.querySelector(".signup-title");
+    const h3 = document.createElement("h3");
+    h3.className = heading.className;
+    h3.append(...heading.childNodes);
+    heading.replaceWith(h3);
+  }
+
+  // Unique ids so labels and error messages stay linked when a page has two boxes.
+  const id = `signup-${++signupCount}`;
+  const title = box.querySelector(".signup-title");
+  title.id = `${id}-title`;
+  box.setAttribute("aria-labelledby", title.id);
+  box.querySelectorAll("[data-signup-id]").forEach(el => { el.id = `${id}-${el.dataset.signupId}`; });
+  box.querySelectorAll("[data-signup-for]").forEach(el => { el.htmlFor = `${id}-${el.dataset.signupFor}`; });
+  box.querySelectorAll("[data-signup-describedby]").forEach(el => { el.setAttribute("aria-describedby", `${id}-${el.dataset.signupDescribedby}`); });
+
+  const email = form.elements.email;
+  const field = email.closest(".signup-field");
+  const error = form.querySelector(".signup-error");
+  const status = form.querySelector(".signup-status");
+  const EMAIL_MESSAGE = "Please enter a valid email address.";
+  const TOPIC_MESSAGE = "Please choose at least one: newsletters or blog posts.";
+
+  const isValidEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  const showError = message => {
+    field.classList.toggle("has-error", Boolean(message));
+    error.textContent = message;
+  };
+
+  // Same behaviour as the contact form: check on leaving the field, clear while typing.
+  email.addEventListener("blur", () => showError(isValidEmail(email.value) ? "" : EMAIL_MESSAGE));
+  email.addEventListener("input", () => showError(""));
+  form.addEventListener("change", event => {
+    if (event.target.name === "topics") showError("");
+  });
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    if (form.elements._honey.value) return;
+
+    if (!isValidEmail(email.value)) {
+      showError(EMAIL_MESSAGE);
+      email.focus();
+      return;
+    }
+    const topics = [...form.querySelectorAll('input[name="topics"]:checked')].map(input => input.value);
+    if (!topics.length) {
+      showError(TOPIC_MESSAGE);
+      return;
+    }
+    showError("");
+
+    // Not connected to a mailing service yet: nothing is sent or stored.
+    status.textContent = "Sign-ups open soon. Thanks for your interest!";
+    status.hidden = false;
+  });
+}
 
 async function loadLatestBlogUpdate() {
   try {
