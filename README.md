@@ -66,7 +66,7 @@ To deploy locally, install Node.js and npm, build first, authenticate Wrangler w
 
 ## Updating site content
 
-- **Blog and newsletters:** Add a Markdown article under `content/blog/` or follow the [combined submission form setup](scripts/google-blog-publisher/SETUP.md) for team submissions. The form can publish a blog article and optionally a newsletter issue in one submission.
+- **Blog and newsletters:** Add a Markdown article under `content/blog/` or follow the [combined submission form setup](scripts/google-blog-publisher/SETUP.md). The form supports blog submissions with an optional newsletter PDF, as well as newsletter-only submissions.
 - **Newsletters:** Add the issue PDF and cover image to the team's asset host, then add the PDF filename to `assets/data/newsletters.json`. The build generates its shareable page and sitemap entry.
 - **Team roster:** The scheduled workflow syncs normalized roster rows from the `Parsed Team Data` tab in the team's Google Sheet. Configure the repository's GitHub Actions secrets: `TEAM_DATA_CSV_URL`, `DRIVE_ROOT_FOLDER_ID`, `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET_NAME`. The workflow can also be started manually from GitHub Actions.
 - **Crowdfunding:** The bank/UPI contribution tracker is not provisioned automatically. Follow the [tracker setup guide](scripts/crowdfunding-tracker/SETUP.md) to create the private ledger and public form under the team's Google account.

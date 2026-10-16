@@ -1,6 +1,6 @@
 # Combined team, blog, and newsletter submission form
 
-The Apps Script in `Code.gs` handles one Google Form with two routes: team data or blog/newsletter. Team submissions are appended to the roster spreadsheet's `Parsed Team Data` tab in the exact schema consumed by `scripts/sync.py`. Blog posts are converted from DOCX to Markdown and committed to `content/blog/`. If a newsletter PDF is attached, it is uploaded to R2, its cover is generated from Google Drive's PDF preview, and the issue filename is added to `assets/data/newsletters.json`.
+The Apps Script in `Code.gs` handles three routes: team data, blog (optionally with a newsletter PDF), or newsletter only. Team submissions are appended to the roster spreadsheet's `Parsed Team Data` tab in the exact schema consumed by `scripts/sync.py`. Blog posts are converted from DOCX to Markdown and committed to `content/blog/`. Newsletter PDFs are uploaded to R2, their covers are generated from Google Drive's PDF preview, and issue filenames are added to `assets/data/newsletters.json`.
 
 ## Build the Google Form
 
@@ -9,8 +9,8 @@ Create a new form, for example **Ashwa Racing Website Submission**. Use sections
 ### First section
 
 - Required multiple choice: `What would you like to submit?`
-- Choices, spelled exactly: `Team data` and `Blog / Newsletter`.
-- Route each choice to the matching section below.
+- Choices, spelled exactly: `Team data`, `Blog / Newsletter`, and `Newsletter only`.
+- Route each choice to its matching section. The newsletter-only section lets submitters publish an issue without creating a blog post.
 
 ### Team data section
 
@@ -19,8 +19,7 @@ Add these questions. Keep the titles exact because the Apps Script reads them by
 - Required short answer: `Full Name (In normal, e.g. : Ashwa Racing )`
 - Required short answer: `Ashwa Email ID (xxx.ashwa@gmail.com)`
 - Required short answer or dropdown: `Select Batch (Passing Year)`
-- Required checkboxes: `Select your team role(s)`; choices: `Member / Part of team`, `Team Captain`, `Chief Engineer`, `Project Manager`.
-- Optional multiple-choice grid: `Select Prototype(s) you worked on per Role (leave blank if N/A)`. Rows: `Combustion`, `Hybrid`, `Electric`, `Hyperloop`, `Driverless`. Columns: `Member / Part of team`, `Team Captain`, `Chief Engineer`, `Project Manager`. Leave rows unanswered when not applicable.
+- Optional multiple-choice grid: `Select Prototype(s) you worked on per Role (leave blank if N/A)`. Rows: `Combustion`, `Hybrid`, `Electric`, `Hyperloop`, `Driverless`. Columns: `Member / Part of team`, `Team Captain`, `Chief Engineer`, `Project Manager`. Leave rows unanswered when not applicable. The selected roles are also used to fill the roster's `Roles` field; if all rows are blank, it defaults to `Member / Part of team`.
 - Optional multiple-choice grid: `Select your Role in each Subsystem (leave blank if N/A)`. Rows: `Chassis & Workshop Management`, `Suspension & Admin`, `Drivetrain & Human Resources`, `Brakes & Logistics`, `Engine`, `Electrical & Testing`, `Sponsorship, Marketing & Public Relations`, `Finance`, `IT`, `Aero`. Columns: `Member`, `Subsystem Lead`. Leave rows unanswered when not applicable.
 - Required paragraph: `Please list your contributions in a paragraph. If None, kindly write NA.`
 - Required file upload: `Kindly upload your pictures here`; restrict to one image.
@@ -44,6 +43,19 @@ Use the current blog form questions and exact titles:
 - Optional short answer: `Newsletter year` (four digits, for example `2026`). Required by the publisher when a newsletter PDF is attached.
 - Optional short answer: `Newsletter month` (two digits, `01` through `12`). Required by the publisher when a newsletter PDF is attached.
 - Optional dropdown: `Newsletter type`; choices `general`, `hybrid`, `combustion`, `alumni`. Required by the publisher when a newsletter PDF is attached.
+
+Submitting this route always publishes the blog post. Attaching the optional newsletter PDF also adds that issue to the newsletter archive.
+
+### Newsletter only section
+
+Create a separate section for people who only want to upload an issue. Add these questions with the exact titles below; they must be required in this section:
+
+- Required file upload: `Newsletter PDF`; one PDF.
+- Required short answer: `Newsletter year` (four digits, for example `2026`).
+- Required short answer: `Newsletter month` (two digits, `01` through `12`).
+- Required dropdown: `Newsletter type`; choices `general`, `hybrid`, `combustion`, `alumni`.
+
+Set this section to submit the form when complete. Do not add article fields to this route. The upload is published to the newsletter archive without creating a blog post.
 
 Help text for the DOCX upload:
 
@@ -80,6 +92,6 @@ The submitted `Subsystem` value is written into the site's existing blog metadat
 
 - Team route: confirm a submission adds one row to `Parsed Team Data`, then run the existing team sync and verify roster/photo updates.
 - Blog route: confirm the Markdown source is committed under `content/blog/`, article images and archive Markdown reach R2, and the Cloudflare build publishes the article.
-- Newsletter submission: attach a newsletter PDF and confirm the blog post is published, the PDF and generated PNG cover reach their newsletter R2 folders, and the filename is added to `assets/data/newsletters.json`; rebuild and confirm the issue appears in the archive.
+- Newsletter-only submission: confirm no blog post is created, the PDF and generated PNG cover reach their newsletter R2 folders, and the filename is added to `assets/data/newsletters.json`; rebuild and confirm the issue appears in the archive.
 
 The blog and newsletter publishing steps are sequential but not transactional: if newsletter upload or archive update fails after the article commit, the article may publish while the submission reports an error. Correct the issue and resubmit; the article path updates by date and title, and newsletter filenames are not duplicated in the archive.

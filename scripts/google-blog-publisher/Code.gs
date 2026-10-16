@@ -9,6 +9,7 @@ const BLOG_FORM = {
   route: 'What would you like to submit?',
   routeTeam: 'Team data',
   routeBlog: 'Blog / Newsletter',
+  routeNewsletter: 'Newsletter only',
   uploadQuestion: 'Article file (.docx)',
   title: 'Article title',
   date: 'Publication date',
@@ -26,7 +27,6 @@ const TEAM_FORM = {
   name: 'Full Name (In normal, e.g. : Ashwa Racing )',
   email: 'Ashwa Email ID (xxx.ashwa@gmail.com)',
   year: 'Select Batch (Passing Year)',
-  roles: 'Select your team role(s)',
   prototypes: 'Select Prototype(s) you worked on per Role (leave blank if N/A)',
   subsystems: 'Select your Role in each Subsystem (leave blank if N/A)',
   experience: 'Please list your contributions in a paragraph. If None, kindly write NA.',
@@ -103,8 +103,23 @@ function publishBlogSubmission(event) {
       publishTeamSubmission_(answers, uploads, respondent);
       return;
     }
+    const newsletterOnly = normalizeQuestion_(route) === normalizeQuestion_(BLOG_FORM.routeNewsletter);
+    if (newsletterOnly) {
+      const newsletterUploads = uploads[normalizeQuestion_(BLOG_FORM.newsletterPdf)] || [];
+      if (!respondent.endsWith(ALLOWED_EMAIL_SUFFIX)) {
+        trashUploads_(newsletterUploads);
+        throw new Error('Only Google accounts ending in ' + ALLOWED_EMAIL_SUFFIX + ' can submit newsletters. The uploaded file was removed.');
+      }
+      if (!newsletterUploads.find(Boolean)) throw new Error('Attach one newsletter PDF to the form submission.');
+      publishNewsletter_(answers, uploads);
+      if (respondent) {
+        MailApp.sendEmail(respondent, 'Your Ashwa Racing newsletter was published',
+          'Your newsletter was accepted and sent to the website build. It should appear in the newsletter archive after the Cloudflare build completes.');
+      }
+      return;
+    }
     if (route && normalizeQuestion_(route) !== normalizeQuestion_(BLOG_FORM.routeBlog)) {
-      throw new Error('Choose Team data or Blog / Newsletter at the start of the form.');
+      throw new Error('Choose Team data, Blog / Newsletter, or Newsletter only at the start of the form.');
     }
     uploadedFileIds = uploads[normalizeQuestion_(BLOG_FORM.uploadQuestion)] || [];
 
@@ -154,8 +169,9 @@ function publishBlogSubmission(event) {
     console.error(error && error.stack ? error.stack : error);
     if (respondent) {
       const isTeam = normalizeQuestion_(selectedRoute) === normalizeQuestion_(BLOG_FORM.routeTeam);
-      MailApp.sendEmail(respondent, isTeam ? 'Your Ashwa Racing team submission needs attention' : 'Your Ashwa Racing article needs attention',
-        (isTeam ? 'The team data was not added.' : 'The article was not published.') + '\n\n' + String(error.message || error) + '\n\nPlease correct the form details or upload and submit again.');
+      const isNewsletter = normalizeQuestion_(selectedRoute) === normalizeQuestion_(BLOG_FORM.routeNewsletter);
+      MailApp.sendEmail(respondent, isTeam ? 'Your Ashwa Racing team submission needs attention' : isNewsletter ? 'Your Ashwa Racing newsletter needs attention' : 'Your Ashwa Racing article needs attention',
+        (isTeam ? 'The team data was not added.' : isNewsletter ? 'The newsletter was not published.' : 'The article was not published.') + '\n\n' + String(error.message || error) + '\n\nPlease correct the form details or upload and submit again.');
     }
     throw error;
   }
@@ -172,7 +188,8 @@ function publishTeamSubmission_(answers, uploads, respondent) {
   const subsystemResponse = answers[normalizeQuestion_(TEAM_FORM.subsystems)] || [];
   const prototypes = parsePrototypeGrid_(prototypeResponse);
   const subsystemRoles = parseSubsystemGrid_(subsystemResponse);
-  const chosenRoles = String(answers[normalizeQuestion_(TEAM_FORM.roles)] || 'Member / Part of team').split(/,\s*/).filter(Boolean);
+  const chosenRoles = [...new Set(Object.values(prototypes))];
+  if (!chosenRoles.length) chosenRoles.push('Member / Part of team');
   const sheetId = PropertiesService.getScriptProperties().getProperty('TEAM_SHEET_ID');
   if (!sheetId) throw new Error('Set TEAM_SHEET_ID in Apps Script Script Properties to the roster spreadsheet.');
   const sheet = ensureTeamSheet_();

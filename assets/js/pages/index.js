@@ -20,12 +20,6 @@ const SITE_READY_TIMEOUT        = 12000;
 const COUNT_UP_MS               = 2000;
 const SPOTLIGHT_AUTO_ADVANCE_MS = 3000;
 
-// Skip autoplay for reduced-motion, Data Saver, and slow connections.
-const allowVideo =
-  !prefersReducedMotion &&
-  !navigator.connection?.saveData &&
-  !/^(slow-2g|2g|3g)$/.test(navigator.connection?.effectiveType || "");
-
 /* Data fetches start immediately so they're usually done by init time. */
 const sponsorsReady = fetchJSON(SPONSORS_URL)
   .then(data => SPONSOR_TIER_ORDER.flatMap(tier => data[tier] || []))
@@ -43,7 +37,7 @@ const siteReady = new Promise(resolve => {
    BACKGROUND VIDEO
    ============================================================ */
 function initBgVideo(video) {
-  if (!video || !allowVideo) return;
+  if (!video) return;
 
   const reveal = () => {
     video.classList.add("is-loaded");
@@ -53,7 +47,10 @@ function initBgVideo(video) {
   if (video.readyState >= 3) reveal();
   else video.addEventListener("canplay", reveal, { once: true });
 
-  video.play()?.catch(() => video.removeEventListener("canplay", reveal));
+  video.play()?.catch(error => {
+    video.removeEventListener("canplay", reveal);
+    console.warn("Ashwa: background video could not start.", video.currentSrc || video.querySelector("source")?.src, error);
+  });
 }
 
 /* ============================================================
