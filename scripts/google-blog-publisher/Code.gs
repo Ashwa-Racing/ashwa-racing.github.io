@@ -258,14 +258,25 @@ function drivePdfThumbnail_(fileId) {
     if (!thumbnailLink && attempt < 3) Utilities.sleep(1000);
   }
   if (!thumbnailLink) throw new Error('Google Drive has not generated a preview image for this PDF yet. Please try the submission again in a minute.');
-  const response = UrlFetchApp.fetch(thumbnailLink, {
+  const highResolutionLink = thumbnailLink
+    .replace(/=s\d+(?=$|[-?&])/i, '=s1600')
+    .replace(/=w\d+-h\d+(?=$|[-?&])/i, '=w1600-h1600')
+    .replace(/([?&]sz=)(?:w|h)?\d+/i, '$1w1600');
+  const requestOptions = {
     headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() },
     muteHttpExceptions: true
-  });
+  };
+  let response = UrlFetchApp.fetch(highResolutionLink, requestOptions);
+  if ((response.getResponseCode() < 200 || response.getResponseCode() >= 300) && highResolutionLink !== thumbnailLink) {
+    response = UrlFetchApp.fetch(thumbnailLink, requestOptions);
+  }
   if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
     throw new Error('Could not retrieve the newsletter PDF preview image (' + response.getResponseCode() + ').');
   }
-  return Utilities.newBlob(response.getContent(), response.getHeaders()['Content-Type'] || 'image/jpeg', 'newsletter-cover.png').getAs('image/png');
+  const contentType = response.getHeaders()['Content-Type'] || 'image/jpeg';
+  if (!/^image\//i.test(contentType)) throw new Error('Google Drive returned a non-image PDF preview. Please try the submission again in a minute.');
+  console.log('Retrieved newsletter cover preview (' + response.getContent().length + ' bytes).');
+  return Utilities.newBlob(response.getContent(), contentType, 'newsletter-cover.png').getAs('image/png');
 }
 
 function trashUploads_(fileIds) {

@@ -49,7 +49,7 @@ Help text for the DOCX upload:
 
 > In your DOCX, place the image you want as the article cover first. The first embedded image becomes the blog card and social preview cover, and also appears in the article at its original position. Add alt text to images in Word when possible. Use inline JPG, PNG, GIF, or WebP images; each image must be 10 MB or smaller.
 
-When a PDF is attached, the Apps Script fetches its Google Drive preview thumbnail and stores it as the PNG cover at `{year}-{month}.png`. The issue filename is `{year}-{month}-{type}.pdf`. If multiple newsletter types share a month, the workflow uses the same month cover image, consistent with the archive today. No separate cover image upload is needed.
+When a PDF is attached, the Apps Script requests a 1600-pixel Google Drive preview thumbnail and stores it as the PNG cover at `{year}-{month}.png`. The issue filename is `{year}-{month}-{type}.pdf`. If multiple newsletter types share a month, the workflow uses the same month cover image, consistent with the archive today. No separate cover image upload is needed.
 
 ## Configure the roster spreadsheet
 
