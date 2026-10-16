@@ -147,6 +147,160 @@ html[data-theme="light"] .footer-socials img { filter: none; }
 .footer-contact-list a { overflow-wrap: anywhere; }
 .footer-location { color: var(--text-muted, #767676); }
 
+/* Newsletter / blog sign-up (components/signup.html), used in the footer, at the end of
+   blog articles and in the newsletter reader. Card look (sharp corners, red top edge)
+   with contact-form fields. Lives here because footer.css is loaded on every page. */
+.signup {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 56px);
+  padding: clamp(24px, 3.5vw, 40px);
+  border: 1px solid var(--border-strong, rgba(255,255,255,0.16));
+  border-top: 3px solid var(--red, #e8001d);
+  background: var(--surface, #191b22);
+  box-shadow: 0 8px 24px var(--shadow, rgba(0,0,0,0.35));
+}
+
+.signup .label { margin-bottom: 12px; }
+
+/* Where each box sits */
+.footer-signup-slot .signup {
+  width: var(--wrap, min(calc(100% - (var(--site-gutter, 20px) * 2)), var(--content-width, 1150px)));
+  margin: 0 auto clamp(44px, 5vw, 64px);
+}
+
+.blog-post-signup-slot .signup { margin-top: 28px; }
+.reader-signup-slot .signup { margin-top: 18px; box-shadow: none; }
+
+/* Same heading style as the site's h2 (condensed, uppercase, red brand-script accent),
+   written out so it also applies when the box uses an h3 */
+.signup-title {
+  margin: 0 0 12px;
+  color: var(--text-strong, #ffffff);
+  font-family: var(--display, 'Barlow Condensed', sans-serif);
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+.signup-title em { color: var(--red, #e8001d); font-family: Samarkan; font-style: italic; }
+
+/* Compact box for narrow spots (newsletter reader side panel) */
+.signup--compact { grid-template-columns: 1fr; gap: 16px; padding: 18px; }
+.signup--compact .signup-title { margin-bottom: 8px; font-size: 1.5rem; }
+.signup--compact .signup-text { font-size: 0.84rem; line-height: 1.6; }
+.signup--compact .signup-row { flex-direction: column; gap: 10px; }
+.signup--compact .signup-row input { border-right: 1px solid var(--border-strong, rgba(255,255,255,0.16)); }
+.signup--compact .signup-topics legend { float: none; width: 100%; margin: 0 0 2px; }
+
+.signup-text {
+  color: var(--text-muted, #767676);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.signup-form { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.signup-field { display: flex; flex-direction: column; gap: 8px; }
+
+.signup-field > label,
+.signup-topics legend {
+  color: var(--text-soft, rgba(255,255,255,0.68));
+  font-family: var(--display, 'Barlow Condensed', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.signup-row { display: flex; min-width: 0; }
+
+.signup-row input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-strong, rgba(255,255,255,0.16));
+  border-right: 0;
+  border-radius: 0;
+  outline: 0;
+  background: var(--page-bg, #08090c);
+  color: var(--text-strong, #ffffff);
+  font: 400 0.95rem/1.5 var(--body, 'Barlow', Arial, sans-serif);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.signup-row input:focus { border-color: var(--red, #e8001d); box-shadow: 0 0 0 3px rgb(232 0 29 / 12%); }
+.signup-field.has-error input { border-color: var(--red, #e8001d); }
+
+.signup-submit {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1px solid var(--red, #e8001d);
+  border-radius: 0;
+  background: var(--red, #e8001d);
+  color: #fff;
+  font-family: var(--display, 'Barlow Condensed', sans-serif);
+  font-size: 0.86rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.signup-submit:hover { background: var(--red-dark, #b5001a); }
+.signup-arrow { transition: transform 0.2s ease; }
+.signup-submit:hover .signup-arrow { transform: translateX(4px); }
+.signup-submit:focus-visible { outline: 2px solid var(--red, #e8001d); outline-offset: 3px; }
+
+.signup-error { color: var(--red, #e8001d); font-size: 0.8rem; }
+.signup-error:empty { display: none; }
+
+.signup-topics {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.signup-topics legend { float: left; margin-right: 6px; }
+
+.signup-topics label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-soft, rgba(255,255,255,0.68));
+  font-size: 0.84rem;
+  cursor: pointer;
+}
+
+.signup-topics input { width: 16px; height: 16px; margin: 0; accent-color: var(--red, #e8001d); cursor: pointer; }
+.signup-topics input:focus-visible { outline: 2px solid var(--red, #e8001d); outline-offset: 2px; }
+
+.signup-honey { position: absolute; left: -9999px; opacity: 0; }
+
+.signup-status {
+  padding: 12px 14px;
+  border: 1px solid var(--border, rgba(255,255,255,0.08));
+  border-left: 2px solid var(--red, #e8001d);
+  background: var(--page-bg, #08090c);
+  color: var(--text, #f7f6f4);
+  font-size: 0.86rem;
+}
+
+.signup-status[hidden] { display: none; }
+
 .footer-divider {
   width: var(--wrap, min(calc(100% - (var(--site-gutter, 20px) * 2)), var(--content-width, 1150px)));
   height: 1px;
@@ -203,6 +357,8 @@ html[data-theme="light"] .footer-socials img { filter: none; }
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 32px 24px;
   }
+
+  .signup { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
@@ -223,4 +379,8 @@ html[data-theme="light"] .footer-socials img { filter: none; }
   }
 
   .footer-credit { text-align: center; }
+
+  .signup-row { flex-direction: column; gap: 10px; }
+  .signup-topics legend { float: none; width: 100%; margin: 0 0 2px; }
+  .signup-row input { border-right: 1px solid var(--border-strong, rgba(255,255,255,0.16)); }
 }

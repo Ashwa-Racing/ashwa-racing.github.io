@@ -1,0 +1,31 @@
+<!-- Shared newsletter / blog sign-up box. Loaded into every .signup-slot by header.js.
+     Each slot can change the heading and line with data attributes; ids are added per box by header.js. -->
+<section class="signup">
+  <div class="signup-copy">
+    <p class="label">Newsletter</p>
+    <h2 class="signup-title"><span class="signup-title-text">Stay on</span> <em class="signup-title-accent">track.</em></h2>
+    <p class="signup-text">New newsletters and blog posts from the team, straight to your inbox.</p>
+  </div>
+
+  <form class="signup-form" novalidate>
+    <div class="signup-field">
+      <label data-signup-for="email">Email Address</label>
+      <div class="signup-row">
+        <input type="email" data-signup-id="email" name="email" autocomplete="email" required data-signup-describedby="error">
+        <button type="submit" class="signup-submit">Subscribe <span class="signup-arrow" aria-hidden="true">&rarr;</span></button>
+      </div>
+      <p class="signup-error" data-signup-id="error" aria-live="polite"></p>
+    </div>
+
+    <fieldset class="signup-topics">
+      <legend>Send me</legend>
+      <label><input type="checkbox" name="topics" value="newsletters" checked> Newsletters</label>
+      <label><input type="checkbox" name="topics" value="blog" checked> Blog posts</label>
+    </fieldset>
+
+    <!-- Honeypot: hidden from people, filled in by spam bots -->
+    <input type="text" name="_honey" class="signup-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+    <p class="signup-status" role="status" hidden></p>
+  </form>
+</section>
