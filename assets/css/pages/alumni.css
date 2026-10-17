@@ -36,7 +36,7 @@
   background: var(--ink);
   overflow: hidden;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
 }
 
 .al-hero-img {
@@ -61,7 +61,7 @@
   z-index: 2;
   width: var(--wrap);
   margin-inline: auto;
-  padding-bottom: clamp(48px, 8vh, 96px);
+  padding-block: 0;
   text-align: center;
   display: flex;
   flex-direction: column;
