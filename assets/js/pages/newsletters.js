@@ -15,7 +15,7 @@
   const newsletters = files.map(file => {
     const [year, month, typeFile] = file.split('-');
     const type = typeFile.replace('.pdf', '');
-    return { year, month, type, title: `${monthNames[Number(month)]} ${year}`, pdf: `${pdfBase}${year}/${file}`, cover: `${imageBase}${year}/${year}-${month}.png` };
+    return { year, month, type, title: `${monthNames[Number(month)]} ${year}`, pdf: `${pdfBase}${year}/${file}`, cover: `${imageBase}${year}/${year}-${month}` };
   }).sort((a, b) => `${b.year}${b.month}`.localeCompare(`${a.year}${a.month}`));
   const archiveGroups = new Map();
   newsletters.forEach(item => {
@@ -60,11 +60,16 @@
       const image = document.createElement('div');
       image.className = 'blog-card-image';
       const img = document.createElement('img');
-      img.src = first.cover;
+      img.src = `${first.cover}.jpg`;
       img.alt = `${first.title} newsletter cover`;
       img.loading = 'lazy';
       img.decoding = 'async';
-      img.addEventListener('error', () => { image.hidden = true; }, { once: true });
+      img.addEventListener('error', () => {
+        if (!img.dataset.triedPng) {
+          img.dataset.triedPng = 'true';
+          img.src = `${first.cover}.png`;
+        } else image.hidden = true;
+      });
       image.appendChild(img);
 
       const body = document.createElement('div');
@@ -152,10 +157,15 @@
       button.type = 'button';
       button.className = 'reader-rec-card';
       const image = document.createElement('img');
-      image.src = item.cover;
+      image.src = `${item.cover}.jpg`;
       image.alt = '';
       image.loading = 'lazy';
-      image.addEventListener('error', () => { image.hidden = true; }, { once: true });
+      image.addEventListener('error', () => {
+        if (!image.dataset.triedPng) {
+          image.dataset.triedPng = 'true';
+          image.src = `${item.cover}.png`;
+        } else image.hidden = true;
+      });
       const text = document.createElement('span');
       text.innerHTML = `<small>${typeNames[item.type] || item.type}</small><strong>${item.title}</strong>`;
       button.append(image, text);

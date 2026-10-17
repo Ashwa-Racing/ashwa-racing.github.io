@@ -255,26 +255,42 @@ function publishNewsletter_(answers, uploads) {
   const filename = year + '-' + month + '-' + type.toLowerCase() + '.pdf';
   const pdf = DriveApp.getFileById(pdfId);
   if (pdf.getMimeType() !== 'application/pdf') throw new Error('Newsletter upload must be a PDF.');
-  const cover = drivePdfThumbnail_(pdfId);
-  putR2Object_('pdfs/newsletters/' + year + '/' + filename, pdf.getBlob().getBytes(), 'application/pdf');
-  putR2Object_('images/newsletters/' + year + '/' + year + '-' + month + '.png', cover.getBytes(), 'image/png');
+  const pdfSize = pdf.getSize();
+  console.log('Newsletter step 1/5: uploading PDF (' + pdfSize + ' bytes) in ranges: ' + filename);
+  uploadDrivePdfToR2_(pdfId, 'pdfs/newsletters/' + year + '/' + filename, pdfSize);
+  console.log('Newsletter step 2/5: PDF uploaded to R2.');
+
+  try {
+    const cover = drivePdfThumbnail_(pdfId);
+    const extension = cover.contentType === 'image/png' ? 'png' : 'jpg';
+    putR2Object_('images/newsletters/' + year + '/' + year + '-' + month + '.' + extension,
+      cover.bytes, cover.contentType);
+    console.log('Newsletter step 3/5: cover uploaded to R2 (' + cover.contentType + ', ' + cover.bytes.length + ' bytes).');
+    cover.bytes.length = 0;
+  } catch (error) {
+    console.warn('Newsletter cover unavailable; continuing with the PDF: ' + String(error.message || error));
+  }
+
   const path = 'assets/data/newsletters.json';
+  console.log('Newsletter step 4/5: updating archive index.');
   const current = UrlFetchApp.fetch('https://api.github.com/repos/' + BLOG_REPOSITORY.owner + '/' + BLOG_REPOSITORY.repo + '/contents/' + path + '?ref=' + encodeURIComponent(BLOG_REPOSITORY.branch), {headers:{Authorization:'Bearer ' + PropertiesService.getScriptProperties().getProperty('GITHUB_CONTENTS_TOKEN'), Accept:'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}});
   if (current.getResponseCode() !== 200) throw new Error('GitHub could not read the newsletter archive (' + current.getResponseCode() + ').');
   const entry = JSON.parse(current.getContentText());
   const list = JSON.parse(Utilities.newBlob(Utilities.base64Decode(entry.content.replace(/\n/g, ''))).getDataAsString());
   if (!list.includes(filename)) list.push(filename);
   writeGitHubFile_(path, Utilities.newBlob(JSON.stringify(list, null, 2) + '\n', 'application/json').getBytes(), 'Update newsletter archive for ' + year + '-' + month + '-' + type.toLowerCase());
+  console.log('Newsletter step 5/5: archive index updated.');
 }
 
 function drivePdfThumbnail_(fileId) {
+  console.log('Newsletter cover: requesting Drive preview.');
   let thumbnailLink = '';
   for (let attempt = 0; attempt < 4 && !thumbnailLink; attempt += 1) {
     const file = Drive.Files.get(fileId, { fields: 'thumbnailLink' });
     thumbnailLink = file.thumbnailLink || '';
     if (!thumbnailLink && attempt < 3) Utilities.sleep(1000);
   }
-  if (!thumbnailLink) throw new Error('Google Drive has not generated a preview image for this PDF yet. Please try the submission again in a minute.');
+  if (!thumbnailLink) throw new Error('Google Drive has not generated a preview image yet.');
   const highResolutionLink = thumbnailLink
     .replace(/=s\d+(?=$|[-?&])/i, '=s1600')
     .replace(/=w\d+-h\d+(?=$|[-?&])/i, '=w1600-h1600')
@@ -290,10 +306,137 @@ function drivePdfThumbnail_(fileId) {
   if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
     throw new Error('Could not retrieve the newsletter PDF preview image (' + response.getResponseCode() + ').');
   }
-  const contentType = response.getHeaders()['Content-Type'] || 'image/jpeg';
-  if (!/^image\//i.test(contentType)) throw new Error('Google Drive returned a non-image PDF preview. Please try the submission again in a minute.');
-  console.log('Retrieved newsletter cover preview (' + response.getContent().length + ' bytes).');
-  return Utilities.newBlob(response.getContent(), contentType, 'newsletter-cover.png').getAs('image/png');
+  const contentType = String(response.getHeaders()['Content-Type'] || 'image/jpeg').split(';')[0].trim().toLowerCase();
+  if (!/^image\/(jpeg|png)$/i.test(contentType)) throw new Error('Google Drive returned an unsupported preview image (' + contentType + ').');
+  const bytes = response.getContent();
+  console.log('Newsletter cover: fetched preview (' + contentType + ').');
+  return { bytes: bytes, contentType: contentType };
+}
+
+function uploadDrivePdfToR2_(fileId, key, fileSize) {
+  const partSize = 8 * 1024 * 1024;
+  const fileUrl = 'https://www.googleapis.com/drive/v3/files/' + encodeURIComponent(fileId) + '?alt=media';
+  const token = ScriptApp.getOAuthToken();
+  const uploadId = startR2MultipartUpload_(key, 'application/pdf');
+  const completedParts = [];
+
+  try {
+    const partCount = Math.ceil(fileSize / partSize);
+    for (let partIndex = 0; partIndex < partCount; partIndex += 1) {
+      const start = partIndex * partSize;
+      const end = Math.min(fileSize - 1, start + partSize - 1);
+      console.log('Newsletter PDF part ' + (partIndex + 1) + '/' + partCount + ': requesting bytes ' + start + '-' + end + '.');
+      let rangeResponse = UrlFetchApp.fetch(fileUrl, {
+        headers: { Authorization: 'Bearer ' + token, Range: 'bytes=' + start + '-' + end },
+        muteHttpExceptions: true
+      });
+      if (rangeResponse.getResponseCode() !== 206) {
+        throw new Error('Google Drive did not return a partial PDF response (HTTP ' + rangeResponse.getResponseCode() + ').');
+      }
+      const bytes = rangeResponse.getContent();
+      rangeResponse = null;
+      if (bytes.length !== end - start + 1) {
+        throw new Error('Google Drive returned an incomplete PDF range (' + bytes.length + ' bytes; expected ' + (end - start + 1) + ').');
+      }
+      const etag = uploadR2MultipartPart_(key, uploadId, partIndex + 1, bytes);
+      completedParts.push({ number: partIndex + 1, etag: etag });
+      bytes.length = 0;
+      console.log('Newsletter PDF part ' + (partIndex + 1) + '/' + partCount + ': uploaded.');
+    }
+    completeR2MultipartUpload_(key, uploadId, completedParts);
+  } catch (error) {
+    try {
+      abortR2MultipartUpload_(key, uploadId);
+    } catch (abortError) {
+      console.warn('Could not abort incomplete newsletter upload: ' + String(abortError.message || abortError));
+    }
+    throw error;
+  }
+}
+
+function startR2MultipartUpload_(key, contentType) {
+  const response = signedR2Request_('POST', key, 'uploads=', [], contentType);
+  if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
+    throw new Error('Could not start newsletter PDF upload (' + response.getResponseCode() + '): ' + response.getContentText());
+  }
+  const match = response.getContentText().match(/<UploadId>([\s\S]*?)<\/UploadId>/);
+  const uploadId = match ? match[1].replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
+  if (!uploadId) throw new Error('Cloudflare R2 did not return a multipart upload ID.');
+  return uploadId;
+}
+
+function uploadR2MultipartPart_(key, uploadId, partNumber, bytes) {
+  const query = 'partNumber=' + partNumber + '&uploadId=' + awsEncodeURIComponent_(uploadId);
+  const response = signedR2Request_('PUT', key, query, bytes, 'application/pdf');
+  if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
+    throw new Error('Cloudflare R2 rejected newsletter part ' + partNumber + ' (' + response.getResponseCode() + '): ' + response.getContentText());
+  }
+  const headers = response.getHeaders();
+  const etagHeader = Object.keys(headers).find(name => name.toLowerCase() === 'etag');
+  const etag = etagHeader ? String(headers[etagHeader]) : '';
+  if (!etag) throw new Error('Cloudflare R2 did not return an ETag for newsletter part ' + partNumber + '.');
+  return etag;
+}
+
+function completeR2MultipartUpload_(key, uploadId, parts) {
+  const xml = '<CompleteMultipartUpload>' + parts.map(part =>
+    '<Part><PartNumber>' + part.number + '</PartNumber><ETag>' + xmlEscape_(part.etag) + '</ETag></Part>'
+  ).join('') + '</CompleteMultipartUpload>';
+  const bytes = Utilities.newBlob(xml, 'application/xml').getBytes();
+  const response = signedR2Request_('POST', key, 'uploadId=' + awsEncodeURIComponent_(uploadId), bytes, 'application/xml');
+  if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
+    throw new Error('Cloudflare R2 could not complete the newsletter upload (' + response.getResponseCode() + '): ' + response.getContentText());
+  }
+}
+
+function abortR2MultipartUpload_(key, uploadId) {
+  const response = signedR2Request_('DELETE', key, 'uploadId=' + awsEncodeURIComponent_(uploadId), [], 'application/pdf');
+  if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) {
+    throw new Error('Cloudflare R2 rejected multipart abort (' + response.getResponseCode() + ').');
+  }
+}
+
+function signedR2Request_(method, key, query, bytes, contentType) {
+  const properties = PropertiesService.getScriptProperties();
+  const accountId = properties.getProperty('R2_ACCOUNT_ID');
+  const accessKey = properties.getProperty('R2_ACCESS_KEY_ID');
+  const secretKey = properties.getProperty('R2_SECRET_ACCESS_KEY');
+  const bucket = properties.getProperty('R2_BUCKET_NAME');
+  const host = accountId + '.r2.cloudflarestorage.com';
+  const encodedKey = key.split('/').map(awsEncodeURIComponent_).join('/');
+  const canonicalUri = '/' + awsEncodeURIComponent_(bucket) + '/' + encodedKey;
+  const now = new Date();
+  const amzDate = Utilities.formatDate(now, 'UTC', "yyyyMMdd'T'HHmmss'Z'");
+  const dateStamp = Utilities.formatDate(now, 'UTC', 'yyyyMMdd');
+  const payloadHash = sha256Hex_(bytes);
+  const signedHeaders = 'content-type;host;x-amz-content-sha256;x-amz-date';
+  const canonicalHeaders = 'content-type:' + contentType.trim() + '\n' +
+    'host:' + host + '\n' +
+    'x-amz-content-sha256:' + payloadHash + '\n' +
+    'x-amz-date:' + amzDate + '\n';
+  const canonicalRequest = [method, canonicalUri, query, canonicalHeaders, signedHeaders, payloadHash].join('\n');
+  const scope = dateStamp + '/auto/s3/aws4_request';
+  const stringToSign = ['AWS4-HMAC-SHA256', amzDate, scope,
+    sha256Hex_(Utilities.newBlob(canonicalRequest).getBytes())].join('\n');
+  const dateKey = hmacSha256_(Utilities.newBlob(dateStamp).getBytes(), 'AWS4' + secretKey);
+  const regionKey = hmacSha256_(Utilities.newBlob('auto').getBytes(), dateKey);
+  const serviceKey = hmacSha256_(Utilities.newBlob('s3').getBytes(), regionKey);
+  const signingKey = hmacSha256_(Utilities.newBlob('aws4_request').getBytes(), serviceKey);
+  const signature = bytesToHex_(hmacSha256_(Utilities.newBlob(stringToSign).getBytes(), signingKey));
+  const authorization = 'AWS4-HMAC-SHA256 Credential=' + accessKey + '/' + scope +
+    ', SignedHeaders=' + signedHeaders + ', Signature=' + signature;
+  return UrlFetchApp.fetch('https://' + host + canonicalUri + (query ? '?' + query : ''), {
+    method: method,
+    contentType: contentType,
+    headers: { Authorization: authorization, 'x-amz-date': amzDate, 'x-amz-content-sha256': payloadHash },
+    payload: bytes,
+    muteHttpExceptions: true
+  });
+}
+
+function xmlEscape_(value) {
+  return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 }
 
 function trashUploads_(fileIds) {

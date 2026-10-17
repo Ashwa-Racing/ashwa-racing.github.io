@@ -1,6 +1,6 @@
 # Combined team, blog, and newsletter submission form
 
-The Apps Script in `Code.gs` handles three routes: team data, blog (optionally with a newsletter PDF), or newsletter only. Team submissions are appended to the roster spreadsheet's `Parsed Team Data` tab in the exact schema consumed by `scripts/sync.py`. Blog posts are converted from DOCX to Markdown and committed to `content/blog/`. Newsletter PDFs are uploaded to R2, their covers are generated from Google Drive's PDF preview, and issue filenames are added to `assets/data/newsletters.json`.
+The Apps Script in `Code.gs` handles three routes: team data, blog (optionally with a newsletter PDF), or newsletter only. Team submissions are appended to the roster spreadsheet's `Parsed Team Data` tab in the exact schema consumed by `scripts/sync.py`. Blog posts are converted from DOCX to Markdown and committed to `content/blog/`. Newsletter PDFs are transferred from Drive to R2 in 8 MiB ranges using a multipart upload, then their filenames are added to `assets/data/newsletters.json`. A cover is uploaded from Google Drive's PDF preview when available; if Drive has not generated it yet, publishing continues without a cover.
 
 ## Build the Google Form
 
@@ -61,7 +61,7 @@ Help text for the DOCX upload:
 
 > In your DOCX, place the image you want as the article cover first. The first embedded image becomes the blog card and social preview cover, and also appears in the article at its original position. Add alt text to images in Word when possible. Use inline JPG, PNG, GIF, or WebP images; each image must be 10 MB or smaller.
 
-When a PDF is attached, the Apps Script requests a 1600-pixel Google Drive preview thumbnail and stores it as the PNG cover at `{year}-{month}.png`. The issue filename is `{year}-{month}-{type}.pdf`. If multiple newsletter types share a month, the workflow uses the same month cover image, consistent with the archive today. No separate cover image upload is needed.
+When a PDF is attached, the Apps Script stores it as `{year}-{month}-{type}.pdf` and adds its filename to the archive. It also stores Drive's preview image as a JPEG or PNG at `images/newsletters/{year}/{year}-{month}.{jpg|png}` when available. If Drive has not generated a preview, the issue still publishes and its card works without a cover; a cover can be uploaded separately. If multiple newsletter types share a month, they use the same month cover image.
 
 ## Configure the roster spreadsheet
 
@@ -92,6 +92,6 @@ The submitted `Subsystem` value is written into the site's existing blog metadat
 
 - Team route: confirm a submission adds one row to `Parsed Team Data`, then run the existing team sync and verify roster/photo updates.
 - Blog route: confirm the Markdown source is committed under `content/blog/`, article images and archive Markdown reach R2, and the Cloudflare build publishes the article.
-- Newsletter-only submission: confirm no blog post is created, the PDF and generated PNG cover reach their newsletter R2 folders, and the filename is added to `assets/data/newsletters.json`; rebuild and confirm the issue appears in the archive.
+- Newsletter-only submission: confirm no blog post is created, the PDF reaches its newsletter R2 folder, and the filename is added to `assets/data/newsletters.json`; confirm the cover reaches R2 when Drive supplies a preview, rebuild, and verify the issue appears in the archive.
 
 The blog and newsletter publishing steps are sequential but not transactional: if newsletter upload or archive update fails after the article commit, the article may publish while the submission reports an error. Correct the issue and resubmit; the article path updates by date and title, and newsletter filenames are not duplicated in the archive.

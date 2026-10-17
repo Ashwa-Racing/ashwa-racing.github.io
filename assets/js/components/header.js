@@ -20,22 +20,42 @@ loadComponent("main-header", "components/header.html", () => {
 
 loadComponent("main-footer", "components/footer.html");
 
-loadLatestBlogUpdate();
+loadLatestSiteUpdate();
 
-async function loadLatestBlogUpdate() {
+async function loadLatestSiteUpdate() {
   try {
-    const response = await fetch("/assets/data/blog.json", { cache: "no-store", headers: { Accept: "application/json" } });
-    if (!response.ok) return;
-    const result = await response.json();
-    const post = Array.isArray(result.posts) ? result.posts[0] : null;
-    if (!post?.slug || !post?.title) return;
+    const [blogResponse, newsletterResponse] = await Promise.all([
+      fetch("/assets/data/blog.json", { cache: "no-store", headers: { Accept: "application/json" } }),
+      fetch("/assets/data/newsletters.json", { cache: "no-store", headers: { Accept: "application/json" } })
+    ]);
+    const blogData = blogResponse.ok ? await blogResponse.json() : {};
+    const newsletterFiles = newsletterResponse.ok ? await newsletterResponse.json() : [];
+    const post = Array.isArray(blogData.posts)
+      ? [...blogData.posts].filter(item => item?.slug && item?.title)
+        .sort((left, right) => String(right.date || "").localeCompare(String(left.date || "")))[0]
+      : null;
+    const monthNames = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const typeOrder = { general: 0, hybrid: 1, combustion: 2, alumni: 3 };
+    const latestNewsletter = Array.isArray(newsletterFiles)
+      ? newsletterFiles.map(file => {
+        const match = String(file).match(/^(20\d{2})-(0[1-9]|1[0-2])-(general|hybrid|combustion|alumni)\.pdf$/i);
+        return match ? { file, year: match[1], month: match[2], type: match[3].toLowerCase() } : null;
+      }).filter(Boolean).sort((left, right) =>
+        `${right.year}${right.month}`.localeCompare(`${left.year}${left.month}`) ||
+        typeOrder[left.type] - typeOrder[right.type]
+      )[0]
+      : null;
+    if (!post && !latestNewsletter) return;
+    const newsletterTitle = latestNewsletter
+      ? `${monthNames[Number(latestNewsletter.month)]} ${latestNewsletter.year} ${latestNewsletter.type} newsletter`
+      : "";
     const update = {
-      id: `blog:${post.slug}:${post.updated || post.date || ""}`,
-      platform: "the blog",
-      title: post.title,
-      message: post.excerpt || "A new article has been published on the Ashwa Racing blog.",
-      url: `/blog/${encodeURIComponent(post.slug)}`,
-      linkLabel: "Read the article"
+      id: `blog:${post?.slug || ""}:${post?.updated || post?.date || ""}:newsletter:${latestNewsletter?.file || ""}`,
+      platform: post ? "the blog" : "newsletters",
+      title: post?.title || newsletterTitle,
+      message: post?.excerpt || "A new newsletter has been published by Ashwa Racing.",
+      url: post ? `/blog/${encodeURIComponent(post.slug)}` : `/newsletters/${latestNewsletter.year}-${latestNewsletter.month}-${latestNewsletter.type}`,
+      linkLabel: post ? "Read the article" : "Read the newsletter"
     };
     let minimizedId = "";
     try { minimizedId = localStorage.getItem("ashwa-minimized-blog-update-v2") || ""; } catch (error) {}
@@ -60,6 +80,10 @@ async function loadLatestBlogUpdate() {
           <h2 class="site-update-toast__title"></h2>
           <p class="site-update-toast__message"></p>
           <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
+          <a class="site-update-toast__campaign site-update-toast__newsletter" target="_blank" rel="noopener noreferrer">
+            <span class="site-update-toast__campaign-label">Latest newsletter</span>
+            <span class="site-update-toast__campaign-title"></span>
+          </a>
           <a class="site-update-toast__campaign" href="/crowdfunding.html" target="_blank" rel="noopener noreferrer">
             <span class="site-update-toast__campaign-label">Support the next build</span>
             <span class="site-update-toast__campaign-title">Help Ashwa Racing get to the grid <span aria-hidden="true">&rarr;</span></span>
@@ -73,24 +97,33 @@ async function loadLatestBlogUpdate() {
       link.href = destination.href;
       link.textContent = linkLabel;
 
+      const newsletterLink = toast.querySelector(".site-update-toast__newsletter");
+      if (latestNewsletter) {
+        newsletterLink.href = `/newsletters/${latestNewsletter.year}-${latestNewsletter.month}-${latestNewsletter.type}`;
+        newsletterLink.querySelector(".site-update-toast__campaign-title").textContent =
+          `Read ${newsletterTitle} →`;
+      } else {
+        newsletterLink.remove();
+      }
+
       const minimizeButton = toast.querySelector(".site-update-toast__close");
       const setMinimized = minimized => {
         toast.classList.toggle("is-minimized", minimized);
         minimizeButton.textContent = minimized ? "AR" : "×";
-        minimizeButton.setAttribute("aria-label", minimized ? "Show latest blog update" : "Minimize update");
+        minimizeButton.setAttribute("aria-label", minimized ? "Show latest Ashwa Racing update" : "Minimize update");
         try {
           if (minimized) localStorage.setItem("ashwa-minimized-blog-update-v2", id);
           else localStorage.removeItem("ashwa-minimized-blog-update-v2");
         } catch (error) {}
       };
       minimizeButton.textContent = minimizedId === id ? "AR" : "×";
-      minimizeButton.setAttribute("aria-label", minimizedId === id ? "Show latest blog update" : "Minimize update");
+      minimizeButton.setAttribute("aria-label", minimizedId === id ? "Show latest Ashwa Racing update" : "Minimize update");
       minimizeButton.addEventListener("click", () => setMinimized(!toast.classList.contains("is-minimized")));
       document.body.appendChild(toast);
       requestAnimationFrame(() => toast.classList.add("is-visible"));
     }, 900);
   } catch (error) {
-    console.warn("Latest blog update could not be loaded:", error);
+    console.warn("Latest site update could not be loaded:", error);
   }
 }
 
