@@ -32,6 +32,28 @@
 .subsystem-landing-image figcaption { position: absolute; right: 0; bottom: 0; left: 0; display: flex; justify-content: space-between; gap: 12px; padding: 28px 16px 13px; background: linear-gradient(transparent, rgba(8,9,12,.82)); color: rgba(255,255,255,.76); font: 600 .6rem/1.2 var(--display); letter-spacing: .16em; }
 .subsystem-landing-index { position: absolute; right: var(--site-gutter); bottom: 16px; color: var(--text-muted); font: 600 .56rem/1 var(--display); letter-spacing: .18em; }
 
+html[data-theme="light"] body.subsystem-landing-page .subsystem-landing-hero {
+  --page-bg: #fff;
+  --text: #111216;
+  --text-strong: #08090c;
+  --text-soft: rgba(17, 18, 22, .78);
+  --text-muted: rgba(17, 18, 22, .58);
+  --border: rgba(10, 10, 10, .12);
+  --border-strong: rgba(10, 10, 10, .2);
+  --surface: #eeece9;
+  --shadow: rgba(0, 0, 0, .14);
+  color: var(--text);
+  background:
+    linear-gradient(rgba(8, 9, 12, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 9, 12, .035) 1px, transparent 1px),
+    #fff;
+}
+html[data-theme="light"] body.subsystem-landing-page .subsystem-landing-hero::before {
+  background-image: linear-gradient(rgba(8, 9, 12, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(8, 9, 12, .035) 1px, transparent 1px);
+}
+html[data-theme="light"] body.subsystem-landing-page .subsystem-landing-copy h1 { color: #08090c; }
+html[data-theme="light"] body.subsystem-landing-page .subsystem-landing-copy .ss-hero-intro { color: rgba(17, 18, 22, .78); }
+
 .subsystem-landing-section { padding: clamp(52px, 7vw, 92px) var(--site-gutter); background: var(--section-bg); border-bottom: 1px solid var(--border); }
 .subsystem-landing-section--operations { background: var(--page-bg); }
 .subsystem-landing-inner { width: var(--wrap); max-width: 1180px; margin-inline: auto; }
