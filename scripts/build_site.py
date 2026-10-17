@@ -370,6 +370,31 @@ def build_newsletter_pages() -> list[str]:
     return urls
 
 
+def populate_latest_newsletter() -> None:
+    """Render the latest issue into the blog hero before the page is served."""
+    files = json.loads(NEWSLETTER_SOURCE.read_text(encoding="utf-8"))
+    candidates = []
+    for filename in files:
+        match = re.fullmatch(r"(\d{4})-(\d{2})-([a-z]+)\.pdf", filename, re.IGNORECASE)
+        if match:
+            year, month, issue_type = match.groups()
+            candidates.append((year, month, issue_type.lower()))
+    if not candidates:
+        return
+
+    year, month, issue_type = sorted(candidates, key=lambda item: (item[0], item[1], item[2]))[-1]
+    month_name = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][int(month)]
+    title = f"{month_name} {year} · {issue_type.title()}"
+    url = f"/newsletters/{year}-{month}-{issue_type}"
+    cover = f"https://assets.ashwaracing.org/images/newsletters/{year}/{year}-{month}.png"
+    blog_page = OUTPUT / "blog.html"
+    page = blog_page.read_text(encoding="utf-8")
+    page = page.replace('href="/newsletters" aria-label="Browse Ashwa Racing newsletters"', f'href="{url}" aria-label="Read the latest newsletter: {html.escape(title, quote=True)}"')
+    page = page.replace('<img id="blog-newsletter-cover" alt="" loading="eager" decoding="async">', f'<img id="blog-newsletter-cover" src="{cover}" alt="" loading="eager" fetchpriority="high" decoding="async">')
+    page = page.replace('<strong id="blog-newsletter-title">Explore the archive</strong>', f'<strong id="blog-newsletter-title">{html.escape(title)}</strong>')
+    blog_page.write_text(page, encoding="utf-8")
+
+
 def build_sitemap(dynamic_urls: list[str]) -> None:
     source = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
     urls = re.findall(r"<loc>\s*(.*?)\s*</loc>", source, flags=re.IGNORECASE)
@@ -420,6 +445,7 @@ def build() -> None:
 
     blog_urls = build_blog_pages(blog_data)
     newsletter_urls = build_newsletter_pages()
+    populate_latest_newsletter()
     build_sitemap(blog_urls + newsletter_urls)
 
     print(f"Cloudflare Worker assets created at {output} ({len(blog_data['posts'])} blog posts, {len(newsletter_urls)} newsletters indexed)")
