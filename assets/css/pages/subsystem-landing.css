@@ -1,6 +1,11 @@
 /* Editorial index for the subsystem detail pages. */
 .subsystem-landing-page { background: var(--page-bg); }
 .subsystem-landing-hero {
+  --page-bg: #08090c;
+  --text: #f7f6f4;
+  --text-strong: #fff;
+  --text-soft: rgba(255,255,255,.78);
+  --text-muted: rgba(255,255,255,.58);
   min-height: 0;
   padding: clamp(46px, 6vw, 82px) var(--site-gutter);
   grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
