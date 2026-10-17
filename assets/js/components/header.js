@@ -18,7 +18,34 @@ loadComponent("main-header", "components/header.html", () => {
   markActivePage();
 });
 
-loadComponent("main-footer", "components/footer.html");
+loadComponent("main-footer", "components/footer.html", initEmailUpdates);
+
+async function initEmailUpdates() {
+  const forms = [...document.querySelectorAll("[data-updates-form]")];
+  if (!forms.length) return;
+  let endpoint = "";
+  try {
+    const response = await fetch("/assets/data/email-updates-config.json", { cache: "no-store" });
+    if (response.ok) endpoint = String((await response.json()).endpoint || "").trim();
+  } catch (error) {
+    console.warn("Ashwa updates: signup endpoint is not configured yet.", error);
+  }
+
+  forms.forEach(form => {
+    const status = form.querySelector("[data-updates-status]");
+    if (!endpoint) {
+      form.querySelector('[type="submit"]')?.setAttribute("disabled", "");
+      if (status) status.textContent = "Email signups will open once the team connects its Google Sheet.";
+      return;
+    }
+    form.action = endpoint;
+    const audience = document.createElement("input");
+    audience.type = "hidden";
+    audience.name = "audience";
+    audience.value = form.dataset.audience || "reader";
+    form.appendChild(audience);
+  });
+}
 
 loadLatestSiteUpdate();
 
@@ -93,7 +120,10 @@ async function loadLatestSiteUpdate() {
         blogLink.querySelector(".site-update-toast__item-description").textContent =
           post.excerpt || "A new article from the Ashwa Racing team.";
       } else {
-        blogLink.remove();
+        blogLink.href = "/blog.html";
+        blogLink.querySelector(".site-update-toast__item-title").textContent = "Explore Ashwa Racing stories";
+        blogLink.querySelector(".site-update-toast__item-description").textContent =
+          "Browse engineering, competition, projects, and stories from the team.";
       }
 
       const newsletterLink = toast.querySelector(".site-update-toast__newsletter");
