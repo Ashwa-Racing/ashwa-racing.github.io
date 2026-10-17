@@ -149,8 +149,8 @@ body {
 .reveal {
   opacity: 0; transform: translateY(22px);
   transition:
-    opacity 0.55s var(--expo) var(--delay, 0s),
-    transform 0.55s var(--expo) var(--delay, 0s);
+    opacity 0.38s var(--expo) var(--delay, 0s),
+    transform 0.38s var(--expo) var(--delay, 0s);
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
 

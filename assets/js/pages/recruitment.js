@@ -9,7 +9,6 @@ const RECRUITMENT = {
   formURL: "https://forms.gle/hrbQxbTiwtwteNa18"
 };
 
-const SITE_READY_TIMEOUT = 12000;
 const prefersReducedMotion =
   matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -358,36 +357,10 @@ function initStatCounters() {
    INIT
    ============================================================ */
 
-function waitForSiteReady() {
-  if (window.__siteReady) {
-    return Promise.resolve();
-  }
-
-  return new Promise(resolve => {
-    window.addEventListener(
-      "site:ready",
-      resolve,
-      { once: true }
-    );
-
-    /*
-     * Fallback in case the shared
-     * loader fails or is unavailable.
-     */
-    setTimeout(
-      resolve,
-      SITE_READY_TIMEOUT
-    );
-  });
-}
-
-async function initRecruitment() {
+function initRecruitment() {
   initThemeToggle();
   initBrandLogoObserver();
   initRecruitmentStatus();
-
-  await waitForSiteReady();
-
   initReveal();
   initStatCounters();
 }
