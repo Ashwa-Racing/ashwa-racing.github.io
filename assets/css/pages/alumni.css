@@ -75,7 +75,7 @@
   font-weight: 800;
   text-transform: uppercase;
   line-height: 0.95;
-  color: var(--white);
+  color: #fff;
   margin-bottom: 22px;
   max-width: 12ch;
   text-wrap: balance;
@@ -94,8 +94,9 @@
 .al-hero-desc {
   font-size: clamp(0.88rem, 1.5vw, 1.05rem);
   line-height: 1.7;
-  color: var(--white);
+  color: rgba(255,255,255,.96);
   max-width: 480px;
+  text-shadow: 0 1px 10px rgba(0,0,0,.72);
 }
 
 /* ============================================================
