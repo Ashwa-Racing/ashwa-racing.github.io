@@ -12,9 +12,49 @@
   const filterEl = document.getElementById('blog-filter');
   const gridEl = document.getElementById('blog-grid');
   const emptyEl = document.getElementById('blog-empty');
+  const latestNewsletterEl = document.getElementById('blog-latest-newsletter');
+  const newsletterTitleEl = document.getElementById('blog-newsletter-title');
+  const newsletterCoverEl = document.getElementById('blog-newsletter-cover');
 
   let posts = [];
   let activeCategory = 'All';
+
+  const loadLatestNewsletter = async () => {
+    if (!latestNewsletterEl) return;
+    try {
+      const response = await fetch('assets/data/newsletters.json', { cache: 'no-cache' });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const files = await response.json();
+      if (!Array.isArray(files)) throw new Error('Invalid newsletter data.');
+      const latest = files
+        .filter(file => /^\d{4}-\d{2}-[a-z]+\.pdf$/i.test(file))
+        .map(file => {
+          const [, year, month, type] = file.match(/^(\d{4})-(\d{2})-([a-z]+)\.pdf$/i);
+          return { file, year, month, type };
+        })
+        .sort((a, b) => `${b.year}${b.month}`.localeCompare(`${a.year}${a.month}`) || a.type.localeCompare(b.type))[0];
+      if (!latest) return;
+
+      const [year, month, type] = latest.file.replace('.pdf', '').split('-');
+      const monthName = new Intl.DateTimeFormat('en', { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(Number(year), Number(month) - 1, 1)));
+      const assetBase = 'https://assets.ashwaracing.org';
+      const coverBase = `${assetBase}/images/newsletters/${year}/${year}-${month}`;
+      latestNewsletterEl.href = `/newsletters/${year}-${month}-${type}`;
+      latestNewsletterEl.setAttribute('aria-label', `Read the latest newsletter: ${monthName} ${year} ${type}`);
+      newsletterTitleEl.textContent = `${monthName} ${year} · ${type}`;
+      newsletterCoverEl.src = `${coverBase}.jpg`;
+      newsletterCoverEl.addEventListener('error', () => {
+        if (!newsletterCoverEl.dataset.triedPng) {
+          newsletterCoverEl.dataset.triedPng = 'true';
+          newsletterCoverEl.src = `${coverBase}.png`;
+        } else {
+          newsletterCoverEl.closest('.blog-newsletter-cover').classList.add('is-empty');
+        }
+      });
+    } catch (error) {
+      console.error('Ashwa Blog: failed to load latest newsletter.', error);
+    }
+  };
 
   const escapeHTML = (value = '') =>
     String(value).replace(/[&<>"']/g, char => ({
@@ -299,5 +339,6 @@
   });
 
   loadPosts();
+  loadLatestNewsletter();
 
 })();
