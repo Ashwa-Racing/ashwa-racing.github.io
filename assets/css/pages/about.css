@@ -46,7 +46,7 @@
 
 .about-work { padding: clamp(68px, 9vw, 116px) var(--site-gutter); background: var(--section-bg); border-block: 1px solid var(--border); }
 .about-work__head { width: var(--wrap); display: flex; justify-content: space-between; align-items: end; gap: 40px; margin: 0 auto 48px; }
-.about-work__head > p { max-width: 42ch; margin-bottom: 7px; color: var(--text-soft); line-height: 1.75; }
+.about-work__head > p { max-width: 42ch; margin-bottom: 7px; color: var(--text); line-height: 1.75; }
 .about-programmes { width: var(--wrap); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-inline: auto; }
 .about-programme { overflow: hidden; border: 1px solid var(--border); background: var(--card-bg); }
 .about-programme--feature { grid-row: span 2; }
