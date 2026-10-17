@@ -24,7 +24,6 @@
   const lbTitle = document.getElementById('lbTitle');
   const lbDesc = document.getElementById('lbDesc');
   const lbCounter = document.getElementById('lbCounter');
-  const heroImage = document.getElementById('gallery-hero-image');
   if (!section) return;
 
   let catalog = [...fallbackPhotos];
@@ -44,12 +43,6 @@
       [result[i], result[j]] = [result[j], result[i]];
     }
     return result;
-  };
-
-  const updateHeroPlacards = () => {
-    if (!heroImage || !catalog.length) return;
-    heroImage.src = shuffle(catalog)[0].src;
-    heroImage.alt = '';
   };
 
   const discoverFromSiteManifests = async () => {
@@ -262,7 +255,6 @@
     if (event.key === 'ArrowRight') stepLightbox(1);
   });
 
-  updateHeroPlacards();
   loadMore();
 
   if ('IntersectionObserver' in window) {
@@ -288,7 +280,6 @@
         }
       });
       shuffled = [];
-      updateHeroPlacards();
     }
   }).catch(error => console.warn('Gallery image manifest unavailable; using the built-in archive.', error));
 
