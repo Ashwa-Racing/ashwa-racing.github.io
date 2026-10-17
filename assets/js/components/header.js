@@ -46,24 +46,14 @@ async function loadLatestSiteUpdate() {
       )[0]
       : null;
     if (!post && !latestNewsletter) return;
+    const newsletterTypeNames = { general: "General", hybrid: "Hybrid", combustion: "Combustion", alumni: "Alumni" };
     const newsletterTitle = latestNewsletter
-      ? `${monthNames[Number(latestNewsletter.month)]} ${latestNewsletter.year} ${latestNewsletter.type} newsletter`
+      ? `${monthNames[Number(latestNewsletter.month)]} ${latestNewsletter.year} ${newsletterTypeNames[latestNewsletter.type]} Newsletter`
       : "";
-    const update = {
-      id: `blog:${post?.slug || ""}:${post?.updated || post?.date || ""}:newsletter:${latestNewsletter?.file || ""}`,
-      platform: post ? "the blog" : "newsletters",
-      title: post?.title || newsletterTitle,
-      message: post?.excerpt || "A new newsletter has been published by Ashwa Racing.",
-      url: post ? `/blog/${encodeURIComponent(post.slug)}` : `/newsletters/${latestNewsletter.year}-${latestNewsletter.month}-${latestNewsletter.type}`,
-      linkLabel: post ? "Read the article" : "Read the newsletter"
-    };
+    const id = `blog:${post?.slug || ""}:${post?.updated || post?.date || ""}:newsletter:${latestNewsletter?.file || ""}`;
     let minimizedId = "";
     try { minimizedId = localStorage.getItem("ashwa-minimized-blog-update-v2") || ""; } catch (error) {}
-    const { id, platform, title, message, url, linkLabel } = update;
-    if (![id, platform, title, message, url, linkLabel].every(value => typeof value === "string" && value.trim())) return;
-
-    const destination = new URL(url, window.location.origin);
-    if (!['http:', 'https:'].includes(destination.protocol)) return;
+    if (!id.trim()) return;
 
     window.setTimeout(() => {
       if (document.querySelector(".site-update-toast")) return;
@@ -76,32 +66,40 @@ async function loadLatestSiteUpdate() {
       toast.innerHTML = `
         <span class="site-update-toast__mark" aria-hidden="true"></span>
         <div class="site-update-toast__content">
-          <p class="site-update-toast__eyebrow"></p>
-          <h2 class="site-update-toast__title"></h2>
-          <p class="site-update-toast__message"></p>
-          <a class="site-update-toast__link" target="_blank" rel="noopener noreferrer"></a>
-          <a class="site-update-toast__campaign site-update-toast__newsletter" target="_blank" rel="noopener noreferrer">
-            <span class="site-update-toast__campaign-label">Latest newsletter</span>
-            <span class="site-update-toast__campaign-title"></span>
+          <a class="site-update-toast__item site-update-toast__blog" target="_blank" rel="noopener noreferrer">
+            <span class="site-update-toast__item-label">Latest blog</span>
+            <strong class="site-update-toast__item-title"></strong>
+            <span class="site-update-toast__item-description"></span>
+            <span class="site-update-toast__item-action">Read the article <span aria-hidden="true">↗</span></span>
           </a>
-          <a class="site-update-toast__campaign" href="/crowdfunding.html" target="_blank" rel="noopener noreferrer">
-            <span class="site-update-toast__campaign-label">Support the next build</span>
-            <span class="site-update-toast__campaign-title">Help Ashwa Racing get to the grid <span aria-hidden="true">&rarr;</span></span>
+          <a class="site-update-toast__item site-update-toast__newsletter" target="_blank" rel="noopener noreferrer">
+            <span class="site-update-toast__item-label">Latest newsletter</span>
+            <strong class="site-update-toast__item-title"></strong>
+            <span class="site-update-toast__item-description">The newest issue from the Ashwa Racing newsletter archive.</span>
+            <span class="site-update-toast__item-action">Read the newsletter <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="site-update-toast__item site-update-toast__crowdfunding" href="/crowdfunding.html" target="_blank" rel="noopener noreferrer">
+            <span class="site-update-toast__item-label">Support the next build</span>
+            <strong class="site-update-toast__item-title">Help Ashwa Racing get to the grid</strong>
+            <span class="site-update-toast__item-description">Help fund the team’s journey to competition.</span>
+            <span class="site-update-toast__item-action">Support the build <span aria-hidden="true">↗</span></span>
           </a>
         </div>
         <button class="site-update-toast__close" type="button" aria-label="Minimize update">×</button>`;
-      toast.querySelector(".site-update-toast__eyebrow").textContent = `New on ${platform}`;
-      toast.querySelector(".site-update-toast__title").textContent = title;
-      toast.querySelector(".site-update-toast__message").textContent = message;
-      const link = toast.querySelector(".site-update-toast__link");
-      link.href = destination.href;
-      link.textContent = linkLabel;
+      const blogLink = toast.querySelector(".site-update-toast__blog");
+      if (post) {
+        blogLink.href = `/blog/${encodeURIComponent(post.slug)}`;
+        blogLink.querySelector(".site-update-toast__item-title").textContent = post.title;
+        blogLink.querySelector(".site-update-toast__item-description").textContent =
+          post.excerpt || "A new article from the Ashwa Racing team.";
+      } else {
+        blogLink.remove();
+      }
 
       const newsletterLink = toast.querySelector(".site-update-toast__newsletter");
       if (latestNewsletter) {
         newsletterLink.href = `/newsletters/${latestNewsletter.year}-${latestNewsletter.month}-${latestNewsletter.type}`;
-        newsletterLink.querySelector(".site-update-toast__campaign-title").textContent =
-          `Read ${newsletterTitle} →`;
+        newsletterLink.querySelector(".site-update-toast__item-title").textContent = newsletterTitle;
       } else {
         newsletterLink.remove();
       }
