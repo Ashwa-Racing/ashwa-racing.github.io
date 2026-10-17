@@ -4,6 +4,9 @@
 .org-hero h1 { margin: 12px auto 20px; color: #fff; font-family: var(--display); font-size: clamp(3rem, 8vw, 6.5rem); font-weight: 800; line-height: .95; text-transform: uppercase; }
 .org-hero h1 em { color: var(--red); font-family: "Samarkan", serif; font-style: italic; text-transform: none; }
 .org-hero p:last-child { max-width: 58ch; margin: 0 auto; color: rgb(255 255 255 / 78%); font-size: 1.05rem; line-height: 1.7; }
+html[data-theme="light"] .org-hero { background: radial-gradient(ellipse at 78% 10%, rgb(232 0 29 / 6%), transparent 42%), #fff; }
+html[data-theme="light"] .org-hero h1 { color: #08090c; }
+html[data-theme="light"] .org-hero p:last-child { color: rgba(17, 18, 22, .78); }
 .organization-structure { padding: clamp(48px, 7vw, 88px) 0; background: var(--section-bg); }
 .organization-structure > .container:first-child { margin-bottom: 40px; }
 
