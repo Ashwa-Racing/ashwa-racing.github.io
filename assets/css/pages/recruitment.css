@@ -482,7 +482,7 @@ body {
   padding: var(--section-pad) var(--site-gutter);
 }
 
-.rc-process-inner { max-width: 820px; }
+.rc-process-inner { width: min(100%, 820px); margin-inline: auto; }
 
 .rc-process-header { margin-bottom: 60px; }
 
@@ -623,7 +623,8 @@ body {
 .rc-subsystems-inner {
   position: relative; z-index: 1;
   padding: var(--section-pad) var(--site-gutter) 64px;
-  max-width: 680px;
+  width: min(100%, calc(var(--content-width) + (var(--site-gutter) * 2)));
+  margin-inline: auto;
 }
 
 .rc-subsystems-heading {
@@ -781,6 +782,10 @@ html.theme-transition::before {
 
 html[data-theme="light"] .rc-why {
   background: var(--section-bg);
+}
+
+html[data-theme="light"] .rc-section-heading {
+  color: var(--text-strong);
 }
 
 html[data-theme="light"] .rc-why-header p,
