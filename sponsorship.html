@@ -19,7 +19,7 @@
   <script>(() => { let theme = null; try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {} document.documentElement.dataset.theme = theme === "light" ? "light" : "dark"; })();</script>
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
-  <link rel="stylesheet" href="assets/css/components/footer.css">
+  <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
   <link rel="stylesheet" href="assets/css/pages/sponsorship.css">
 </head>
 <body>
@@ -111,9 +111,30 @@
         <div><p>Not every partnership fits a fixed tier. If your organisation can contribute components, materials, software, engineering expertise, manufacturing, testing, or event support, tell us what you have in mind.</p><a class="btn-solid" href="contact.html?type=sponsorship">Start a partnership conversation</a><br><a href="crowdfunding.html" class="sp-inline-link">An individual supporter? Back the build <span aria-hidden="true">&rarr;</span></a></div>
       </div>
     </section>
+    <section class="sp-updates section-pad" aria-labelledby="sp-updates-title">
+      <div class="container sp-updates-inner">
+        <div>
+          <p class="label">For current and prospective partners</p>
+          <h2 id="sp-updates-title">Partner <em>briefings.</em></h2>
+          <p>Receive occasional updates on competition results, engineering milestones, and partnership opportunities. We’ll only email you about Ashwa Racing.</p>
+        </div>
+        <form class="updates-form sp-updates-form" data-updates-form data-audience="sponsor" method="post" target="_blank">
+          <label class="updates-email-label" for="sponsor-updates-name">Name <span class="sp-updates-optional">(optional)</span></label>
+          <input id="sponsor-updates-name" name="name" type="text" autocomplete="name" placeholder="Your name">
+          <label class="updates-email-label" for="sponsor-updates-company">Company <span class="sp-updates-optional">(optional)</span></label>
+          <input id="sponsor-updates-company" name="company" type="text" autocomplete="organization" placeholder="Your organisation">
+          <label class="updates-email-label" for="sponsor-updates-email">Work email address</label>
+          <input id="sponsor-updates-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+          <label class="updates-consent"><input type="checkbox" name="consent" value="yes" required> Send me Ashwa Racing partner and team progress updates. I can unsubscribe at any time.</label>
+          <input class="updates-honeypot" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button type="submit">Get partner updates <span aria-hidden="true">→</span></button>
+          <p class="updates-status" data-updates-status role="status" aria-live="polite">You’ll receive a confirmation email before updates begin.</p>
+        </form>
+      </div>
+    </section>
   </main>
   <footer id="main-footer"></footer>
   <script src="assets/js/components/theme.js" defer></script>
-  <script src="assets/js/components/header.js?v=6" defer></script>
+  <script src="assets/js/components/header.js?v=7" defer></script>
 </body>
 </html>

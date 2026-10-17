@@ -1,4 +1,21 @@
 <footer class="footer">
+  <section class="footer-updates" aria-labelledby="footer-updates-title">
+    <div class="footer-updates-copy">
+      <p class="footer-updates-kicker">From the team</p>
+      <h2 id="footer-updates-title">Get Ashwa <em>updates.</em></h2>
+      <p>New stories, newsletters, and milestones. Choose the updates you want; unsubscribe any time.</p>
+    </div>
+    <form class="updates-form" data-updates-form data-audience="reader" method="post" target="_blank">
+      <label class="updates-email-label" for="footer-updates-email">Email address</label>
+      <div class="updates-form-row">
+        <input id="footer-updates-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        <button type="submit">Sign me up <span aria-hidden="true">→</span></button>
+      </div>
+      <label class="updates-consent"><input type="checkbox" name="consent" value="yes" required> Email me Ashwa Racing blog, newsletter, and team updates.</label>
+      <input class="updates-honeypot" name="website" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="updates-status" data-updates-status role="status" aria-live="polite">You’ll receive a confirmation email before updates begin.</p>
+    </form>
+  </section>
   <div class="footer-top">
     <div class="footer-brand-col">
       <a href="index.html" class="footer-brand-link" aria-label="Ashwa Racing home">

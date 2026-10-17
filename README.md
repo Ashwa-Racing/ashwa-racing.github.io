@@ -73,6 +73,8 @@ To deploy locally, install Node.js and npm, build first, authenticate Wrangler w
 - **Shared navigation and footer:** Edit `components/header.html` or `components/footer.html`. The corresponding shared scripts and styles are in `assets/js/components/` and `assets/css/components/`.
 - **Page layout and behavior:** Edit the root HTML page and its matching files under `assets/css/pages/` and `assets/js/pages/`.
 
+Email updates: follow [`scripts/email-updates/SETUP.md`](scripts/email-updates/SETUP.md) to connect reader and sponsor opt-ins to a private Google Sheet and Apps Script. Readers receive automatic blog/newsletter alerts; sponsor briefings are sent from the sheet.
+
 ## Contributing
 
 1. Create a branch for your change.

@@ -47,3 +47,15 @@
 @media(max-width:900px) { .sp-package-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .sp-package,.sp-package:nth-child(4),.sp-package:nth-child(5) { grid-column:auto; } .sp-package:last-child { grid-column:1 / -1; min-height:unset; } }
 @media(max-width:650px) { .sp-landing-hero { min-height:540px; padding:104px 0 78px; } .sp-landing-hero__image { background-position:58% center; } .sp-landing-hero h1 { font-size:clamp(3.8rem,16vw,6rem); } .sp-hero-note { font-size:.6rem; } .sp-intro-grid,.sp-custom-inner { grid-template-columns:1fr; gap:28px; } .sp-section-heading { align-items:start; flex-direction:column; gap:18px; } .sp-package-grid { grid-template-columns:1fr; } .sp-package,.sp-package:nth-child(4),.sp-package:nth-child(5),.sp-package:last-child { grid-column:auto; min-height:unset; } .sp-package-summary { min-height:0; } }
 @media(prefers-reduced-motion:reduce) { .sp-text-link span,.sp-inline-link span,.sp-package-cta span { transition:none; } }
+.sp-updates { border-top: 1px solid var(--border); background: var(--section-bg); }
+.sp-updates-inner { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(320px, .8fr); align-items: center; gap: clamp(32px, 7vw, 100px); }
+.sp-updates-inner h2 { margin: 12px 0 16px; color: var(--text-strong); font: 800 clamp(2.6rem, 5vw, 5rem)/.92 var(--display); text-transform: uppercase; }
+.sp-updates-inner h2 em { color: var(--red); font: 400 .9em/1 var(--ashwa); text-transform: none; }
+.sp-updates-inner > div > p:last-child { max-width: 54ch; color: var(--text-soft); line-height: 1.65; }
+.sp-updates-form { padding: clamp(20px, 3vw, 32px); border: 1px solid var(--border-strong); border-top: 3px solid var(--red); background: var(--surface); }
+.sp-updates-form > input:not([type="checkbox"]) { width: 100%; min-height: 44px; margin: -3px 0 5px; padding: 10px 12px; border: 1px solid var(--border-strong); border-radius: 0; background: var(--page-bg); color: var(--text-strong); font: 400 .9rem/1.4 var(--body); }
+.sp-updates-optional { color: var(--text-muted); font-weight: 400; letter-spacing: 0; text-transform: none; }
+.sp-updates-form > button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 17px; border: 1px solid var(--red); background: var(--red); color: #fff; cursor: pointer; font: 800 .72rem/1 var(--display); letter-spacing: .09em; text-transform: uppercase; }
+.sp-updates-form > button:hover { background: var(--red-dark); }
+.sp-updates-form input:focus-visible,.sp-updates-form button:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+@media (max-width: 760px) { .sp-updates-inner { grid-template-columns: 1fr; gap: 24px; } }
