@@ -395,6 +395,53 @@ def populate_latest_newsletter() -> None:
     blog_page.write_text(page, encoding="utf-8")
 
 
+def populate_newsletter_archive() -> None:
+    """Render newsletter archive cards and year filters into the initial HTML."""
+    files = json.loads(NEWSLETTER_SOURCE.read_text(encoding="utf-8"))
+    month_names = ["", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    type_names = {"general": "General", "hybrid": "Hybrid", "combustion": "Combustion", "alumni": "Alumni"}
+    groups = {}
+    for filename in files:
+        match = re.fullmatch(r"(\d{4})-(\d{2})-([a-z]+)\.pdf", filename, re.IGNORECASE)
+        if not match:
+            continue
+        year, month, issue_type = match.groups()
+        key = (year, month)
+        groups.setdefault(key, []).append((issue_type.lower(), filename))
+
+    years = sorted({year for year, _ in groups}, reverse=True)
+    year_buttons = ['<button type="button" class="is-active" data-year="all" aria-pressed="true">All Years</button>']
+    year_buttons.extend(f'<button type="button" data-year="{year}" aria-pressed="false">{year}</button>' for year in years)
+    cards = []
+    asset_host = "https://assets.ashwaracing.org"
+    for year, month in sorted(groups, key=lambda key: (key[0], key[1]), reverse=True):
+        issues = groups[(year, month)]
+        issues.sort(key=lambda issue: issue[0])
+        month_title = f"{month_names[int(month)]} {year}"
+        issue_links = []
+        for index, (issue_type, _) in enumerate(issues, start=1):
+            label = type_names.get(issue_type, issue_type.title())
+            url = f"/newsletters/{year}-{month}-{issue_type}"
+            issue_links.append(
+                f'<a class="newsletter-link" href="{url}" aria-label="Read {month_title} {label} newsletter" data-edition="{index:02d}">{label}</a>'
+            )
+        cover = f"{asset_host}/images/newsletters/{year}/{year}-{month}.png"
+        editions = f"{len(issues)} editions" if len(issues) > 1 else "Monthly edition"
+        cards.append(
+            f'<article class="blog-card newsletter-card" tabindex="0" role="button" aria-label="Read {month_title} newsletter" data-year="{year}">'
+            f'<div class="blog-card-image"><img src="{cover}" alt="{month_title} newsletter cover" loading="lazy" decoding="async"></div>'
+            f'<div class="blog-card-body"><p class="newsletter-card-kicker">Ashwa Racing · {editions}</p>'
+            f'<h2 class="blog-card-title">{month_title}</h2><div class="newsletter-types">{"".join(issue_links)}</div></div></article>'
+        )
+
+    page_path = OUTPUT / "newsletters.html"
+    page = page_path.read_text(encoding="utf-8")
+    page = re.sub(r'<p class="blog-toolbar-label" id="count"[^>]*>.*?</p>', f'<p class="blog-toolbar-label" id="count" aria-live="polite">{len(files)} newsletters</p>', page, count=1, flags=re.DOTALL)
+    page = re.sub(r'(<div class="blog-filter" id="filter-bar"[^>]*>).*?(</div>)', lambda match: match.group(1) + "".join(year_buttons) + match.group(2), page, count=1, flags=re.DOTALL)
+    page = re.sub(r'<div class="blog-grid newsletter-grid" id="list"></div>', f'<div class="blog-grid newsletter-grid" id="list">{"".join(cards)}</div>', page, count=1)
+    page_path.write_text(page, encoding="utf-8")
+
+
 def build_sitemap(dynamic_urls: list[str]) -> None:
     source = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
     urls = re.findall(r"<loc>\s*(.*?)\s*</loc>", source, flags=re.IGNORECASE)
@@ -446,6 +493,7 @@ def build() -> None:
     blog_urls = build_blog_pages(blog_data)
     newsletter_urls = build_newsletter_pages()
     populate_latest_newsletter()
+    populate_newsletter_archive()
     build_sitemap(blog_urls + newsletter_urls)
 
     print(f"Cloudflare Worker assets created at {output} ({len(blog_data['posts'])} blog posts, {len(newsletter_urls)} newsletters indexed)")

@@ -31,6 +31,7 @@
   if (!list || !filterBar || !count || !empty) return;
 
   [...new Set(newsletters.map(item => item.year))].sort((a, b) => b.localeCompare(a)).forEach(year => {
+    if ([...filterBar.querySelectorAll('button[data-year]')].some(button => button.dataset.year === year)) return;
     const button = document.createElement('button');
     button.type = 'button';
     button.dataset.year = year;
