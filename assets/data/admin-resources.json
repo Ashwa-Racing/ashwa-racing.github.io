@@ -2,13 +2,13 @@
   "reviewed": "2026-10-18",
   "resources": [
     {
-      "name": "Team roster spreadsheet",
+      "id": "team-publisher",
+      "name": "Team, blog & newsletter spreadsheet",
       "category": "Team & people",
       "type": "Google Sheet",
       "status": "in-use",
       "summary": "Source of truth for member profiles. The Parsed Team Data tab is read by the scheduled roster sync.",
       "access": "Restricted team access. Only the normalized Parsed Team Data tab is published as CSV for the sync.",
-      "url": "",
       "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
     },
     {
@@ -32,13 +32,13 @@
       "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
     },
     {
-      "name": "Website form responses tab",
-      "category": "Website publishing",
-      "type": "Google Sheet tab",
-      "status": "in-use",
-      "summary": "Raw responses live in a separate tab of the same spreadsheet as the roster. Parsed Team Data is the normalized tab used by the website sync.",
-      "access": "Restricted to maintainers. Do not publish the raw response tab.",
-      "url": "",
+      "id": "legacy-team-responses",
+      "name": "Old team data response sheet",
+      "category": "Team & people",
+      "type": "Google Sheet · legacy",
+      "status": "legacy",
+      "summary": "Previous team data response sheet, retained for reference. New team, blog, and newsletter data is handled in the current combined spreadsheet.",
+      "access": "Keep restricted to team maintainers; it may contain historical personal information.",
       "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
     },
     {
