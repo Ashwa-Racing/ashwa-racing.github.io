@@ -22,6 +22,43 @@
       "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
     },
     {
+      "id": "team-recruitment-form",
+      "name": "Team recruitment form",
+      "category": "Team & people",
+      "type": "Google Form",
+      "status": "in-use",
+      "summary": "Public form for prospective members to apply to Ashwa Racing.",
+      "access": "Share the responder link with applicants. Keep form editing access restricted to team maintainers.",
+      "url": "https://forms.gle/hrbQxbTiwtwteNa18"
+    },
+    {
+      "id": "team-blog-newsletter-form",
+      "name": "Team, blog & newsletter form",
+      "category": "Team & people",
+      "type": "Google Form",
+      "status": "in-use",
+      "summary": "Current combined form for team updates, blog submissions, and newsletter content.",
+      "access": "Use this form for new submissions. Keep form editing access restricted to maintainers."
+    },
+    {
+      "id": "legacy-blog-form",
+      "name": "Old blog submission form",
+      "category": "Team & people",
+      "type": "Google Form · legacy",
+      "status": "legacy",
+      "summary": "Previous form used for blog submissions before the combined team, blog, and newsletter form.",
+      "access": "Keep for reference; direct new submissions to the current combined form."
+    },
+    {
+      "id": "legacy-team-form",
+      "name": "Old team submission form",
+      "category": "Team & people",
+      "type": "Google Form · legacy",
+      "status": "legacy",
+      "summary": "Previous team data form, retained for reference after the combined form was introduced.",
+      "access": "Keep for reference; direct new submissions to the current combined form."
+    },
+    {
       "name": "Email updates spreadsheet",
       "category": "Email updates",
       "type": "Google Sheet",

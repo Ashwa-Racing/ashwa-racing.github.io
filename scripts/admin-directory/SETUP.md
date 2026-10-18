@@ -1,6 +1,6 @@
 # Team resource dashboard
 
-The dashboard is served at `dash.ashwaracing.org/admin` and its hostname is protected by Cloudflare Access. The directory descriptions are public static data in `assets/data/admin-resources.json`. Private Google Sheet and Drive URLs belong in the Worker secret `ADMIN_RESOURCE_LINKS`, not in this repository.
+The dashboard is served at `dash.ashwaracing.org/admin` and its hostname is protected by Cloudflare Access. The directory descriptions are public static data in `assets/data/admin-resources.json`. Private Google Sheet, Drive, and Google Form URLs belong in the Worker secret `ADMIN_RESOURCE_LINKS`, not in this repository.
 
 ## Add or update resource links
 
@@ -9,7 +9,10 @@ In Cloudflare, open **Workers & Pages → ashwaracing → Settings → Runtime �
 ```json
 {
   "team-publisher": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_ID/edit",
-  "legacy-team-responses": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_ID/edit"
+  "legacy-team-responses": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_ID/edit",
+  "team-blog-newsletter-form": "https://forms.gle/REPLACE_WITH_FORM_ID",
+  "legacy-blog-form": "https://forms.gle/REPLACE_WITH_FORM_ID",
+  "legacy-team-form": "https://forms.gle/REPLACE_WITH_FORM_ID"
 }
 ```
 
