@@ -6,6 +6,7 @@
   const groups = document.getElementById('resource-groups');
   const search = document.getElementById('resource-search');
   const themeToggle = document.getElementById('ops-theme-toggle');
+  const loaderStartedAt = performance.now();
   let resources = [];
   let privateLinks = {};
   let activeCategory = 'All resources';
@@ -136,5 +137,14 @@
     document.getElementById('setup-count').textContent = resources.filter(resource => resource.status === 'setup-pending').length;
     document.getElementById('reviewed-date').textContent = dateLabel(data.reviewed);
     renderFilters(); renderResources();
-  }).catch(error => { groups.innerHTML = `<p class="empty-state">${escapeHtml(error.message)} Please reload this page or ask the IT / SMP team.</p>`; });
+  }).catch(error => { groups.innerHTML = `<p class="empty-state">${escapeHtml(error.message)} Please reload this page or ask the IT / SMP team.</p>`; })
+    .finally(() => {
+      const delay = Math.max(0, 1250 - (performance.now() - loaderStartedAt));
+      window.setTimeout(() => {
+        const loader = document.getElementById('ops-preloader');
+        if (!loader) return;
+        loader.setAttribute('aria-hidden', 'true');
+        loader.classList.add('is-done');
+      }, delay);
+    });
 })();
