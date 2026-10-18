@@ -12,16 +12,6 @@
       "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
     },
     {
-      "name": "Team photos folder",
-      "category": "Team & people",
-      "type": "Google Drive folder",
-      "status": "in-use",
-      "summary": "Stores member photos used by the roster workflow before they are copied to the public website asset host.",
-      "access": "The sync expects photos to be fetchable by link. Do not store unrelated private files here.",
-      "url": "",
-      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
-    },
-    {
       "name": "Website submission form",
       "category": "Website publishing",
       "type": "Google Form",
