@@ -12,16 +12,6 @@
       "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
     },
     {
-      "name": "Website submission form",
-      "category": "Website publishing",
-      "type": "Google Form",
-      "status": "in-use",
-      "summary": "One form for team roster updates, blog articles, and newsletter-only submissions.",
-      "access": "Share the responder link with team members. Keep the form editor restricted to maintainers.",
-      "url": "",
-      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
-    },
-    {
       "id": "legacy-team-responses",
       "name": "Old team data response sheet",
       "category": "Team & people",
@@ -29,16 +19,6 @@
       "status": "legacy",
       "summary": "Previous team data response sheet, retained for reference. New team, blog, and newsletter data is handled in the current combined spreadsheet.",
       "access": "Keep restricted to team maintainers; it may contain historical personal information.",
-      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
-    },
-    {
-      "name": "Article and newsletter uploads",
-      "category": "Website publishing",
-      "type": "Google Drive form uploads",
-      "status": "in-use",
-      "summary": "DOCX articles and optional newsletter PDFs are processed by the website publishing workflow and copied to the site asset host.",
-      "access": "Keep the form and upload storage under the durable team account. Uploaded photos used on the public site are made public by link.",
-      "url": "",
       "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
     },
     {

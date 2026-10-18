@@ -1,7 +1,7 @@
 (() => {
   const dataPath = '/assets/data/admin-resources.json';
   const privateLinksPath = '/_admin/resources';
-  const categories = ['All resources', 'Team & people', 'Website publishing', 'Email updates', 'Crowdfunding'];
+  const categories = ['All resources', 'Team & people', 'Email updates', 'Crowdfunding'];
   const filters = document.getElementById('category-filters');
   const groups = document.getElementById('resource-groups');
   const search = document.getElementById('resource-search');
