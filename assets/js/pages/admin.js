@@ -20,14 +20,65 @@
       if (!response.ok) throw new Error(`Could not load ${path}`);
       return response.json();
     })));
+    const data = results.map(result => result.status === 'fulfilled' ? result.value : null);
     results.forEach((result, index) => {
       if (result.status !== 'fulfilled') return;
-      const data = result.value;
-      const count = index === 0 ? (Array.isArray(data) ? data.filter(person => person && person.name).length : null)
-        : index === 1 ? (Array.isArray(data.posts) ? data.posts.length : null)
-        : (Array.isArray(data) ? data.length : null);
+      const value = result.value;
+      const count = index === 0 ? (Array.isArray(value) ? value.filter(person => person && person.name).length : null)
+        : index === 1 ? (Array.isArray(value.posts) ? value.posts.length : null)
+        : (Array.isArray(value) ? value.length : null);
       if (count !== null) document.getElementById(countIds[index]).textContent = count.toLocaleString('en-IN');
     });
+    renderRosterChart(data[0]);
+    renderPublishingChart(data[1], data[2]);
+  }
+
+  function renderBarRows(elementId, rows, maximum) {
+    const target = document.getElementById(elementId);
+    if (!rows.length) { target.innerHTML = '<p class="chart-empty">No published records found.</p>'; return; }
+    target.innerHTML = rows.map(row => {
+      const width = maximum > 0 ? Math.max(row.value > 0 ? 2 : 0, row.value / maximum * 100) : 0;
+      return `<div class="bar-row" role="listitem"><div class="bar-caption"><span>${escapeHtml(row.label)}</span><strong>${row.value.toLocaleString('en-IN')}</strong></div><div class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:${width}%"></span></div></div>`;
+    }).join('');
+  }
+
+  function renderRosterChart(team) {
+    if (!Array.isArray(team)) { document.getElementById('cohort-chart').innerHTML = '<p class="chart-empty">Roster data is unavailable.</p>'; return; }
+    const counts = new Map();
+    team.filter(person => person && person.name).forEach(person => {
+      const year = String(person.year || 'Unspecified');
+      counts.set(year, (counts.get(year) || 0) + 1);
+    });
+    const years = [...counts.entries()].sort((a, b) => (Number(b[0]) || 0) - (Number(a[0]) || 0));
+    const shown = years.slice(0, 8).map(([label, value]) => ({ label, value }));
+    const earlierCount = years.slice(8).reduce((sum, [, value]) => sum + value, 0);
+    if (earlierCount) shown.push({ label:'Earlier batches', value:earlierCount });
+    renderBarRows('cohort-chart', shown, Math.max(...shown.map(row => row.value), 1));
+  }
+
+  function renderPublishingChart(blogData, newsletterData) {
+    const years = new Map();
+    const add = (year, type) => {
+      if (!/^\d{4}$/.test(year)) return;
+      if (!years.has(year)) years.set(year, { blog:0, newsletter:0 });
+      years.get(year)[type] += 1;
+    };
+    if (blogData && Array.isArray(blogData.posts)) blogData.posts.forEach(post => add(String(post.date || '').slice(0, 4), 'blog'));
+    if (Array.isArray(newsletterData)) newsletterData.forEach(file => {
+      const match = String(file).match(/^(\d{4})-/);
+      if (match) add(match[1], 'newsletter');
+    });
+    if (!blogData && !newsletterData) { document.getElementById('publishing-chart').innerHTML = '<p class="chart-empty">Publishing data is unavailable.</p>'; return; }
+    const rows = [...years.entries()].sort((a, b) => Number(b[0]) - Number(a[0])).slice(0, 8);
+    const maximum = Math.max(...rows.map(([, value]) => value.blog + value.newsletter), 1);
+    const target = document.getElementById('publishing-chart');
+    if (!rows.length) { target.innerHTML = '<p class="chart-empty">No published records found.</p>'; return; }
+    target.innerHTML = rows.map(([year, value]) => {
+      const blogWidth = value.blog / maximum * 100;
+      const newsletterWidth = value.newsletter / maximum * 100;
+      const total = value.blog + value.newsletter;
+      return `<div class="bar-row" role="listitem"><div class="bar-caption"><span>${year}</span><strong>${total} total</strong></div><div class="bar-track" aria-hidden="true"><span class="bar-fill blog-fill" style="width:${blogWidth}%"></span><span class="bar-fill newsletter-fill" style="width:${newsletterWidth}%"></span></div></div>`;
+    }).join('');
   }
 
   function syncThemeToggle() {

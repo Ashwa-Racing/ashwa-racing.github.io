@@ -104,4 +104,28 @@ html[data-theme="light"] .ops-hero::after { color:#ffffff35; }
 .record-stat { min-height:88px; display:flex; flex-direction:column; justify-content:center; gap:6px; padding:13px 16px; border:1px solid var(--line); border-top:2px solid var(--red); background:linear-gradient(130deg,var(--panel-hi),var(--panel)); color:#a8aab2; font:600 10px/1 var(--display); letter-spacing:.12em; }
 .record-stat-number { color:var(--white); font:700 30px/.95 var(--display); letter-spacing:0; }
 .record-snapshot-note { margin:10px 0 0; color:#858790; font-size:11px; }
+.analytics-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
+.chart-panel { min-width:0; padding:18px; border:1px solid var(--line); background:linear-gradient(140deg,var(--panel-hi),var(--panel)); }
+.chart-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:15px; }
+.chart-heading .eyebrow { margin-bottom:5px; }
+.chart-heading h3 { margin:0; font:700 22px/1 var(--display); }
+.chart-unit { color:#858790; font:600 9px/1 var(--display); letter-spacing:.14em; }
+.chart-rows { display:grid; gap:11px; }
+.bar-row { min-width:0; }
+.bar-caption { display:flex; justify-content:space-between; gap:12px; margin-bottom:5px; color:#b7b8be; font-size:11px; }
+.bar-caption strong { color:var(--white); font:600 11px/1 var(--body); }
+.bar-track { height:7px; display:flex; overflow:hidden; background:#292b32; }
+.bar-fill { min-width:0; height:100%; background:linear-gradient(90deg,#a90018,var(--red)); box-shadow:0 0 10px #e8001d35; }
+.bar-fill.blog-fill { background:#e8001d; }
+.bar-fill.newsletter-fill { background:#9da2ad; box-shadow:none; }
+.chart-legend { display:flex; gap:15px; margin:-5px 0 13px; color:#a7a9b0; font-size:10px; }
+.chart-legend span { display:inline-flex; align-items:center; gap:6px; }
+.chart-legend span::before { width:7px; height:7px; background:#e8001d; content:""; }
+.chart-legend .legend-newsletter::before { background:#9da2ad; }
+.chart-empty { margin:0; color:#858790; font-size:11px; }
+html[data-theme="light"] .bar-caption { color:#565860; }
+html[data-theme="light"] .bar-track { background:#e2e3e6; }
+html[data-theme="light"] .chart-legend { color:#565860; }
+html[data-theme="light"] .chart-empty { color:#656770; }
+@media(max-width:760px) { .analytics-grid { grid-template-columns:1fr; } }
 @media(max-width:650px) { .record-snapshot-grid { grid-template-columns:1fr; } .record-stat { min-height:72px; } }
