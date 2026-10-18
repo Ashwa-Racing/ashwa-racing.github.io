@@ -141,7 +141,7 @@
     renderFilters(); renderResources();
   }).catch(error => { groups.innerHTML = `<p class="empty-state">${escapeHtml(error.message)} Please reload this page or ask the IT / SMP team.</p>`; })
     .finally(() => {
-      const delay = Math.max(0, 1250 - (performance.now() - loaderStartedAt));
+      const delay = Math.max(0, 2700 - (performance.now() - loaderStartedAt));
       window.setTimeout(() => {
         const loader = document.getElementById('ops-preloader');
         if (!loader) return;
