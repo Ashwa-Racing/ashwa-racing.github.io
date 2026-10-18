@@ -34,12 +34,13 @@
     renderPublishingChart(data[1], data[2]);
   }
 
-  function renderBarRows(elementId, rows, maximum) {
+  function renderBarRows(elementId, rows, maximum, total) {
     const target = document.getElementById(elementId);
     if (!rows.length) { target.innerHTML = '<p class="chart-empty">No published records found.</p>'; return; }
     target.innerHTML = rows.map(row => {
       const width = maximum > 0 ? Math.max(row.value > 0 ? 2 : 0, row.value / maximum * 100) : 0;
-      return `<div class="bar-row" role="listitem"><div class="bar-caption"><span>${escapeHtml(row.label)}</span><strong>${row.value.toLocaleString('en-IN')}</strong></div><div class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:${width}%"></span></div></div>`;
+      const share = total ? Math.round(row.value / total * 100) : 0;
+      return `<div class="bar-row" role="listitem"><div class="bar-caption"><span>${escapeHtml(row.label)}</span><strong>${row.value.toLocaleString('en-IN')} <small>${share}% of roster</small></strong></div><div class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:${width}%"></span></div></div>`;
     }).join('');
   }
 
@@ -54,7 +55,8 @@
     const shown = years.slice(0, 8).map(([label, value]) => ({ label, value }));
     const earlierCount = years.slice(8).reduce((sum, [, value]) => sum + value, 0);
     if (earlierCount) shown.push({ label:'Earlier batches', value:earlierCount });
-    renderBarRows('cohort-chart', shown, Math.max(...shown.map(row => row.value), 1));
+    const total = [...counts.values()].reduce((sum, value) => sum + value, 0);
+    renderBarRows('cohort-chart', shown, Math.max(...shown.map(row => row.value), 1), total);
   }
 
   function renderPublishingChart(blogData, newsletterData) {
@@ -78,7 +80,7 @@
       const blogWidth = value.blog / maximum * 100;
       const newsletterWidth = value.newsletter / maximum * 100;
       const total = value.blog + value.newsletter;
-      return `<div class="bar-row" role="listitem"><div class="bar-caption"><span>${year}</span><strong>${total} total</strong></div><div class="bar-track" aria-hidden="true"><span class="bar-fill blog-fill" style="width:${blogWidth}%"></span><span class="bar-fill newsletter-fill" style="width:${newsletterWidth}%"></span></div></div>`;
+      return `<div class="bar-row" role="listitem"><div class="bar-caption"><span>${year}</span><strong>${total} total <small>${value.blog} blog / ${value.newsletter} newsletter</small></strong></div><div class="bar-track" aria-hidden="true"><span class="bar-fill blog-fill" style="width:${blogWidth}%"></span><span class="bar-fill newsletter-fill" style="width:${newsletterWidth}%"></span></div></div>`;
     }).join('');
   }
 
