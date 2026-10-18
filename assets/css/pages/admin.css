@@ -31,7 +31,8 @@ html[data-theme="light"] .ops-note p,html[data-theme="light"] .ops-footer { colo
 .internal-tag,.eyebrow { color:var(--red); font:700 11px/1.2 var(--display); letter-spacing:.19em; }
 .internal-tag { display:flex; align-items:center; gap:9px; color:#b2b2b8; }
 .internal-tag i { width:7px; height:7px; border-radius:50%; background:#67c791; box-shadow:0 0 12px #67c79170; }
-.ops-hero { position:relative; display:flex; align-items:center; justify-content:space-between; min-height:300px; padding:44px 8% 46px 6%; border-bottom:1px solid var(--line); overflow:hidden; }
+.ops-hero { position:relative; display:flex; align-items:center; justify-content:space-between; min-height:340px; padding:44px 8% 46px 6%; border-bottom:1px solid var(--line); overflow:hidden; background:#0c0d11 url("https://assets.ashwaracing.org/images/heroimg/hero-desktop.jpg") center 46%/cover no-repeat; }
+.ops-hero::before { position:absolute; z-index:0; inset:0; background:linear-gradient(90deg,rgba(12,13,17,.98) 0%,rgba(12,13,17,.91) 37%,rgba(12,13,17,.40) 100%),linear-gradient(0deg,rgba(12,13,17,.38),transparent 48%); content:""; }
 .ops-hero::after { position:absolute; z-index:0; top:50%; right:2%; content:"ASHWA"; color:#15161b; font:800 clamp(130px,25vw,290px)/.8 var(--display); letter-spacing:-.045em; transform:translateY(-46%); pointer-events:none; }
 .hero-copy { max-width:675px; position:relative; z-index:1; }
 .eyebrow { margin:0 0 13px; }
@@ -39,7 +40,7 @@ h1,h2,p { margin-top:0; }
 h1 { margin-bottom:13px; font:800 clamp(52px,8vw,84px)/.82 var(--display); letter-spacing:-.025em; }
 h1 em { color:var(--red); font-style:normal; }
 .intro { max-width:620px; margin:20px 0 0; color:#b4b5bb; font-size:15px; line-height:1.7; }
-.hero-mark { width:154px; height:154px; flex:none; display:flex; flex-direction:column; justify-content:center; padding:18px; border:1px solid #3c2228; outline:1px solid #3c222850; outline-offset:8px; color:#fff; transform:rotate(-8deg); }
+.hero-mark { position:relative; z-index:1; width:154px; height:154px; flex:none; display:flex; flex-direction:column; justify-content:center; padding:18px; border:1px solid #ffffff42; outline:1px solid #e8001d70; outline-offset:8px; background:#0c0d1190; color:#fff; transform:rotate(-8deg); }
 .hero-mark span { color:var(--red); font:800 56px/.8 var(--display); }
 .hero-mark b { margin-top:8px; font:700 12px/1.1 var(--display); letter-spacing:.2em; }
 .ops-overview { min-height:81px; display:flex; align-items:center; gap:35px; border-bottom:1px solid var(--line); }
@@ -92,3 +93,6 @@ h2 { margin-bottom:0; font:700 34px/1 var(--display); }
 @media(max-width:650px) { .ops-shell { width:calc(100% - 32px); } .ops-topbar { height:61px; padding:0 16px; } .ops-brand img { width:88px; height:36px; } .ops-nav { gap:14px; } .ops-nav a { font-size:10px; } .ops-nav a:nth-child(1),.ops-nav a:nth-child(2) { display:none; } .ops-theme-toggle { width:34px; height:34px; margin-left:13px; } .internal-tag { font-size:9px; letter-spacing:.1em; } .ops-hero { min-height:250px; padding:38px 0; } .hero-mark { width:90px; height:90px; padding:10px; margin-right:7px; } .hero-mark span { font-size:34px; } .hero-mark b { font-size:9px; } .intro { max-width:470px; font-size:13px; } .ops-overview { flex-wrap:wrap; gap:14px 22px; padding:15px 0; } .reviewed { width:100%; margin:0; } .section-heading { align-items:stretch; flex-direction:column; } .search-box { width:100%; } .resource-grid { grid-template-columns:1fr; } .resource-card { min-height:175px; } .ops-footer { flex-direction:column; } }
 @media(max-width:380px) { .hero-mark { display:none; } h1 { font-size:54px; } .overview-item { gap:5px; font-size:9px; } .overview-number { font-size:21px; } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; } }
+html[data-theme="light"] .ops-hero { background:#f1f1f2 url("https://assets.ashwaracing.org/images/heroimg/hero-desktop.jpg") center 46%/cover no-repeat; }
+html[data-theme="light"] .ops-hero::before { background:linear-gradient(90deg,rgba(241,241,242,.97) 0%,rgba(241,241,242,.89) 37%,rgba(241,241,242,.38) 100%),linear-gradient(0deg,rgba(241,241,242,.35),transparent 48%); }
+html[data-theme="light"] .ops-hero::after { color:#ffffff35; }
