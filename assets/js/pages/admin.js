@@ -34,14 +34,26 @@
     renderPublishingChart(data[1], data[2]);
   }
 
-  function renderBarRows(elementId, rows, maximum, total) {
+  function renderLineChart(elementId, labels, series, description) {
     const target = document.getElementById(elementId);
-    if (!rows.length) { target.innerHTML = '<p class="chart-empty">No published records found.</p>'; return; }
-    target.innerHTML = rows.map(row => {
-      const width = maximum > 0 ? Math.max(row.value > 0 ? 2 : 0, row.value / maximum * 100) : 0;
-      const share = total ? Math.round(row.value / total * 100) : 0;
-      return `<div class="bar-row" role="listitem"><div class="bar-caption"><span>${escapeHtml(row.label)}</span><strong>${row.value.toLocaleString('en-IN')} <small>${share}% of roster</small></strong></div><div class="bar-track" aria-hidden="true"><span class="bar-fill" style="width:${width}%"></span></div></div>`;
+    if (!labels.length || !series.some(item => item.values.length)) { target.innerHTML = '<p class="chart-empty">No published records found.</p>'; return; }
+    const width = 640, height = 240, left = 38, right = 18, top = 18, bottom = 38;
+    const plotWidth = width - left - right, plotHeight = height - top - bottom;
+    const maximum = Math.max(...series.flatMap(item => item.values), 1);
+    const x = index => labels.length < 2 ? left + plotWidth / 2 : left + index * plotWidth / (labels.length - 1);
+    const y = value => top + plotHeight - value / maximum * plotHeight;
+    const grid = Array.from({ length:4 }, (_, index) => {
+      const value = Math.round(maximum * (3 - index) / 3);
+      const lineY = top + index * plotHeight / 3;
+      return `<g class="line-grid"><line x1="${left}" y1="${lineY}" x2="${width-right}" y2="${lineY}"/><text x="${left-9}" y="${lineY+3}" text-anchor="end">${value}</text></g>`;
     }).join('');
+    const labelsSvg = labels.map((label, index) => `<text class="line-label" x="${x(index)}" y="${height-12}" text-anchor="middle">${escapeHtml(label)}</text>`).join('');
+    const lines = series.map((item, seriesIndex) => {
+      const points = item.values.map((value, index) => `${x(index)},${y(value)}`).join(' ');
+      const nodes = item.values.map((value, index) => `<circle class="line-point${index === item.values.length - 1 ? ' latest' : ''}" cx="${x(index)}" cy="${y(value)}" r="${index === item.values.length - 1 ? 4 : 2.5}"/>`).join('');
+      return `<g class="line-series series-${seriesIndex + 1}"><polyline pathLength="1" points="${points}"/>${nodes}</g>`;
+    }).join('');
+    target.innerHTML = `<svg class="line-plot" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(description)}" focusable="false">${grid}${lines}${labelsSvg}</svg>`;
   }
 
   function renderRosterChart(team) {
@@ -52,11 +64,10 @@
       counts.set(year, (counts.get(year) || 0) + 1);
     });
     const years = [...counts.entries()].sort((a, b) => (Number(b[0]) || 0) - (Number(a[0]) || 0));
-    const shown = years.slice(0, 8).map(([label, value]) => ({ label, value }));
+    const shown = years.slice(0, 8).reverse();
     const earlierCount = years.slice(8).reduce((sum, [, value]) => sum + value, 0);
-    if (earlierCount) shown.push({ label:'Earlier batches', value:earlierCount });
-    const total = [...counts.values()].reduce((sum, value) => sum + value, 0);
-    renderBarRows('cohort-chart', shown, Math.max(...shown.map(row => row.value), 1), total);
+    if (earlierCount) shown.unshift(['Earlier', earlierCount]);
+    renderLineChart('cohort-chart', shown.map(([label]) => label), [{ values:shown.map(([, value]) => value) }], 'Team member profiles by batch, oldest to newest');
   }
 
   function renderPublishingChart(blogData, newsletterData) {
@@ -72,16 +83,13 @@
       if (match) add(match[1], 'newsletter');
     });
     if (!blogData && !newsletterData) { document.getElementById('publishing-chart').innerHTML = '<p class="chart-empty">Publishing data is unavailable.</p>'; return; }
-    const rows = [...years.entries()].sort((a, b) => Number(b[0]) - Number(a[0])).slice(0, 8);
-    const maximum = Math.max(...rows.map(([, value]) => value.blog + value.newsletter), 1);
+    const rows = [...years.entries()].sort((a, b) => Number(a[0]) - Number(b[0])).slice(-8);
     const target = document.getElementById('publishing-chart');
     if (!rows.length) { target.innerHTML = '<p class="chart-empty">No published records found.</p>'; return; }
-    target.innerHTML = rows.map(([year, value]) => {
-      const blogWidth = value.blog / maximum * 100;
-      const newsletterWidth = value.newsletter / maximum * 100;
-      const total = value.blog + value.newsletter;
-      return `<div class="bar-row" role="listitem"><div class="bar-caption"><span>${year}</span><strong>${total} total <small>${value.blog} blog / ${value.newsletter} newsletter</small></strong></div><div class="bar-track" aria-hidden="true"><span class="bar-fill blog-fill" style="width:${blogWidth}%"></span><span class="bar-fill newsletter-fill" style="width:${newsletterWidth}%"></span></div></div>`;
-    }).join('');
+    renderLineChart('publishing-chart', rows.map(([year]) => year), [
+      { values:rows.map(([, value]) => value.blog) },
+      { values:rows.map(([, value]) => value.newsletter) }
+    ], 'Blog articles and newsletter issues published by year');
   }
 
   function syncThemeToggle() {
