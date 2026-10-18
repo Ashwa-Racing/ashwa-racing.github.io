@@ -1,0 +1,95 @@
+{
+  "reviewed": "2026-10-18",
+  "resources": [
+    {
+      "name": "Team roster spreadsheet",
+      "category": "Team & people",
+      "type": "Google Sheet",
+      "status": "in-use",
+      "summary": "Source of truth for member profiles. The Parsed Team Data tab is read by the scheduled roster sync.",
+      "access": "Restricted team access. Only the normalized Parsed Team Data tab is published as CSV for the sync.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
+    },
+    {
+      "name": "Team photos folder",
+      "category": "Team & people",
+      "type": "Google Drive folder",
+      "status": "in-use",
+      "summary": "Stores member photos used by the roster workflow before they are copied to the public website asset host.",
+      "access": "The sync expects photos to be fetchable by link. Do not store unrelated private files here.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
+    },
+    {
+      "name": "Website submission form",
+      "category": "Website publishing",
+      "type": "Google Form",
+      "status": "in-use",
+      "summary": "One form for team roster updates, blog articles, and newsletter-only submissions.",
+      "access": "Share the responder link with team members. Keep the form editor restricted to maintainers.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
+    },
+    {
+      "name": "Website form responses tab",
+      "category": "Website publishing",
+      "type": "Google Sheet tab",
+      "status": "in-use",
+      "summary": "Raw responses live in a separate tab of the same spreadsheet as the roster. Parsed Team Data is the normalized tab used by the website sync.",
+      "access": "Restricted to maintainers. Do not publish the raw response tab.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
+    },
+    {
+      "name": "Article and newsletter uploads",
+      "category": "Website publishing",
+      "type": "Google Drive form uploads",
+      "status": "in-use",
+      "summary": "DOCX articles and optional newsletter PDFs are processed by the website publishing workflow and copied to the site asset host.",
+      "access": "Keep the form and upload storage under the durable team account. Uploaded photos used on the public site are made public by link.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/google-blog-publisher/SETUP.md"
+    },
+    {
+      "name": "Email updates spreadsheet",
+      "category": "Email updates",
+      "type": "Google Sheet",
+      "status": "setup-pending",
+      "summary": "Will hold reader and sponsor opt-ins, confirmation status, and sponsor briefing drafts.",
+      "access": "Private. Subscriber names and email addresses must not be public.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/email-updates/SETUP.md"
+    },
+    {
+      "name": "Crowdfunding ledger",
+      "category": "Crowdfunding",
+      "type": "Google Sheet",
+      "status": "setup-pending",
+      "summary": "Private finance tracker for reported and verified transfers, follow-up, and reward fulfilment.",
+      "access": "Finance admins only. Contains donor contact, shipping, transfer, and payment proof details.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/crowdfunding-tracker/SETUP.md"
+    },
+    {
+      "name": "Crowdfunding transfer form",
+      "category": "Crowdfunding",
+      "type": "Google Form",
+      "status": "setup-pending",
+      "summary": "Public form for supporters to report a bank or UPI transfer and upload payment proof.",
+      "access": "Responder link is public when launched. Form editor and uploaded proof are restricted.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/crowdfunding-tracker/SETUP.md"
+    },
+    {
+      "name": "Approved UPI QR image",
+      "category": "Crowdfunding",
+      "type": "Google Drive file",
+      "status": "setup-pending",
+      "summary": "Approved payment QR inserted into the crowdfunding transfer form.",
+      "access": "Confirm the QR points to the official team account before publishing the form.",
+      "url": "",
+      "guide": "https://github.com/Ashwa-Racing/ashwa-racing.github.io/blob/main/scripts/crowdfunding-tracker/SETUP.md"
+    }
+  ]
+}
