@@ -4,7 +4,7 @@ The dashboard is served at `dash.ashwaracing.org/admin` and its hostname is prot
 
 ## Add or update resource links
 
-In Cloudflare, open **Workers & Pages → ashwaracing → Settings → Variables and Secrets**. Add a **Secret** named `ADMIN_RESOURCE_LINKS`. Its value is a JSON object mapping resource IDs from `assets/data/admin-resources.json` to their URLs. For example:
+In Cloudflare, open **Workers & Pages → ashwaracing → Settings → Runtime → Variables and Secrets**. Add a **Secret** named `ADMIN_RESOURCE_LINKS`. Do not add it under **Build → Variables and Secrets**; build-time secrets are not available to the running Worker. Its value is a JSON object mapping resource IDs from `assets/data/admin-resources.json` to their URLs. For example:
 
 ```json
 {
