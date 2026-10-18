@@ -13,6 +13,23 @@
   const validUrl = value => { try { const url = new URL(value); return url.protocol === 'https:' ? url.href : ''; } catch { return ''; } };
   const dateLabel = value => { const date = new Date(`${value}T00:00:00`); return Number.isNaN(date.getTime()) ? '—' : new Intl.DateTimeFormat('en-IN', { day:'numeric', month:'short', year:'numeric' }).format(date); };
 
+  async function loadPublishedCounts() {
+    const paths = ['/assets/data/team.json', '/assets/data/blog.json', '/assets/data/newsletters.json'];
+    const countIds = ['team-profile-count', 'blog-article-count', 'newsletter-issue-count'];
+    const results = await Promise.allSettled(paths.map(path => fetch(path, { cache:'no-cache' }).then(response => {
+      if (!response.ok) throw new Error(`Could not load ${path}`);
+      return response.json();
+    })));
+    results.forEach((result, index) => {
+      if (result.status !== 'fulfilled') return;
+      const data = result.value;
+      const count = index === 0 ? (Array.isArray(data) ? data.filter(person => person && person.name).length : null)
+        : index === 1 ? (Array.isArray(data.posts) ? data.posts.length : null)
+        : (Array.isArray(data) ? data.length : null);
+      if (count !== null) document.getElementById(countIds[index]).textContent = count.toLocaleString('en-IN');
+    });
+  }
+
   function syncThemeToggle() {
     const light = document.documentElement.dataset.theme === 'light';
     themeToggle.setAttribute('aria-pressed', String(light));
@@ -56,6 +73,7 @@
     syncThemeToggle();
   });
   syncThemeToggle();
+  loadPublishedCounts();
   Promise.all([
     fetch(dataPath, { cache:'no-cache' }).then(response => { if (!response.ok) throw new Error('The directory data is not available.'); return response.json(); }),
     fetch(privateLinksPath, { cache:'no-store', credentials:'same-origin' }).then(response => response.ok ? response.json() : {})

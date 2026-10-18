@@ -96,3 +96,12 @@ h2 { margin-bottom:0; font:700 34px/1 var(--display); }
 html[data-theme="light"] .ops-hero { background:#f1f1f2 url("https://assets.ashwaracing.org/images/heroimg/hero-desktop.jpg") center 46%/cover no-repeat; }
 html[data-theme="light"] .ops-hero::before { background:linear-gradient(90deg,rgba(241,241,242,.97) 0%,rgba(241,241,242,.89) 37%,rgba(241,241,242,.38) 100%),linear-gradient(0deg,rgba(241,241,242,.35),transparent 48%); }
 html[data-theme="light"] .ops-hero::after { color:#ffffff35; }
+.record-snapshot { margin-top:26px; padding:20px 0 16px; border-bottom:1px solid var(--line); }
+.record-snapshot-heading { margin-bottom:15px; }
+.record-snapshot-heading .eyebrow { margin-bottom:7px; }
+.record-snapshot-heading h2 { font-size:28px; }
+.record-snapshot-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+.record-stat { min-height:88px; display:flex; flex-direction:column; justify-content:center; gap:6px; padding:13px 16px; border:1px solid var(--line); border-top:2px solid var(--red); background:linear-gradient(130deg,var(--panel-hi),var(--panel)); color:#a8aab2; font:600 10px/1 var(--display); letter-spacing:.12em; }
+.record-stat-number { color:var(--white); font:700 30px/.95 var(--display); letter-spacing:0; }
+.record-snapshot-note { margin:10px 0 0; color:#858790; font-size:11px; }
+@media(max-width:650px) { .record-snapshot-grid { grid-template-columns:1fr; } .record-stat { min-height:72px; } }
