@@ -1,196 +1,342 @@
+
 /* ============================================================
    ASHWA RACING — contact.js
-   Handles: form validation, enquiry type sync, char counter,
-   Gmail compose URL submission, scroll reveal
+   Handles:
+   - Form validation
+   - Enquiry type and subject synchronization
+   - WhatsApp links
+   - Character counter
+   - Phone number inclusion
+   - Gmail compose
+   - Form reset
+   - Scroll reveal
    ============================================================ */
 
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ─── Enquiry → recipient routing ─────────────────────────
+  // ─── Enquiry recipient routing ────────────────────────────
+
   const RECIPIENTS = {
-    general:     "ashwaracing@rvce.edu.in",
+    general: "ashwaracing@rvce.edu.in",
     sponsorship: "ashwa.smp@gmail.com",
     recruitment: "ashwa.hr@gmail.com",
-    media:       "ashwa.hr@gmail.com"
+    media: "ashwa.hr@gmail.com"
   };
 
-  // ─── DOM refs ─────────────────────────────────────────────
-  const form         = document.getElementById("ct-form");
-  const submitBtn    = document.getElementById("ct-submit-btn");
-  const submitText   = submitBtn?.querySelector(".ct-submit-text");
-  const submitLoading= submitBtn?.querySelector(".ct-submit-loading");
-  const successEl    = document.getElementById("ct-success");
-  const resetBtn     = document.getElementById("ct-reset-btn");
-  const enquiryHidden= document.getElementById("ct-enquiry-type");
-  const charNum      = document.getElementById("ct-char-num");
-  const messageArea  = document.getElementById("ct-message");
+  // ─── DOM references ───────────────────────────────────────
 
-  // ─── Auto-select enquiry type from URL ─────────────────────
-const params = new URLSearchParams(window.location.search);
-const urlType = params.get("type");
-
-const packageName = params.get("package");
-const enquiryTopics = {
-  general: "a general enquiry",
-  sponsorship: "a sponsorship or partnership enquiry",
-  recruitment: "joining the team",
-  media: "a media or press enquiry"
-};
-
-function updateWhatsAppLinks() {
-  const enquiryType = enquiryHidden?.value || urlType || "general";
-  const topic = enquiryType === "sponsorship" && packageName
-    ? `the ${packageName} sponsorship package`
-    : enquiryTopics[enquiryType] || enquiryTopics.general;
-
-  document.querySelectorAll("[data-whatsapp-contact]").forEach(link => {
-    const name = link.dataset.whatsappName || "Ashwa Racing";
-    const message = `Hi ${name}, I'm contacting Ashwa Racing about ${topic}.`;
-    link.href = `https://wa.me/${link.dataset.whatsappContact}?text=${encodeURIComponent(message)}`;
-  });
-}
-
-if (urlType === "sponsorship" && packageName) {
+  const form = document.getElementById("ct-form");
+  const submitBtn = document.getElementById("ct-submit-btn");
+  const submitText = submitBtn?.querySelector(".ct-submit-text");
+  const submitLoading = submitBtn?.querySelector(".ct-submit-loading");
+  const successEl = document.getElementById("ct-success");
+  const resetBtn = document.getElementById("ct-reset-btn");
+  const enquiryHidden = document.getElementById("ct-enquiry-type");
   const subjectInput = document.getElementById("ct-subject");
-  if (subjectInput) subjectInput.value = `${packageName} Sponsorship Package`;
-}
-if (urlType && RECIPIENTS[urlType]) {
-  enquiryHidden.value = urlType;
+  const charNum = document.getElementById("ct-char-num");
+  const messageArea = document.getElementById("ct-message");
 
-  // Activate correct pill
-  document.querySelectorAll(".ct-eq-btn").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.eq === urlType);
-  });
+  // ─── Enquiry categories ───────────────────────────────────
 
-  // Update subject placeholder
-  const subjectInput = document.getElementById("ct-subject");
-  const labels = {
-    general:     "",
+  const subjectLabels = {
+    general: "General Enquiry",
     sponsorship: "Sponsorship & Marketing Enquiry",
     recruitment: "Recruitment Enquiry",
-    media:       "Media / Press Enquiry"
+    media: "Media / Press Enquiry"
   };
 
-  if (subjectInput && labels[urlType]) {
-    subjectInput.placeholder = labels[urlType];
+  const enquiryTopics = {
+    general: "a general enquiry",
+    sponsorship: "a sponsorship or partnership enquiry",
+    recruitment: "joining the team",
+    media: "a media or press enquiry"
+  };
+
+  // ─── URL parameters ───────────────────────────────────────
+
+  const params = new URLSearchParams(window.location.search);
+  const urlType = params.get("type");
+  const packageName = params.get("package");
+
+  const initialType = Object.hasOwn(RECIPIENTS, urlType)
+    ? urlType
+    : "general";
+
+  let autoPackageSubject = "";
+
+  // ─── Update subject placeholder ──────────────────────────
+
+  function updateSubjectPlaceholder(type) {
+    if (!subjectInput) return;
+
+    subjectInput.placeholder =
+      subjectLabels[type] || subjectLabels.general;
   }
 
-  // Optional: scroll to form smoothly
-  document.getElementById("ct-form")
-    ?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-updateWhatsAppLinks();
+  // ─── Update WhatsApp links ────────────────────────────────
 
-  // ─── Enquiry type pills ───────────────────────────────────
+  function updateWhatsAppLinks() {
+    const type = enquiryHidden?.value || "general";
+
+    const topic =
+      type === "sponsorship" && packageName
+        ? `the ${packageName} sponsorship package`
+        : enquiryTopics[type] || enquiryTopics.general;
+
+    document
+      .querySelectorAll("[data-whatsapp-contact]")
+      .forEach(link => {
+        const number = link.dataset.whatsappContact;
+        const name = link.dataset.whatsappName || "Ashwa Racing";
+
+        if (!number) return;
+
+        const message =
+          `Hi ${name}, I'm contacting Ashwa Racing about ${topic}.`;
+
+        link.href =
+          `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+      });
+  }
+
+  // ─── Synchronize enquiry category ────────────────────────
+
+  function setEnquiryType(type) {
+    const selectedType = Object.hasOwn(RECIPIENTS, type)
+      ? type
+      : "general";
+
+    if (enquiryHidden) {
+      enquiryHidden.value = selectedType;
+    }
+
+    document.querySelectorAll(".ct-eq-btn").forEach(btn => {
+      const selected = btn.dataset.eq === selectedType;
+
+      btn.classList.toggle("active", selected);
+      btn.setAttribute("aria-pressed", String(selected));
+    });
+
+    // Clear only an automatically populated package subject.
+    if (
+      selectedType !== "sponsorship" &&
+      subjectInput &&
+      subjectInput.value === autoPackageSubject &&
+      autoPackageSubject
+    ) {
+      subjectInput.value = "";
+      autoPackageSubject = "";
+    }
+
+    updateSubjectPlaceholder(selectedType);
+    updateWhatsAppLinks();
+  }
+
+  // ─── Initialize enquiry type ──────────────────────────────
+
+  setEnquiryType(initialType);
+
+  if (initialType === "sponsorship" && packageName && subjectInput) {
+    autoPackageSubject = `${packageName} Sponsorship Package`;
+    subjectInput.value = autoPackageSubject;
+  }
+
+  if (urlType && Object.hasOwn(RECIPIENTS, urlType)) {
+    form?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  // ─── Enquiry category buttons ────────────────────────────
+
   document.querySelectorAll(".ct-eq-btn").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".ct-eq-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      if (enquiryHidden) enquiryHidden.value = btn.dataset.eq;
-      updateWhatsAppLinks();
-
-      // Update form subject placeholder to match context
-      const subjectInput = document.getElementById("ct-subject");
-      const labels = {
-        general:     "",
-        sponsorship: "Sponsorship & Marketing Enquiry",
-        recruitment: "Recruitment Enquiry",
-        media:       "Media / Press Enquiry"
-      };
-      if (subjectInput && labels[btn.dataset.eq]) {
-        subjectInput.placeholder = labels[btn.dataset.eq];
-      }
+      setEnquiryType(btn.dataset.eq);
     });
   });
 
   // ─── Character counter ────────────────────────────────────
+
   const MAX_CHARS = 1000;
-  messageArea?.addEventListener("input", () => {
-    const len = messageArea.value.length;
-    if (charNum) charNum.textContent = len;
 
-    // Warn at 90%
-    const countEl = messageArea.closest(".ct-field")?.querySelector(".ct-char-count");
-    if (countEl) {
-      countEl.style.color = len > MAX_CHARS * 0.9
-        ? "var(--red)"
-        : "var(--text-muted)";
-    }
+  function updateCharacterCounter() {
+    if (!messageArea) return;
 
-    // Hard cap
-    if (len > MAX_CHARS) {
+    if (messageArea.value.length > MAX_CHARS) {
       messageArea.value = messageArea.value.slice(0, MAX_CHARS);
-      if (charNum) charNum.textContent = MAX_CHARS;
     }
-  });
 
-  // ─── Validation helpers ───────────────────────────────────
+    const length = messageArea.value.length;
+
+    if (charNum) {
+      charNum.textContent = length;
+    }
+
+    const countEl = messageArea
+      .closest(".ct-field")
+      ?.querySelector(".ct-char-count");
+
+    if (countEl) {
+      countEl.style.color =
+        length > MAX_CHARS * 0.9
+          ? "var(--red)"
+          : "var(--text-muted)";
+    }
+  }
+
+  messageArea?.addEventListener("input", updateCharacterCounter);
+  updateCharacterCounter();
+
+  // ─── Validation rules ─────────────────────────────────────
+
   const validators = {
     "ct-first": {
-      check: v => v.trim().length >= 2,
-      msg:   "Please enter your first name (min. 2 characters)."
+      check: value => value.trim().length >= 2,
+      msg: "Please enter your first name (min. 2 characters)."
     },
+
     "ct-last": {
-      check: v => v.trim().length >= 2,
-      msg:   "Please enter your last name (min. 2 characters)."
+      check: value => value.trim().length >= 2,
+      msg: "Please enter your last name (min. 2 characters)."
     },
+
     "ct-email": {
-      check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-      msg:   "Please enter a valid email address."
+      check: value =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()),
+      msg: "Please enter a valid email address."
     },
+
     "ct-message": {
-      check: v => v.trim().length >= 10,
-      msg:   "Please enter a message (min. 10 characters)."
+      check: value =>
+        value.trim().length >= 10 &&
+        value.trim().length <= MAX_CHARS,
+      msg: "Please enter a message (10–1000 characters)."
     }
   };
 
+  // ─── Validate individual field ────────────────────────────
+
   function validateField(id) {
-    const input  = document.getElementById(id);
-    const errEl  = document.getElementById(`err-${id.replace("ct-", "")}`);
-    const field  = input?.closest(".ct-field");
-    const rule   = validators[id];
+    const input = document.getElementById(id);
+    const rule = validators[id];
 
     if (!input || !rule) return true;
 
+    const errorId = `err-${id.replace("ct-", "")}`;
+    const errorEl = document.getElementById(errorId);
+    const field = input.closest(".ct-field");
+
     const valid = rule.check(input.value);
+
     field?.classList.toggle("has-error", !valid);
-    if (errEl) errEl.textContent = valid ? "" : rule.msg;
+    input.setAttribute("aria-invalid", String(!valid));
+
+    if (errorEl) {
+      errorEl.textContent = valid ? "" : rule.msg;
+    }
+
     return valid;
   }
 
-  // Live validation — validate on blur, clear error on first keystroke
+  // ─── Live validation ──────────────────────────────────────
+
   Object.keys(validators).forEach(id => {
     const input = document.getElementById(id);
+
     if (!input) return;
 
-    input.addEventListener("blur", () => validateField(id));
+    let touched = false;
+
+    input.addEventListener("blur", () => {
+      touched = true;
+      validateField(id);
+    });
+
     input.addEventListener("input", () => {
-      const errEl = document.getElementById(`err-${id.replace("ct-", "")}`);
-      const field = input.closest(".ct-field");
-      field?.classList.remove("has-error");
-      if (errEl) errEl.textContent = "";
+      if (touched) {
+        validateField(id);
+      }
     });
   });
 
+  function clearValidation() {
+    Object.keys(validators).forEach(id => {
+      const input = document.getElementById(id);
+      const errorEl = document.getElementById(
+        `err-${id.replace("ct-", "")}`
+      );
+
+      input?.closest(".ct-field")?.classList.remove("has-error");
+      input?.removeAttribute("aria-invalid");
+
+      if (errorEl) {
+        errorEl.textContent = "";
+      }
+    });
+  }
+
   // ─── Build Gmail compose URL ──────────────────────────────
+
   function buildGmailUrl({ to, subject, body }) {
     const base = "https://mail.google.com/mail/?view=cm&fs=1";
+
     return (
-      `${base}` +
+      base +
       `&to=${encodeURIComponent(to)}` +
       `&su=${encodeURIComponent(subject)}` +
       `&body=${encodeURIComponent(body)}`
     );
   }
 
-  // ─── Form submission ──────────────────────────────────────
-  form?.addEventListener("submit", e => {
-    e.preventDefault();
+  // ─── Submission notice ────────────────────────────────────
 
-    // Honeypot check
+  let statusEl = null;
+
+  if (form && submitBtn) {
+    statusEl = document.createElement("p");
+    statusEl.id = "ct-compose-status";
+    statusEl.setAttribute("role", "status");
+    statusEl.setAttribute("aria-live", "polite");
+
+    statusEl.style.marginTop = "12px";
+    statusEl.style.lineHeight = "1.6";
+    statusEl.hidden = true;
+
+    submitBtn.insertAdjacentElement("afterend", statusEl);
+  }
+
+  function showStatus(message) {
+    if (!statusEl) return;
+
+    statusEl.textContent = message;
+    statusEl.hidden = false;
+  }
+
+  function resetSubmitButton() {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+    }
+
+    if (submitText) {
+      submitText.hidden = false;
+    }
+
+    if (submitLoading) {
+      submitLoading.hidden = true;
+    }
+  }
+
+  // ─── Form submission ──────────────────────────────────────
+
+  form?.addEventListener("submit", event => {
+    event.preventDefault();
+
+    // Basic honeypot check
     const honey = form.querySelector('input[name="_honey"]');
+
     if (honey?.value) return;
 
     // Validate all required fields
@@ -199,30 +345,51 @@ updateWhatsAppLinks();
       .every(Boolean);
 
     if (!valid) {
-      form.querySelector(".ct-field.has-error input, .ct-field.has-error textarea")
-          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      const firstInvalid = form.querySelector(
+        ".ct-field.has-error input, .ct-field.has-error textarea"
+      );
+
+      firstInvalid?.focus();
+      firstInvalid?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
       return;
     }
 
-    // Extract values
-    const data        = new FormData(form);
-    const firstName   = (data.get("firstName")   || "").trim();
-    const lastName    = (data.get("lastName")    || "").trim();
-    const email       = (data.get("email")       || "").trim();
-    const message     = (data.get("message")     || "").trim();
-    const enquiryType = (data.get("enquiryType") || "general").trim();
-    const subjectRaw  = (data.get("subject")     || "").trim();
+    // ─── Extract form values ────────────────────────────────
 
-    // Resolve recipient
-    const to = RECIPIENTS[enquiryType] ?? RECIPIENTS.general;
+    const data = new FormData(form);
 
-    // Build subject line
-    const enquiryLabel = enquiryType.charAt(0).toUpperCase() + enquiryType.slice(1);
+    const firstName = String(data.get("firstName") || "").trim();
+    const lastName = String(data.get("lastName") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const message = String(data.get("message") || "").trim();
+    const subjectRaw = String(data.get("subject") || "").trim();
+
+    const rawType = enquiryHidden?.value || "general";
+
+    const enquiryType = Object.hasOwn(RECIPIENTS, rawType)
+      ? rawType
+      : "general";
+
+    // ─── Resolve recipient ──────────────────────────────────
+
+    const to = RECIPIENTS[enquiryType];
+
+    const enquiryLabel =
+      enquiryType.charAt(0).toUpperCase() + enquiryType.slice(1);
+
+    // ─── Build subject ──────────────────────────────────────
+
     const subject = subjectRaw
       ? `[${enquiryLabel}] ${subjectRaw}`
-      : `[${enquiryLabel}] Contact Form Submission`;
+      : `[${enquiryLabel}] ${subjectLabels[enquiryType]}`;
 
-    // Build body
+    // ─── Build email body ───────────────────────────────────
+
     const body = [
       "Ashwa Racing Website Contact Form",
       "",
@@ -230,58 +397,112 @@ updateWhatsAppLinks();
       "",
       `Name: ${firstName} ${lastName}`,
       `Email: ${email}`,
+      ...(phone ? [`Phone: ${phone}`] : []),
       "",
       "Message:",
       message,
       "",
       "----------------------------------------",
-      "Sent via ashwaracing.in"
+      "Prepared via Ashwa Racing Contact Form"
     ].join("\n");
 
-    // Brief loading state while tab opens
-    submitBtn.disabled = true;
-    if (submitText)    submitText.hidden    = true;
-    if (submitLoading) submitLoading.hidden = false;
+    // ─── Open Gmail ─────────────────────────────────────────
 
-    // Open Gmail compose in new tab
-    const gmailUrl = buildGmailUrl({ to, subject, body });
-    window.open(gmailUrl, "_blank", "noopener");
+    if (submitBtn) {
+      submitBtn.disabled = true;
+    }
 
-    // Restore button + show success state
-    submitBtn.disabled = false;
-    if (submitText)    submitText.hidden    = false;
-    if (submitLoading) submitLoading.hidden = true;
+    if (submitText) {
+      submitText.hidden = true;
+    }
 
-    if (form)      form.hidden      = true;
-    if (successEl) successEl.hidden = false;
-  });
+    if (submitLoading) {
+      submitLoading.hidden = false;
+    }
 
-  // ─── Reset / send another ─────────────────────────────────
-  resetBtn?.addEventListener("click", () => {
-    form?.reset();
-    if (charNum) charNum.textContent = "0";
-    if (form)      form.hidden      = false;
-    if (successEl) successEl.hidden = true;
-    submitBtn.disabled = false;
-    if (submitText)    submitText.hidden    = false;
-    if (submitLoading) submitLoading.hidden = true;
-
-    // Reset enquiry pills
-    document.querySelectorAll(".ct-eq-btn").forEach((b, i) => {
-      b.classList.toggle("active", i === 0);
+    const gmailUrl = buildGmailUrl({
+      to,
+      subject,
+      body
     });
-    if (enquiryHidden) enquiryHidden.value = "general";
+
+    try {
+      window.open(gmailUrl, "_blank", "noopener");
+
+      // Opening a draft is NOT confirmation of delivery.
+      showStatus(
+        "A Gmail draft was requested in a new tab. " +
+        "Please check that it opened and click Send in Gmail " +
+        "to complete your enquiry. If no tab opened, " +
+        "allow pop-ups and try again."
+      );
+
+    } catch (error) {
+      console.error("Unable to open Gmail:", error);
+
+      showStatus(
+        "Unable to open Gmail. Please allow pop-ups " +
+        "and try again."
+      );
+    }
+
+    // Keep the form visible until a real backend is added.
+    resetSubmitButton();
   });
+
+  // ─── Reset / Send another ─────────────────────────────────
+
+  function resetContactForm() {
+    form?.reset();
+
+    autoPackageSubject = "";
+
+    clearValidation();
+    setEnquiryType("general");
+    updateCharacterCounter();
+    resetSubmitButton();
+
+    if (statusEl) {
+      statusEl.textContent = "";
+      statusEl.hidden = true;
+    }
+
+    if (form) {
+      form.hidden = false;
+    }
+
+    if (successEl) {
+      successEl.hidden = true;
+    }
+  }
+
+  resetBtn?.addEventListener("click", resetContactForm);
 
   // ─── Scroll reveal ────────────────────────────────────────
-  const revealObs = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("visible");
-      obs.unobserve(entry.target);
-    });
-  }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
 
-  document.querySelectorAll(".reveal").forEach(el => revealObs.observe(el));
+  if ("IntersectionObserver" in window) {
+    const revealObs = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px"
+      }
+    );
+
+    document.querySelectorAll(".reveal").forEach(element => {
+      revealObs.observe(element);
+    });
+  } else {
+    document.querySelectorAll(".reveal").forEach(element => {
+      element.classList.add("visible");
+    });
+  }
 
 });
