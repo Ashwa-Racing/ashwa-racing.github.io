@@ -1,287 +1,707 @@
 /* ============================================================
    ASHWA RACING — contact.js
-   Handles: form validation, enquiry type sync, char counter,
-   Gmail compose URL submission, scroll reveal
+   Enquiry categories, accessible subsystem dropdown,
+   validation, email drafts, form reset and scroll reveal.
    ============================================================ */
 
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ─── Enquiry → recipient routing ─────────────────────────
+  // Existing email addresses. No changes to routing yet.
   const RECIPIENTS = {
-    general:     "ashwaracing@rvce.edu.in",
-    sponsorship: "ashwa.smp@gmail.com",
-    recruitment: "ashwa.hr@gmail.com",
-    media:       "ashwa.hr@gmail.com"
+    general: "akshayurs.ashwa@gmail.com",
+    sponsorship: "pranavramakrishnan.ashwa@gmail.com",
+    recruitment: "akshayurs.ashwa@gmail.com",
+    media: "pranavramakrishnan.ashwa@gmail.com"
   };
 
-  // ─── DOM refs ─────────────────────────────────────────────
-  const form         = document.getElementById("ct-form");
-  const submitBtn    = document.getElementById("ct-submit-btn");
-  const submitText   = submitBtn?.querySelector(".ct-submit-text");
-  const submitLoading= submitBtn?.querySelector(".ct-submit-loading");
-  const successEl    = document.getElementById("ct-success");
-  const resetBtn     = document.getElementById("ct-reset-btn");
-  const enquiryHidden= document.getElementById("ct-enquiry-type");
-  const charNum      = document.getElementById("ct-char-num");
-  const messageArea  = document.getElementById("ct-message");
-
-  // ─── Auto-select enquiry type from URL ─────────────────────
-const params = new URLSearchParams(window.location.search);
-const urlType = params.get("type");
-
-const packageName = params.get("package");
-const enquiryTopics = {
-  general: "a general enquiry",
-  sponsorship: "a sponsorship or partnership enquiry",
-  recruitment: "joining the team",
-  media: "a media or press enquiry"
-};
-
-function updateWhatsAppLinks() {
-  const enquiryType = enquiryHidden?.value || urlType || "general";
-  const topic = enquiryType === "sponsorship" && packageName
-    ? `the ${packageName} sponsorship package`
-    : enquiryTopics[enquiryType] || enquiryTopics.general;
-
-  document.querySelectorAll("[data-whatsapp-contact]").forEach(link => {
-    const name = link.dataset.whatsappName || "Ashwa Racing";
-    const message = `Hi ${name}, I'm contacting Ashwa Racing about ${topic}.`;
-    link.href = `https://wa.me/${link.dataset.whatsappContact}?text=${encodeURIComponent(message)}`;
-  });
-}
-
-if (urlType === "sponsorship" && packageName) {
-  const subjectInput = document.getElementById("ct-subject");
-  if (subjectInput) subjectInput.value = `${packageName} Sponsorship Package`;
-}
-if (urlType && RECIPIENTS[urlType]) {
-  enquiryHidden.value = urlType;
-
-  // Activate correct pill
-  document.querySelectorAll(".ct-eq-btn").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.eq === urlType);
-  });
-
-  // Update subject placeholder
-  const subjectInput = document.getElementById("ct-subject");
-  const labels = {
-    general:     "",
+  // Replace empty strings ONLY with confirmed subsystem lead emails.
+  const TECHNICAL_RECIPIENTS = {
+    team_management: "akshayurs.ashwa@gmail.com",
+    suspension_vehicle_dynamics: "aitijhya.ashwa@gmail.com",
+    engine: "talin.ashwa@gmail.com",
+    drivetrain: "ranjithds.ashwa@gmail.com",
+    electrical_it: "aditeya.ashwa@gmail.com",
+    chassis: "sathviksnaik.ashwa@gmail.com",
+    admin_brakes: "shravancs.ashwa@gmail.com",
+    smp_finance: "pranavramakrishnan.ashwa@gmail.com"
+  };
+  const subjectLabels = {
+    general: "General Enquiry",
     sponsorship: "Sponsorship & Marketing Enquiry",
     recruitment: "Recruitment Enquiry",
-    media:       "Media / Press Enquiry"
+    media: "Media / Press Enquiry",
+    technical: "Technical Enquiry"
   };
 
-  if (subjectInput && labels[urlType]) {
-    subjectInput.placeholder = labels[urlType];
+  const subsystemLabels = {
+    team_management: "Team & Management",
+    suspension_vehicle_dynamics: "Suspension & Vehicle Dynamics",
+    engine: "Engine",
+    drivetrain: "Drivetrain",
+    electrical_it: "Electrical & IT",
+    chassis: "Chassis",
+    admin_brakes: "Admin & Brakes",
+    smp_finance: "SMP & Finance"
+  };
+
+  // DOM references
+  const form = document.getElementById("ct-form");
+  const submitBtn = document.getElementById("ct-submit-btn");
+  const submitText = submitBtn?.querySelector(".ct-submit-text");
+  const submitLoading = submitBtn?.querySelector(".ct-submit-loading");
+  const successEl = document.getElementById("ct-success");
+  const resetBtn = document.getElementById("ct-reset-btn");
+
+  const enquiryHidden = document.getElementById("ct-enquiry-type");
+  const subsystemHidden = document.getElementById("ct-subsystem");
+  const technicalSection = document.getElementById("ct-technical-section");
+  const subsystemError = document.getElementById("ct-subsystem-error");
+
+  const subsystemDropdown = document.getElementById("ct-subsystem-dropdown");
+  const subsystemTrigger = document.getElementById("ct-subsystem-trigger");
+  const subsystemLabel = document.getElementById("ct-subsystem-label");
+  const subsystemList = document.getElementById("ct-subsystem-list");
+
+  const subsystemOptions = Array.from(
+    document.querySelectorAll(".ct-subsystem-option")
+  );
+
+  const subjectInput = document.getElementById("ct-subject");
+  const charNum = document.getElementById("ct-char-num");
+  const messageArea = document.getElementById("ct-message");
+
+  // URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const urlType = params.get("type");
+  const packageName = params.get("package");
+
+  const initialType = Object.hasOwn(subjectLabels, urlType)
+    ? urlType
+    : "general";
+
+  let autoPackageSubject = "";
+
+  // Subject placeholder
+  function updateSubjectPlaceholder(type) {
+    if (!subjectInput) return;
+
+    const subsystem = subsystemHidden?.value || "";
+
+    subjectInput.placeholder =
+      type === "technical" && Object.hasOwn(subsystemLabels, subsystem)
+        ? `Technical Enquiry - ${subsystemLabels[subsystem]}`
+        : subjectLabels[type] || subjectLabels.general;
   }
 
-  // Optional: scroll to form smoothly
-  document.getElementById("ct-form")
-    ?.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-updateWhatsAppLinks();
+  // ─── Custom subsystem dropdown ───────────────────────────
 
-  // ─── Enquiry type pills ───────────────────────────────────
-  document.querySelectorAll(".ct-eq-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".ct-eq-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      if (enquiryHidden) enquiryHidden.value = btn.dataset.eq;
-      updateWhatsAppLinks();
+  function setDropdownOpen(open, focusIndex = null) {
+    if (!subsystemList || !subsystemTrigger) return;
 
-      // Update form subject placeholder to match context
-      const subjectInput = document.getElementById("ct-subject");
-      const labels = {
-        general:     "",
-        sponsorship: "Sponsorship & Marketing Enquiry",
-        recruitment: "Recruitment Enquiry",
-        media:       "Media / Press Enquiry"
-      };
-      if (subjectInput && labels[btn.dataset.eq]) {
-        subjectInput.placeholder = labels[btn.dataset.eq];
+    const shouldOpen = Boolean(open && !technicalSection?.hidden);
+
+    subsystemList.hidden = !shouldOpen;
+
+    subsystemTrigger.setAttribute(
+      "aria-expanded",
+      String(shouldOpen)
+    );
+
+    if (
+      shouldOpen &&
+      focusIndex !== null &&
+      subsystemOptions.length
+    ) {
+      const index = Math.max(
+        0,
+        Math.min(focusIndex, subsystemOptions.length - 1)
+      );
+
+      subsystemOptions[index].focus();
+    }
+  }
+
+  function selectSubsystem(value) {
+    if (!Object.hasOwn(subsystemLabels, value)) return;
+
+    if (subsystemHidden) {
+      subsystemHidden.value = value;
+    }
+
+    if (subsystemLabel) {
+      subsystemLabel.textContent = subsystemLabels[value];
+      subsystemLabel.classList.remove("is-placeholder");
+    }
+
+    subsystemOptions.forEach(option => {
+      const selected = option.dataset.subsystem === value;
+
+      option.classList.toggle("is-selected", selected);
+      option.setAttribute("aria-selected", String(selected));
+    });
+
+    if (subsystemError) {
+      subsystemError.textContent = "";
+    }
+
+    updateSubjectPlaceholder("technical");
+    setDropdownOpen(false);
+    subsystemTrigger?.focus();
+  }
+
+  function clearSubsystem() {
+    if (subsystemHidden) {
+      subsystemHidden.value = "";
+    }
+
+    if (subsystemLabel) {
+      subsystemLabel.textContent = "-- Choose a subsystem --";
+      subsystemLabel.classList.add("is-placeholder");
+    }
+
+    subsystemOptions.forEach(option => {
+      option.classList.remove("is-selected");
+      option.setAttribute("aria-selected", "false");
+    });
+
+    if (subsystemError) {
+      subsystemError.textContent = "";
+    }
+
+    setDropdownOpen(false);
+  }
+
+  // Open / close dropdown
+  subsystemTrigger?.addEventListener("click", () => {
+    const opening = subsystemList?.hidden ?? false;
+
+    const index = subsystemOptions.findIndex(
+      option => option.classList.contains("is-selected")
+    );
+
+    setDropdownOpen(
+      opening,
+      opening ? Math.max(0, index) : null
+    );
+  });
+
+  // Keyboard support on dropdown trigger
+  subsystemTrigger?.addEventListener("keydown", event => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+
+      const selectedIndex = subsystemOptions.findIndex(
+        option => option.classList.contains("is-selected")
+      );
+
+      const nextIndex = selectedIndex >= 0
+        ? selectedIndex
+        : event.key === "ArrowDown"
+          ? 0
+          : subsystemOptions.length - 1;
+
+      setDropdownOpen(true, nextIndex);
+
+    } else if (event.key === "Escape") {
+      setDropdownOpen(false);
+    }
+  });
+
+  // Subsystem option click and keyboard navigation
+  subsystemOptions.forEach((option, index) => {
+
+    option.addEventListener("click", () => {
+      selectSubsystem(option.dataset.subsystem);
+    });
+
+    option.addEventListener("keydown", event => {
+      if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+        event.preventDefault();
+
+        let next = index;
+
+        if (event.key === "ArrowDown") {
+          next = (index + 1) % subsystemOptions.length;
+        }
+
+        if (event.key === "ArrowUp") {
+          next = (
+            index - 1 + subsystemOptions.length
+          ) % subsystemOptions.length;
+        }
+
+        if (event.key === "Home") {
+          next = 0;
+        }
+
+        if (event.key === "End") {
+          next = subsystemOptions.length - 1;
+        }
+
+        subsystemOptions[next].focus();
+
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        setDropdownOpen(false);
+        subsystemTrigger?.focus();
+
+      } else if (
+        event.key === "Enter" ||
+        event.key === " "
+      ) {
+        event.preventDefault();
+        selectSubsystem(option.dataset.subsystem);
+
+      } else if (event.key === "Tab") {
+        setDropdownOpen(false);
       }
     });
   });
 
-  // ─── Character counter ────────────────────────────────────
-  const MAX_CHARS = 1000;
-  messageArea?.addEventListener("input", () => {
-    const len = messageArea.value.length;
-    if (charNum) charNum.textContent = len;
-
-    // Warn at 90%
-    const countEl = messageArea.closest(".ct-field")?.querySelector(".ct-char-count");
-    if (countEl) {
-      countEl.style.color = len > MAX_CHARS * 0.9
-        ? "var(--red)"
-        : "var(--text-muted)";
-    }
-
-    // Hard cap
-    if (len > MAX_CHARS) {
-      messageArea.value = messageArea.value.slice(0, MAX_CHARS);
-      if (charNum) charNum.textContent = MAX_CHARS;
+  // Close dropdown when clicking outside
+  document.addEventListener("pointerdown", event => {
+    if (
+      subsystemDropdown &&
+      !subsystemDropdown.contains(event.target)
+    ) {
+      setDropdownOpen(false);
     }
   });
 
-  // ─── Validation helpers ───────────────────────────────────
+  // ─── Enquiry category synchronization ────────────────────
+
+  function setEnquiryType(type) {
+    const selectedType = Object.hasOwn(subjectLabels, type)
+      ? type
+      : "general";
+
+    if (enquiryHidden) {
+      enquiryHidden.value = selectedType;
+    }
+
+    document.querySelectorAll(".ct-eq-btn[data-eq]").forEach(btn => {
+      const selected = btn.dataset.eq === selectedType;
+
+      btn.classList.toggle("active", selected);
+      btn.setAttribute("aria-pressed", String(selected));
+    });
+
+    if (
+      selectedType !== "sponsorship" &&
+      subjectInput &&
+      autoPackageSubject &&
+      subjectInput.value === autoPackageSubject
+    ) {
+      subjectInput.value = "";
+      autoPackageSubject = "";
+    }
+
+    if (technicalSection) {
+      technicalSection.hidden = selectedType !== "technical";
+    }
+
+    if (selectedType !== "technical") {
+      clearSubsystem();
+    }
+
+    updateSubjectPlaceholder(selectedType);
+
+    if (subsystemError) {
+      subsystemError.textContent = "";
+    }
+  }
+
+  // Initialize
+  setEnquiryType(initialType);
+
+  if (
+    initialType === "sponsorship" &&
+    packageName &&
+    subjectInput
+  ) {
+    autoPackageSubject = `${packageName} Sponsorship Package`;
+    subjectInput.value = autoPackageSubject;
+  }
+
+  if (urlType && Object.hasOwn(subjectLabels, urlType)) {
+    form?.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  document.querySelectorAll(".ct-eq-btn[data-eq]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      setEnquiryType(btn.dataset.eq);
+    });
+  });
+
+  // ─── Character counter ────────────────────────────────────
+
+  const MAX_CHARS = 1000;
+
+  function updateCharacterCounter() {
+    if (!messageArea) return;
+
+    if (messageArea.value.length > MAX_CHARS) {
+      messageArea.value = messageArea.value.slice(0, MAX_CHARS);
+    }
+
+    const length = messageArea.value.length;
+
+    if (charNum) {
+      charNum.textContent = length;
+    }
+
+    const countEl = messageArea
+      .closest(".ct-field")
+      ?.querySelector(".ct-char-count");
+
+    if (countEl) {
+      countEl.style.color =
+        length > MAX_CHARS * 0.9
+          ? "var(--red)"
+          : "var(--text-muted)";
+    }
+  }
+
+  messageArea?.addEventListener("input", updateCharacterCounter);
+  updateCharacterCounter();
+
+  // ─── Validation ───────────────────────────────────────────
+
   const validators = {
     "ct-first": {
-      check: v => v.trim().length >= 2,
-      msg:   "Please enter your first name (min. 2 characters)."
+      check: value => value.trim().length >= 2,
+      msg: "Please enter your first name (min. 2 characters)."
     },
+
     "ct-last": {
-      check: v => v.trim().length >= 2,
-      msg:   "Please enter your last name (min. 2 characters)."
+      check: value => value.trim().length >= 2,
+      msg: "Please enter your last name (min. 2 characters)."
     },
+
     "ct-email": {
-      check: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()),
-      msg:   "Please enter a valid email address."
+      check: value =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim()),
+      msg: "Please enter a valid email address."
     },
+
     "ct-message": {
-      check: v => v.trim().length >= 10,
-      msg:   "Please enter a message (min. 10 characters)."
+      check: value =>
+        value.trim().length >= 10 &&
+        value.trim().length <= MAX_CHARS,
+      msg: "Please enter a message (10–1000 characters)."
     }
   };
 
   function validateField(id) {
-    const input  = document.getElementById(id);
-    const errEl  = document.getElementById(`err-${id.replace("ct-", "")}`);
-    const field  = input?.closest(".ct-field");
-    const rule   = validators[id];
+    const input = document.getElementById(id);
+    const rule = validators[id];
 
     if (!input || !rule) return true;
 
+    const errorEl = document.getElementById(
+      `err-${id.replace("ct-", "")}`
+    );
+
     const valid = rule.check(input.value);
-    field?.classList.toggle("has-error", !valid);
-    if (errEl) errEl.textContent = valid ? "" : rule.msg;
+
+    input.closest(".ct-field")?.classList.toggle(
+      "has-error",
+      !valid
+    );
+
+    input.setAttribute("aria-invalid", String(!valid));
+
+    if (errorEl) {
+      errorEl.textContent = valid ? "" : rule.msg;
+    }
+
     return valid;
   }
 
-  // Live validation — validate on blur, clear error on first keystroke
+  // Live validation
   Object.keys(validators).forEach(id => {
     const input = document.getElementById(id);
+
     if (!input) return;
 
-    input.addEventListener("blur", () => validateField(id));
+    let touched = false;
+
+    input.addEventListener("blur", () => {
+      touched = true;
+      validateField(id);
+    });
+
     input.addEventListener("input", () => {
-      const errEl = document.getElementById(`err-${id.replace("ct-", "")}`);
-      const field = input.closest(".ct-field");
-      field?.classList.remove("has-error");
-      if (errEl) errEl.textContent = "";
+      if (touched) {
+        validateField(id);
+      }
     });
   });
 
-  // ─── Build Gmail compose URL ──────────────────────────────
+  function clearValidation() {
+    Object.keys(validators).forEach(id => {
+      const input = document.getElementById(id);
+      const errorEl = document.getElementById(
+        `err-${id.replace("ct-", "")}`
+      );
+
+      input?.closest(".ct-field")?.classList.remove("has-error");
+      input?.removeAttribute("aria-invalid");
+
+      if (errorEl) {
+        errorEl.textContent = "";
+      }
+    });
+
+    if (subsystemError) {
+      subsystemError.textContent = "";
+    }
+  }
+
+  // ─── Gmail compose link ───────────────────────────────────
+
   function buildGmailUrl({ to, subject, body }) {
     const base = "https://mail.google.com/mail/?view=cm&fs=1";
+
     return (
-      `${base}` +
+      base +
       `&to=${encodeURIComponent(to)}` +
       `&su=${encodeURIComponent(subject)}` +
       `&body=${encodeURIComponent(body)}`
     );
   }
 
-  // ─── Form submission ──────────────────────────────────────
-  form?.addEventListener("submit", e => {
-    e.preventDefault();
+  // ─── Status message ───────────────────────────────────────
 
-    // Honeypot check
+  let statusEl = null;
+
+  if (form && submitBtn) {
+    statusEl = document.createElement("p");
+    statusEl.id = "ct-compose-status";
+    statusEl.setAttribute("role", "status");
+    statusEl.setAttribute("aria-live", "polite");
+
+    statusEl.style.marginTop = "12px";
+    statusEl.style.lineHeight = "1.6";
+    statusEl.hidden = true;
+
+    submitBtn.insertAdjacentElement("afterend", statusEl);
+  }
+
+  function showStatus(message) {
+    if (!statusEl) return;
+
+    statusEl.textContent = message;
+    statusEl.hidden = false;
+  }
+
+  function clearStatus() {
+    if (!statusEl) return;
+
+    statusEl.textContent = "";
+    statusEl.hidden = true;
+  }
+
+  function resetSubmitButton() {
+    if (submitBtn) submitBtn.disabled = false;
+    if (submitText) submitText.hidden = false;
+    if (submitLoading) submitLoading.hidden = true;
+  }
+
+  // ─── Form submission ──────────────────────────────────────
+
+  form?.addEventListener("submit", event => {
+    event.preventDefault();
+    clearStatus();
+
     const honey = form.querySelector('input[name="_honey"]');
     if (honey?.value) return;
 
-    // Validate all required fields
     const valid = Object.keys(validators)
-      .map(id => validateField(id))
+      .map(validateField)
       .every(Boolean);
 
     if (!valid) {
-      form.querySelector(".ct-field.has-error input, .ct-field.has-error textarea")
-          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      const firstInvalid = form.querySelector(
+        ".ct-field.has-error input, .ct-field.has-error textarea"
+      );
+
+      firstInvalid?.focus();
+      firstInvalid?.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+
       return;
     }
 
     // Extract values
-    const data        = new FormData(form);
-    const firstName   = (data.get("firstName")   || "").trim();
-    const lastName    = (data.get("lastName")    || "").trim();
-    const email       = (data.get("email")       || "").trim();
-    const message     = (data.get("message")     || "").trim();
-    const enquiryType = (data.get("enquiryType") || "general").trim();
-    const subjectRaw  = (data.get("subject")     || "").trim();
+    const data = new FormData(form);
 
-    // Resolve recipient
-    const to = RECIPIENTS[enquiryType] ?? RECIPIENTS.general;
+    const firstName = String(data.get("firstName") || "").trim();
+    const lastName = String(data.get("lastName") || "").trim();
+    const email = String(data.get("email") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
+    const message = String(data.get("message") || "").trim();
+    const subjectRaw = String(data.get("subject") || "").trim();
 
-    // Build subject line
-    const enquiryLabel = enquiryType.charAt(0).toUpperCase() + enquiryType.slice(1);
+    const rawType = enquiryHidden?.value || "general";
+
+    const enquiryType = Object.hasOwn(subjectLabels, rawType)
+      ? rawType
+      : "general";
+
+    const subsystem = subsystemHidden?.value || "";
+
+    // Determine recipient
+    let to = "";
+
+    if (enquiryType === "technical") {
+
+      if (!Object.hasOwn(subsystemLabels, subsystem)) {
+        if (subsystemError) {
+          subsystemError.textContent =
+            "Please select a technical subsystem.";
+        }
+
+        technicalSection?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+        showStatus("Please select a technical subsystem.");
+        return;
+      }
+
+      // Subsystem recipients pending confirmation
+      to = TECHNICAL_RECIPIENTS[subsystem];
+
+      if (!to) {
+        showStatus(
+          "The email address for this subsystem hasn't been configured yet. " +
+          "Please try again once the team has added its lead's email."
+        );
+        return;
+      }
+
+    } else {
+      to = RECIPIENTS[enquiryType];
+    }
+
+    // Email subject
+    const enquiryLabel =
+      enquiryType.charAt(0).toUpperCase() + enquiryType.slice(1);
+
+    const subsystemName =
+      enquiryType === "technical"
+        ? subsystemLabels[subsystem]
+        : "";
+
+    const prefix = subsystemName
+      ? `[Technical - ${subsystemName}]`
+      : `[${enquiryLabel}]`;
+
     const subject = subjectRaw
-      ? `[${enquiryLabel}] ${subjectRaw}`
-      : `[${enquiryLabel}] Contact Form Submission`;
+      ? `${prefix} ${subjectRaw}`
+      : `${prefix} ${subjectLabels[enquiryType]}`;
 
-    // Build body
+    // Email body
     const body = [
       "Ashwa Racing Website Contact Form",
       "",
       `Enquiry Type: ${enquiryLabel}`,
+      ...(subsystemName ? [`Subsystem: ${subsystemName}`] : []),
       "",
       `Name: ${firstName} ${lastName}`,
       `Email: ${email}`,
+      ...(phone ? [`Phone: ${phone}`] : []),
       "",
       "Message:",
       message,
       "",
       "----------------------------------------",
-      "Sent via ashwaracing.in"
+      "Prepared via Ashwa Racing Contact Form"
     ].join("\n");
 
-    // Brief loading state while tab opens
-    submitBtn.disabled = true;
-    if (submitText)    submitText.hidden    = true;
+    if (submitBtn) submitBtn.disabled = true;
+    if (submitText) submitText.hidden = true;
     if (submitLoading) submitLoading.hidden = false;
 
-    // Open Gmail compose in new tab
-    const gmailUrl = buildGmailUrl({ to, subject, body });
-    window.open(gmailUrl, "_blank", "noopener");
+    try {
+      window.open(
+        buildGmailUrl({ to, subject, body }),
+        "_blank",
+        "noopener"
+      );
 
-    // Restore button + show success state
-    submitBtn.disabled = false;
-    if (submitText)    submitText.hidden    = false;
-    if (submitLoading) submitLoading.hidden = true;
+      showStatus(
+        "A Gmail draft was requested in a new tab. " +
+        "Please check that it opened and click Send in Gmail " +
+        "to complete your enquiry. If no tab opened, " +
+        "allow pop-ups and try again."
+      );
 
-    if (form)      form.hidden      = true;
-    if (successEl) successEl.hidden = false;
+    } catch (error) {
+      console.error("Unable to open Gmail:", error);
+
+      showStatus(
+        "Unable to open Gmail. Please allow pop-ups and try again."
+      );
+    }
+
+    resetSubmitButton();
   });
 
-  // ─── Reset / send another ─────────────────────────────────
-  resetBtn?.addEventListener("click", () => {
+  // ─── Form reset ────────────────────────────────────────────
+
+  function resetContactForm() {
     form?.reset();
-    if (charNum) charNum.textContent = "0";
-    if (form)      form.hidden      = false;
-    if (successEl) successEl.hidden = true;
-    submitBtn.disabled = false;
-    if (submitText)    submitText.hidden    = false;
-    if (submitLoading) submitLoading.hidden = true;
+    autoPackageSubject = "";
 
-    // Reset enquiry pills
-    document.querySelectorAll(".ct-eq-btn").forEach((b, i) => {
-      b.classList.toggle("active", i === 0);
-    });
-    if (enquiryHidden) enquiryHidden.value = "general";
-  });
+    clearValidation();
+    clearSubsystem();
+    setEnquiryType("general");
+    updateCharacterCounter();
+    resetSubmitButton();
+    clearStatus();
+
+    if (form) form.hidden = false;
+    if (successEl) successEl.hidden = true;
+  }
+
+  resetBtn?.addEventListener("click", resetContactForm);
 
   // ─── Scroll reveal ────────────────────────────────────────
-  const revealObs = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("visible");
-      obs.unobserve(entry.target);
-    });
-  }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
 
-  document.querySelectorAll(".reveal").forEach(el => revealObs.observe(el));
+  if ("IntersectionObserver" in window) {
+    const revealObs = new IntersectionObserver(
+      (entries, observer) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px"
+      }
+    );
+
+    document.querySelectorAll(".reveal").forEach(element => {
+      revealObs.observe(element);
+    });
+
+  } else {
+    document.querySelectorAll(".reveal").forEach(element => {
+      element.classList.add("visible");
+    });
+  }
 
 });
