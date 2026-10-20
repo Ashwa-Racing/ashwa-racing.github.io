@@ -1,32 +1,50 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Contact Us | Ashwa Racing</title>
 
   <link rel="canonical" href="https://ashwaracing.org/contact" />
 
-<meta name="description" content="Contact Ashwa Racing by email, phone, or WhatsApp about sponsorship packages, recruitment, media, or general enquiries. Reach the Formula Student team at RV College of Engineering." />
+  <meta name="description"
+        content="Contact Ashwa Racing by email for sponsorship, recruitment, media, technical, or general enquiries. Reach the Formula Student team at RV College of Engineering." />
 
-  <link rel="icon" type="image/png" href="assets/images/favicon/favicon-96x96.png" sizes="96x96" />
-  <link rel="icon" type="image/svg+xml" href="assets/images/favicon/favicon.svg" />
-  <link rel="shortcut icon" href="assets/images/favicon/favicon.ico" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/favicon/apple-touch-icon.png" />
+  <link rel="icon" type="image/png"
+        href="assets/images/favicon/favicon-96x96.png"
+        sizes="96x96" />
+  <link rel="icon" type="image/svg+xml"
+        href="assets/images/favicon/favicon.svg" />
+  <link rel="shortcut icon"
+        href="assets/images/favicon/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180"
+        href="assets/images/favicon/apple-touch-icon.png" />
+
   <meta name="apple-mobile-web-app-title" content="Ashwa Racing" />
   <link rel="manifest" href="assets/images/favicon/site.webmanifest" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://assets.ashwaracing.org">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 
   <script>
     (() => {
       let theme = null;
-      try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {}
-      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+
+      try {
+        theme = localStorage.getItem("ashwa-theme");
+      } catch (e) {}
+
+      document.documentElement.dataset.theme =
+        theme === "light" ? "light" : "dark";
     })();
   </script>
 
@@ -34,19 +52,155 @@
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
   <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
   <link rel="stylesheet" href="assets/css/pages/contact.css">
+
+  <style>
+    /* RED SMP ICON AND BUTTON */
+
+    .ct-direct-card .ct-direct-icon {
+      background: var(--red);
+      border: 1px solid var(--red);
+      color: #fff;
+    }
+
+    .ct-direct-card .ct-direct-icon i {
+      color: #fff;
+    }
+
+    .ct-direct-action.ct-email-red {
+      background: var(--red);
+      border-color: var(--red);
+      color: #fff;
+    }
+
+    .ct-direct-action.ct-email-red:hover {
+      background: var(--red-dark, #bb0022);
+      border-color: var(--red-dark, #bb0022);
+      color: #fff;
+    }
+
+    /* TECHNICAL SUBSYSTEM DROPDOWN */
+
+    #ct-technical-section[hidden],
+    #ct-subsystem-list[hidden] {
+      display: none !important;
+    }
+
+    .ct-subsystem-dropdown {
+      position: relative;
+      width: 100%;
+    }
+
+    .ct-subsystem-trigger {
+      display: flex;
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      border: 1px solid var(--border-strong);
+      border-radius: 0;
+
+      background: var(--page-bg);
+      color: var(--text-strong);
+
+      font: 400 .95rem/1.5 var(--body);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .ct-subsystem-trigger .is-placeholder {
+      color: var(--text-muted);
+    }
+
+    .ct-subsystem-trigger[aria-expanded="true"],
+    .ct-subsystem-trigger:focus-visible {
+      border-color: var(--red);
+      outline: 2px solid var(--red);
+      outline-offset: 2px;
+    }
+
+    .ct-subsystem-trigger .fa-chevron-down {
+      color: var(--red);
+    }
+
+    /* STATIC PREVENTS OVERLAP WITH FOLLOW US */
+
+    .ct-subsystem-list {
+      position: static;
+      width: 100%;
+      margin-top: 4px;
+      max-height: 240px;
+      overflow-y: auto;
+
+      border: 1px solid var(--red);
+      background: var(--surface);
+      box-shadow: 0 12px 28px var(--shadow);
+    }
+
+    .ct-subsystem-option {
+      display: block;
+      width: 100%;
+      padding: 10px 14px;
+
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--text-strong);
+
+      font: 400 .9rem/1.4 var(--body);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .ct-subsystem-option:hover {
+      background: var(--surface-hi);
+    }
+
+    .ct-subsystem-option:focus-visible,
+    .ct-subsystem-option.is-selected {
+      outline: none;
+      background: var(--red);
+      color: #fff;
+    }
+  </style>
 </head>
+
 <body>
 
 <div id="main-header"></div>
 
-<button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
-  <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
-  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l1.41-1.41" /></svg>
+<!-- THEME TOGGLE -->
+
+<button class="theme-toggle" id="theme-toggle"
+        type="button"
+        aria-label="Switch to light mode"
+        aria-pressed="false">
+
+  <svg class="icon-moon"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="1.8"
+       aria-hidden="true">
+    <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" />
+  </svg>
+
+  <svg class="icon-sun"
+       viewBox="0 0 24 24"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="1.8"
+       aria-hidden="true">
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41-1.41M17.66 6.34l1.41-1.41" />
+  </svg>
+
 </button>
 
-<!-- ═══════════════════════════
-     HERO
-════════════════════════════ -->
+<!-- HERO -->
+
 <section class="ct-hero">
   <div class="ct-hero-bg"></div>
   <div class="ct-hero-overlay"></div>
@@ -54,196 +208,573 @@
   <div class="ct-hero-stripe"></div>
 
   <div class="ct-hero-content">
+
     <div class="ct-eyebrow">
       <span class="eyebrow-dash"></span>
       <span>Ashwa Racing &middot; RVCE</span>
     </div>
-    <h1 class="ct-hero-title">GET IN<br><em>TOUCH.</em></h1>
+
+    <h1 class="ct-hero-title">
+      GET IN<br><em>TOUCH.</em>
+    </h1>
+
     <p class="ct-hero-desc">
-      Whether you're a student looking to join, a company interested in partnership,
+      Whether you're a student looking to join,
+      a company interested in partnership,
       or a racing enthusiast &mdash; we'd love to hear from you.
     </p>
-    <a class="ct-hero-link" href="sponsorship.html">Explore sponsorship packages <span aria-hidden="true">&rarr;</span></a>
+
+    <a class="ct-hero-link" href="sponsorship.html">
+      Explore sponsorship packages
+      <span aria-hidden="true">&rarr;</span>
+    </a>
+
   </div>
 </section>
 
-<!-- ═══════════════════════════
-     CONTACT BODY
-     Left: info + reach-outs
-     Right: form
-════════════════════════════ -->
+<!-- MAIN CONTACT SECTION -->
+
 <section class="ct-main">
 
-  <!-- ─── Left ─── -->
+  <!-- LEFT COLUMN -->
+
   <div class="ct-left">
 
-    <!-- Contact details -->
+    <!-- CONTACT DETAILS -->
+
     <div class="ct-info-block reveal">
+
       <div class="ct-section-label">
-        <span class="label-dash"></span>Contact Details
+        <span class="label-dash"></span>
+        Contact Details
       </div>
 
+      <!-- GENERAL EMAIL -->
+
       <div class="ct-detail">
-        <div class="ct-detail-icon"><i class="fas fa-envelope"></i></div>
+        <div class="ct-detail-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+
         <div>
           <div class="ct-detail-label">General enquiries</div>
-          <a class="ct-detail-value" href="mailto:ashwaracing@rvce.edu.in">ashwaracing@rvce.edu.in</a>
+
+          <a class="ct-detail-value"
+             href="mailto:akshayurs.ashwa@gmail.com">
+            akshayurs.ashwa@gmail.com
+          </a>
         </div>
       </div>
 
+      <!-- SPONSORSHIP EMAIL -->
+
       <div class="ct-detail">
-        <div class="ct-detail-icon"><i class="fas fa-envelope"></i></div>
+        <div class="ct-detail-icon">
+          <i class="fas fa-envelope"></i>
+        </div>
+
         <div>
           <div class="ct-detail-label">Sponsorship enquiries</div>
-          <a class="ct-detail-value" href="mailto:ashwa.smp@gmail.com">ashwa.smp@gmail.com</a>
+
+          <a class="ct-detail-value"
+             href="mailto:pranavramakrishnan.ashwa@gmail.com">
+            pranavramakrishnan.ashwa@gmail.com
+          </a>
         </div>
       </div>
+
+      <!-- WORKSHOP ADDRESS -->
 
       <div class="ct-detail">
-        <div class="ct-detail-icon"><i class="fas fa-map-marker-alt"></i></div>
+        <div class="ct-detail-icon">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+
         <div>
           <div class="ct-detail-label">Workshop</div>
-          <span class="ct-detail-value">RV College of Engineering,<br>Mysore Road, Bengaluru &mdash; 560059</span>
+
+          <span class="ct-detail-value">
+            RV College of Engineering,<br>
+            Mysore Road, Bengaluru &mdash; 560059
+          </span>
         </div>
       </div>
+
     </div>
 
-    <div class="ct-direct-block reveal" style="--delay:0.04s">
-      <div class="ct-section-label"><span class="label-dash"></span>Talk to an SMP Lead</div>
-      <article class="ct-direct-card">
-        <div class="ct-direct-icon" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
-        <div class="ct-direct-copy">
-          <span class="ct-direct-role">Batch of 2027</span>
-          <h3>Pranav Ramakrishnan</h3>
-          <div class="ct-direct-actions">
-            <a class="ct-direct-action ct-direct-action--primary" href="https://wa.me/919148718718" data-whatsapp-contact="919148718718" data-whatsapp-name="Pranav" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            <a class="ct-direct-action" href="tel:+919148718718">Call</a>
-          </div>
-        </div>
-      </article>
-      <article class="ct-direct-card">
-        <div class="ct-direct-icon" aria-hidden="true"><i class="fab fa-whatsapp"></i></div>
-        <div class="ct-direct-copy">
-          <span class="ct-direct-role">Batch of 2028</span>
-          <h3>Dilan Da Silva</h3>
-          <div class="ct-direct-actions">
-            <a class="ct-direct-action ct-direct-action--primary" href="https://wa.me/919886546677" data-whatsapp-contact="919886546677" data-whatsapp-name="Dilan" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            <a class="ct-direct-action" href="tel:+919886546677">Call</a>
-          </div>
-        </div>
-      </article>
-    </div>
+    <!-- SMP EMAIL CARD -->
 
-    <!-- Enquiry types -->
-    <div class="ct-enquiry-block reveal" style="--delay:0.08s">
+    <div class="ct-direct-block reveal"
+         style="--delay:0.04s">
+
       <div class="ct-section-label">
-        <span class="label-dash"></span>I'm Reaching Out About
+        <span class="label-dash"></span>
+        Contact SMP Team
       </div>
+
+      <article class="ct-direct-card">
+
+        <div class="ct-direct-icon" aria-hidden="true">
+          <i class="fas fa-envelope"></i>
+        </div>
+
+        <div class="ct-direct-copy">
+
+          <span class="ct-direct-role">
+            Sponsorship &amp; Media
+          </span>
+
+          <h3>Get in Touch via Email</h3>
+
+          <div class="ct-direct-actions">
+
+            <a class="ct-direct-action ct-direct-action--primary ct-email-red"
+               href="mailto:pranavramakrishnan.ashwa@gmail.com">
+
+              <i class="fas fa-envelope"></i>
+              Email SMP
+
+            </a>
+
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- ENQUIRY TYPE BUTTONS -->
+
+    <div class="ct-enquiry-block reveal"
+         style="--delay:0.08s">
+
+      <div class="ct-section-label">
+        <span class="label-dash"></span>
+        I'm Reaching Out About
+      </div>
+
       <div class="ct-enquiry-grid">
-        <button class="ct-eq-btn active" data-eq="general">General</button>
-        <button class="ct-eq-btn" data-eq="sponsorship">Sponsorship</button>
-        <button class="ct-eq-btn" data-eq="recruitment">Recruitment</button>
-        <button class="ct-eq-btn" data-eq="media">Media / Press</button>
+
+        <button type="button"
+                class="ct-eq-btn active"
+                data-eq="general">
+          General
+        </button>
+
+        <button type="button"
+                class="ct-eq-btn"
+                data-eq="sponsorship">
+          Sponsorship
+        </button>
+
+        <button type="button"
+                class="ct-eq-btn"
+                data-eq="recruitment">
+          Recruitment
+        </button>
+
+        <button type="button"
+                class="ct-eq-btn"
+                data-eq="media">
+          Media / Press
+        </button>
+
+        <button type="button"
+                class="ct-eq-btn"
+                data-eq="technical">
+          Technical Enquiry
+        </button>
+
+      </div>
+
+      <!-- TECHNICAL ENQUIRY DROPDOWN -->
+
+      <div id="ct-technical-section"
+           class="ct-technical-section"
+           hidden>
+
+        <div class="ct-section-label"
+             style="margin-top:24px;">
+
+          <span class="label-dash"></span>
+          Choose Your Subsystem
+
+        </div>
+
+        <div class="ct-field">
+
+          <label for="ct-subsystem-trigger">
+            Select Subsystem <span class="req">*</span>
+          </label>
+
+          <div class="ct-subsystem-dropdown"
+               id="ct-subsystem-dropdown">
+
+            <!-- DROPDOWN TRIGGER -->
+
+            <button type="button"
+                    id="ct-subsystem-trigger"
+                    class="ct-subsystem-trigger"
+                    aria-haspopup="listbox"
+                    aria-expanded="false"
+                    aria-controls="ct-subsystem-list"
+                    aria-describedby="ct-subsystem-error">
+
+              <span id="ct-subsystem-label"
+                    class="is-placeholder">
+                -- Choose a subsystem --
+              </span>
+
+              <i class="fas fa-chevron-down"
+                 aria-hidden="true"></i>
+
+            </button>
+
+            <!-- UPDATED 8 SUBSYSTEM OPTIONS -->
+
+            <div id="ct-subsystem-list"
+                 class="ct-subsystem-list"
+                 role="listbox"
+                 aria-label="Technical subsystem"
+                 hidden>
+
+              <!-- 1. TEAM AND MANAGEMENT -->
+
+              <button type="button"
+                      role="option"
+                      tabindex="-1"
+                      class="ct-subsystem-option"
+                      data-subsystem="team_management"
+                      aria-selected="false">
+                Team &amp; Management
+              </button>
+
+              <!-- 2. SUSPENSION -->
+
+              <button type="button"
+                      role="option"
+                      tabindex="-1"
+                      class="ct-subsystem-option"
+                      data-subsystem="suspension_vehicle_dynamics"
+                      aria-selected="false">
+                Suspension &amp; Vehicle Dynamics
+              </button>
+
+              <!-- 3. ENGINE -->
+
+              <button type="button"
+                      role="option"
+                      tabindex="-1"
+                      class="ct-subsystem-option"
+                      data-subsystem="engine"
+                      aria-selected="false">
+                Engine
+              </button>
+
+              <!-- 4. DRIVETRAIN -->
+
+              <button type="button"
+                      role="option"
+                      tabindex="-1"
+                      class="ct-subsystem-option"
+                      data-subsystem="drivetrain"
+                      aria-selected="false">
+                Drivetrain
+              </button>
+
+              <!-- 5. ELECTRICAL AND IT -->
+
+              <button type="button"
+                      role="option"
+                      tabindex="-1"
+                      class="ct-subsystem-option"
+                      data-subsystem="electrical_it"
+                      aria-selected="false">
+                Electrical &amp; IT
+              </button>
+
+              <!-- 6. CHASSIS -->
+
+              <button type="button"
+                      role="option"
+                      tabindex="-1"
+                      class="ct-subsystem-option"
+                      data-subsystem="chassis"
+                      aria-selected="false">
+                Chassis
+              </button>
+
+              <!-- 7. ADMIN AND BRAKES -->
+
+              <button type="button"
+                      role="option"
+                      tabindex="-1"
+                      class="ct-subsystem-option"
+                      data-subsystem="admin_brakes"
+                      aria-selected="false">
+                Admin &amp; Brakes
+              </button>
+
+              <!-- 8. SMP AND FINANCE -->
+
+              <button type="button"
+                      role="option"
+                      tabindex="-1"
+                      class="ct-subsystem-option"
+                      data-subsystem="smp_finance"
+                      aria-selected="false">
+                SMP &amp; Finance
+              </button>
+
+            </div>
+
+          </div>
+        </div>
+
+        <p id="ct-subsystem-error"
+           role="alert"
+           style="color:var(--red);margin-top:10px;"></p>
+
       </div>
     </div>
 
-    <!-- Socials -->
-    <div class="ct-social-block reveal" style="--delay:0.14s">
+    <!-- FOLLOW US -->
+
+    <div class="ct-social-block reveal"
+         style="--delay:0.14s">
+
       <div class="ct-section-label">
-        <span class="label-dash"></span>Follow Us
+        <span class="label-dash"></span>
+        Follow Us
       </div>
+
       <div class="ct-socials">
-        <a href="https://www.instagram.com/ashwa_racing" target="_blank" rel="noopener" aria-label="Instagram">
+
+        <a href="https://www.instagram.com/ashwa_racing"
+           target="_blank"
+           rel="noopener"
+           aria-label="Instagram">
           <i class="fab fa-instagram"></i>
         </a>
-        <a href="https://www.linkedin.com/company/ashwa-racing/" target="_blank" rel="noopener" aria-label="LinkedIn">
+
+        <a href="https://www.linkedin.com/company/ashwa-racing/"
+           target="_blank"
+           rel="noopener"
+           aria-label="LinkedIn">
           <i class="fab fa-linkedin-in"></i>
         </a>
-        <a href="https://www.youtube.com/@AshwaRacingRVCE" target="_blank" rel="noopener" aria-label="YouTube">
+
+        <a href="https://www.youtube.com/@AshwaRacingRVCE"
+           target="_blank"
+           rel="noopener"
+           aria-label="YouTube">
           <i class="fab fa-youtube"></i>
         </a>
-        <a href="https://github.com/Ashwa-Racing" target="_blank" rel="noopener" aria-label="GitHub">
+
+        <a href="https://github.com/Ashwa-Racing"
+           target="_blank"
+           rel="noopener"
+           aria-label="GitHub">
           <i class="fab fa-github"></i>
         </a>
+
       </div>
     </div>
 
   </div>
 
-  <!-- ─── Right: Form ─── -->
-  <div class="ct-right reveal" style="--delay:0.05s">
+  <!-- RIGHT COLUMN: CONTACT FORM -->
+
+  <div class="ct-right reveal"
+       style="--delay:0.05s">
+
     <div class="ct-form-header">
-      <h2 class="ct-form-title">Send a<br><em>Message</em></h2>
+      <h2 class="ct-form-title">
+        Send a<br><em>Message</em>
+      </h2>
     </div>
 
-    <form class="ct-form" id="ct-form" novalidate>
+    <form class="ct-form"
+          id="ct-form"
+          novalidate>
+
+      <!-- FIRST AND LAST NAME -->
 
       <div class="ct-form-row">
+
         <div class="ct-field">
-          <label for="ct-first">First Name <span class="req">*</span></label>
-          <input type="text" id="ct-first" name="firstName" autocomplete="given-name" required>
-          <div class="ct-field-error" id="err-first"></div>
+          <label for="ct-first">
+            First Name <span class="req">*</span>
+          </label>
+
+          <input type="text"
+                 id="ct-first"
+                 name="firstName"
+                 autocomplete="given-name"
+                 required>
+
+          <div class="ct-field-error"
+               id="err-first"></div>
         </div>
+
         <div class="ct-field">
-          <label for="ct-last">Last Name <span class="req">*</span></label>
-          <input type="text" id="ct-last" name="lastName" autocomplete="family-name" required>
-          <div class="ct-field-error" id="err-last"></div>
+          <label for="ct-last">
+            Last Name <span class="req">*</span>
+          </label>
+
+          <input type="text"
+                 id="ct-last"
+                 name="lastName"
+                 autocomplete="family-name"
+                 required>
+
+          <div class="ct-field-error"
+               id="err-last"></div>
         </div>
+
       </div>
 
+      <!-- EMAIL ADDRESS -->
+
       <div class="ct-field">
-        <label for="ct-email">Email Address <span class="req">*</span></label>
-        <input type="email" id="ct-email" name="email" autocomplete="email" required>
-        <div class="ct-field-error" id="err-email"></div>
+
+        <label for="ct-email">
+          Email Address <span class="req">*</span>
+        </label>
+
+        <input type="email"
+               id="ct-email"
+               name="email"
+               autocomplete="email"
+               required>
+
+        <div class="ct-field-error"
+             id="err-email"></div>
+
       </div>
+
+      <!-- PHONE AND SUBJECT -->
 
       <div class="ct-form-row">
+
         <div class="ct-field">
-          <label for="ct-phone">Phone <span class="ct-optional">(optional)</span></label>
-          <input type="tel" id="ct-phone" name="phone" autocomplete="tel">
+
+          <label for="ct-phone">
+            Phone
+            <span class="ct-optional">(optional)</span>
+          </label>
+
+          <input type="tel"
+                 id="ct-phone"
+                 name="phone"
+                 autocomplete="tel">
+
         </div>
+
         <div class="ct-field">
-          <label for="ct-subject">Subject</label>
-          <input type="text" id="ct-subject" name="subject">
+
+          <label for="ct-subject">
+            Subject
+          </label>
+
+          <input type="text"
+                 id="ct-subject"
+                 name="subject">
+
         </div>
+
       </div>
 
-      <!-- Hidden enquiry type -->
-      <input type="hidden" id="ct-enquiry-type" name="enquiryType" value="general">
+      <!-- HIDDEN ENQUIRY VALUES -->
+
+      <input type="hidden"
+             id="ct-enquiry-type"
+             name="enquiryType"
+             value="general">
+
+      <input type="hidden"
+             id="ct-subsystem"
+             name="subsystem"
+             value="">
+
+      <!-- MESSAGE -->
 
       <div class="ct-field">
-        <label for="ct-message">Message <span class="req">*</span></label>
-        <textarea id="ct-message" name="message" rows="5" required></textarea>
-        <div class="ct-field-error" id="err-message"></div>
-        <div class="ct-char-count"><span id="ct-char-num">0</span> / 1000</div>
+
+        <label for="ct-message">
+          Message <span class="req">*</span>
+        </label>
+
+        <textarea id="ct-message"
+                  name="message"
+                  rows="5"
+                  required></textarea>
+
+        <div class="ct-field-error"
+             id="err-message"></div>
+
+        <div class="ct-char-count">
+          <span id="ct-char-num">0</span> / 1000
+        </div>
+
       </div>
 
-      <!-- Honeypot — hidden from humans -->
-      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;">
+      <!-- SPAM HONEYPOT -->
 
-      <button type="submit" class="ct-submit" id="ct-submit-btn">
-        <span class="ct-submit-text">Send Message</span>
-        <span class="ct-submit-icon"><i class="fas fa-arrow-right"></i></span>
-        <span class="ct-submit-loading" hidden>
-          <i class="fas fa-circle-notch fa-spin"></i> Sending&hellip;
+      <input type="text"
+             name="_honey"
+             tabindex="-1"
+             autocomplete="off"
+             aria-hidden="true"
+             style="position:absolute;left:-9999px;opacity:0;">
+
+      <!-- SUBMIT BUTTON -->
+
+      <button type="submit"
+              class="ct-submit"
+              id="ct-submit-btn">
+
+        <span class="ct-submit-text">
+          Send Message
         </span>
+
+        <span class="ct-submit-icon">
+          <i class="fas fa-arrow-right"></i>
+        </span>
+
+        <span class="ct-submit-loading" hidden>
+          <i class="fas fa-circle-notch fa-spin"></i>
+          Sending&hellip;
+        </span>
+
       </button>
 
     </form>
 
-    <!-- Success state -->
-    <div class="ct-success" id="ct-success" hidden>
-      <div class="ct-success-icon"><i class="fas fa-check"></i></div>
-      <!-- <h3>Message Sent</h3> -->
-      <p>Thanks for reaching out. We'll get back to you as soon as possible.</p>
-      <!-- <button class="ct-reset-btn" id="ct-reset-btn">Send Another</button> -->
+    <!-- SUCCESS STATE -->
+
+    <div class="ct-success"
+         id="ct-success"
+         hidden>
+
+      <div class="ct-success-icon">
+        <i class="fas fa-check"></i>
+      </div>
+
+      <p>
+        Thanks for reaching out.
+        We'll get back to you as soon as possible.
+      </p>
+
     </div>
 
   </div>
 
 </section>
 
+<!-- FOOTER -->
+
 <footer id="main-footer"></footer>
+
+<!-- SCRIPTS -->
 
 <script src="assets/js/components/theme.js" defer></script>
 <script src="assets/js/components/header.js?v=7" defer></script>

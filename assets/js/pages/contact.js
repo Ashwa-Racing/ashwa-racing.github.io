@@ -1,110 +1,279 @@
-
 /* ============================================================
    ASHWA RACING — contact.js
-   Handles:
-   - Form validation
-   - Enquiry type and subject synchronization
-   - WhatsApp links
-   - Character counter
-   - Phone number inclusion
-   - Gmail compose
-   - Form reset
-   - Scroll reveal
+   Enquiry categories, accessible subsystem dropdown,
+   validation, email drafts, form reset and scroll reveal.
    ============================================================ */
 
 "use strict";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ─── Enquiry recipient routing ────────────────────────────
-
+  // Existing email addresses. No changes to routing yet.
   const RECIPIENTS = {
-    general: "ashwaracing@rvce.edu.in",
-    sponsorship: "ashwa.smp@gmail.com",
-    recruitment: "ashwa.hr@gmail.com",
-    media: "ashwa.hr@gmail.com"
+    general: "akshayurs.ashwa@gmail.com",
+    sponsorship: "pranavramakrishnan.ashwa@gmail.com",
+    recruitment: "akshayurs.ashwa@gmail.com",
+    media: "pranavramakrishnan.ashwa@gmail.com"
   };
 
-  // ─── DOM references ───────────────────────────────────────
+  // Replace empty strings ONLY with confirmed subsystem lead emails.
+  const TECHNICAL_RECIPIENTS = {
+    team_management: "akshayurs.ashwa@gmail.com",
+    suspension_vehicle_dynamics: "aitijhya.ashwa@gmail.com",
+    engine: "talin.ashwa@gmail.com",
+    drivetrain: "ranjithds.ashwa@gmail.com",
+    electrical_it: "aditeya.ashwa@gmail.com",
+    chassis: "sathviksnaik.ashwa@gmail.com",
+    admin_brakes: "shravancs.ashwa@gmail.com",
+    smp_finance: "pranavramakrishnan.ashwa@gmail.com"
+  };
+  const subjectLabels = {
+    general: "General Enquiry",
+    sponsorship: "Sponsorship & Marketing Enquiry",
+    recruitment: "Recruitment Enquiry",
+    media: "Media / Press Enquiry",
+    technical: "Technical Enquiry"
+  };
 
+  const subsystemLabels = {
+    team_management: "Team & Management",
+    suspension_vehicle_dynamics: "Suspension & Vehicle Dynamics",
+    engine: "Engine",
+    drivetrain: "Drivetrain",
+    electrical_it: "Electrical & IT",
+    chassis: "Chassis",
+    admin_brakes: "Admin & Brakes",
+    smp_finance: "SMP & Finance"
+  };
+
+  // DOM references
   const form = document.getElementById("ct-form");
   const submitBtn = document.getElementById("ct-submit-btn");
   const submitText = submitBtn?.querySelector(".ct-submit-text");
   const submitLoading = submitBtn?.querySelector(".ct-submit-loading");
   const successEl = document.getElementById("ct-success");
   const resetBtn = document.getElementById("ct-reset-btn");
+
   const enquiryHidden = document.getElementById("ct-enquiry-type");
+  const subsystemHidden = document.getElementById("ct-subsystem");
+  const technicalSection = document.getElementById("ct-technical-section");
+  const subsystemError = document.getElementById("ct-subsystem-error");
+
+  const subsystemDropdown = document.getElementById("ct-subsystem-dropdown");
+  const subsystemTrigger = document.getElementById("ct-subsystem-trigger");
+  const subsystemLabel = document.getElementById("ct-subsystem-label");
+  const subsystemList = document.getElementById("ct-subsystem-list");
+
+  const subsystemOptions = Array.from(
+    document.querySelectorAll(".ct-subsystem-option")
+  );
+
   const subjectInput = document.getElementById("ct-subject");
   const charNum = document.getElementById("ct-char-num");
   const messageArea = document.getElementById("ct-message");
 
-  // ─── Enquiry categories ───────────────────────────────────
-
-  const subjectLabels = {
-    general: "General Enquiry",
-    sponsorship: "Sponsorship & Marketing Enquiry",
-    recruitment: "Recruitment Enquiry",
-    media: "Media / Press Enquiry"
-  };
-
-  const enquiryTopics = {
-    general: "a general enquiry",
-    sponsorship: "a sponsorship or partnership enquiry",
-    recruitment: "joining the team",
-    media: "a media or press enquiry"
-  };
-
-  // ─── URL parameters ───────────────────────────────────────
-
+  // URL parameters
   const params = new URLSearchParams(window.location.search);
   const urlType = params.get("type");
   const packageName = params.get("package");
 
-  const initialType = Object.hasOwn(RECIPIENTS, urlType)
+  const initialType = Object.hasOwn(subjectLabels, urlType)
     ? urlType
     : "general";
 
   let autoPackageSubject = "";
 
-  // ─── Update subject placeholder ──────────────────────────
-
+  // Subject placeholder
   function updateSubjectPlaceholder(type) {
     if (!subjectInput) return;
 
+    const subsystem = subsystemHidden?.value || "";
+
     subjectInput.placeholder =
-      subjectLabels[type] || subjectLabels.general;
+      type === "technical" && Object.hasOwn(subsystemLabels, subsystem)
+        ? `Technical Enquiry - ${subsystemLabels[subsystem]}`
+        : subjectLabels[type] || subjectLabels.general;
   }
 
-  // ─── Update WhatsApp links ────────────────────────────────
+  // ─── Custom subsystem dropdown ───────────────────────────
 
-  function updateWhatsAppLinks() {
-    const type = enquiryHidden?.value || "general";
+  function setDropdownOpen(open, focusIndex = null) {
+    if (!subsystemList || !subsystemTrigger) return;
 
-    const topic =
-      type === "sponsorship" && packageName
-        ? `the ${packageName} sponsorship package`
-        : enquiryTopics[type] || enquiryTopics.general;
+    const shouldOpen = Boolean(open && !technicalSection?.hidden);
 
-    document
-      .querySelectorAll("[data-whatsapp-contact]")
-      .forEach(link => {
-        const number = link.dataset.whatsappContact;
-        const name = link.dataset.whatsappName || "Ashwa Racing";
+    subsystemList.hidden = !shouldOpen;
 
-        if (!number) return;
+    subsystemTrigger.setAttribute(
+      "aria-expanded",
+      String(shouldOpen)
+    );
 
-        const message =
-          `Hi ${name}, I'm contacting Ashwa Racing about ${topic}.`;
+    if (
+      shouldOpen &&
+      focusIndex !== null &&
+      subsystemOptions.length
+    ) {
+      const index = Math.max(
+        0,
+        Math.min(focusIndex, subsystemOptions.length - 1)
+      );
 
-        link.href =
-          `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
-      });
+      subsystemOptions[index].focus();
+    }
   }
 
-  // ─── Synchronize enquiry category ────────────────────────
+  function selectSubsystem(value) {
+    if (!Object.hasOwn(subsystemLabels, value)) return;
+
+    if (subsystemHidden) {
+      subsystemHidden.value = value;
+    }
+
+    if (subsystemLabel) {
+      subsystemLabel.textContent = subsystemLabels[value];
+      subsystemLabel.classList.remove("is-placeholder");
+    }
+
+    subsystemOptions.forEach(option => {
+      const selected = option.dataset.subsystem === value;
+
+      option.classList.toggle("is-selected", selected);
+      option.setAttribute("aria-selected", String(selected));
+    });
+
+    if (subsystemError) {
+      subsystemError.textContent = "";
+    }
+
+    updateSubjectPlaceholder("technical");
+    setDropdownOpen(false);
+    subsystemTrigger?.focus();
+  }
+
+  function clearSubsystem() {
+    if (subsystemHidden) {
+      subsystemHidden.value = "";
+    }
+
+    if (subsystemLabel) {
+      subsystemLabel.textContent = "-- Choose a subsystem --";
+      subsystemLabel.classList.add("is-placeholder");
+    }
+
+    subsystemOptions.forEach(option => {
+      option.classList.remove("is-selected");
+      option.setAttribute("aria-selected", "false");
+    });
+
+    if (subsystemError) {
+      subsystemError.textContent = "";
+    }
+
+    setDropdownOpen(false);
+  }
+
+  // Open / close dropdown
+  subsystemTrigger?.addEventListener("click", () => {
+    const opening = subsystemList?.hidden ?? false;
+
+    const index = subsystemOptions.findIndex(
+      option => option.classList.contains("is-selected")
+    );
+
+    setDropdownOpen(
+      opening,
+      opening ? Math.max(0, index) : null
+    );
+  });
+
+  // Keyboard support on dropdown trigger
+  subsystemTrigger?.addEventListener("keydown", event => {
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault();
+
+      const selectedIndex = subsystemOptions.findIndex(
+        option => option.classList.contains("is-selected")
+      );
+
+      const nextIndex = selectedIndex >= 0
+        ? selectedIndex
+        : event.key === "ArrowDown"
+          ? 0
+          : subsystemOptions.length - 1;
+
+      setDropdownOpen(true, nextIndex);
+
+    } else if (event.key === "Escape") {
+      setDropdownOpen(false);
+    }
+  });
+
+  // Subsystem option click and keyboard navigation
+  subsystemOptions.forEach((option, index) => {
+
+    option.addEventListener("click", () => {
+      selectSubsystem(option.dataset.subsystem);
+    });
+
+    option.addEventListener("keydown", event => {
+      if (["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+        event.preventDefault();
+
+        let next = index;
+
+        if (event.key === "ArrowDown") {
+          next = (index + 1) % subsystemOptions.length;
+        }
+
+        if (event.key === "ArrowUp") {
+          next = (
+            index - 1 + subsystemOptions.length
+          ) % subsystemOptions.length;
+        }
+
+        if (event.key === "Home") {
+          next = 0;
+        }
+
+        if (event.key === "End") {
+          next = subsystemOptions.length - 1;
+        }
+
+        subsystemOptions[next].focus();
+
+      } else if (event.key === "Escape") {
+        event.preventDefault();
+        setDropdownOpen(false);
+        subsystemTrigger?.focus();
+
+      } else if (
+        event.key === "Enter" ||
+        event.key === " "
+      ) {
+        event.preventDefault();
+        selectSubsystem(option.dataset.subsystem);
+
+      } else if (event.key === "Tab") {
+        setDropdownOpen(false);
+      }
+    });
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("pointerdown", event => {
+    if (
+      subsystemDropdown &&
+      !subsystemDropdown.contains(event.target)
+    ) {
+      setDropdownOpen(false);
+    }
+  });
+
+  // ─── Enquiry category synchronization ────────────────────
 
   function setEnquiryType(type) {
-    const selectedType = Object.hasOwn(RECIPIENTS, type)
+    const selectedType = Object.hasOwn(subjectLabels, type)
       ? type
       : "general";
 
@@ -112,47 +281,58 @@ document.addEventListener("DOMContentLoaded", () => {
       enquiryHidden.value = selectedType;
     }
 
-    document.querySelectorAll(".ct-eq-btn").forEach(btn => {
+    document.querySelectorAll(".ct-eq-btn[data-eq]").forEach(btn => {
       const selected = btn.dataset.eq === selectedType;
 
       btn.classList.toggle("active", selected);
       btn.setAttribute("aria-pressed", String(selected));
     });
 
-    // Clear only an automatically populated package subject.
     if (
       selectedType !== "sponsorship" &&
       subjectInput &&
-      subjectInput.value === autoPackageSubject &&
-      autoPackageSubject
+      autoPackageSubject &&
+      subjectInput.value === autoPackageSubject
     ) {
       subjectInput.value = "";
       autoPackageSubject = "";
     }
 
+    if (technicalSection) {
+      technicalSection.hidden = selectedType !== "technical";
+    }
+
+    if (selectedType !== "technical") {
+      clearSubsystem();
+    }
+
     updateSubjectPlaceholder(selectedType);
-    updateWhatsAppLinks();
+
+    if (subsystemError) {
+      subsystemError.textContent = "";
+    }
   }
 
-  // ─── Initialize enquiry type ──────────────────────────────
-
+  // Initialize
   setEnquiryType(initialType);
 
-  if (initialType === "sponsorship" && packageName && subjectInput) {
+  if (
+    initialType === "sponsorship" &&
+    packageName &&
+    subjectInput
+  ) {
     autoPackageSubject = `${packageName} Sponsorship Package`;
     subjectInput.value = autoPackageSubject;
   }
 
-  if (urlType && Object.hasOwn(RECIPIENTS, urlType)) {
+  if (urlType && Object.hasOwn(subjectLabels, urlType)) {
     form?.scrollIntoView({
       behavior: "smooth",
       block: "start"
     });
   }
 
-  // ─── Enquiry category buttons ────────────────────────────
-
-  document.querySelectorAll(".ct-eq-btn").forEach(btn => {
+  document.querySelectorAll(".ct-eq-btn[data-eq]").forEach(btn => {
     btn.addEventListener("click", () => {
       setEnquiryType(btn.dataset.eq);
     });
@@ -190,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
   messageArea?.addEventListener("input", updateCharacterCounter);
   updateCharacterCounter();
 
-  // ─── Validation rules ─────────────────────────────────────
+  // ─── Validation ───────────────────────────────────────────
 
   const validators = {
     "ct-first": {
@@ -217,21 +397,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // ─── Validate individual field ────────────────────────────
-
   function validateField(id) {
     const input = document.getElementById(id);
     const rule = validators[id];
 
     if (!input || !rule) return true;
 
-    const errorId = `err-${id.replace("ct-", "")}`;
-    const errorEl = document.getElementById(errorId);
-    const field = input.closest(".ct-field");
+    const errorEl = document.getElementById(
+      `err-${id.replace("ct-", "")}`
+    );
 
     const valid = rule.check(input.value);
 
-    field?.classList.toggle("has-error", !valid);
+    input.closest(".ct-field")?.classList.toggle(
+      "has-error",
+      !valid
+    );
+
     input.setAttribute("aria-invalid", String(!valid));
 
     if (errorEl) {
@@ -241,8 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return valid;
   }
 
-  // ─── Live validation ──────────────────────────────────────
-
+  // Live validation
   Object.keys(validators).forEach(id => {
     const input = document.getElementById(id);
 
@@ -276,9 +457,13 @@ document.addEventListener("DOMContentLoaded", () => {
         errorEl.textContent = "";
       }
     });
+
+    if (subsystemError) {
+      subsystemError.textContent = "";
+    }
   }
 
-  // ─── Build Gmail compose URL ──────────────────────────────
+  // ─── Gmail compose link ───────────────────────────────────
 
   function buildGmailUrl({ to, subject, body }) {
     const base = "https://mail.google.com/mail/?view=cm&fs=1";
@@ -291,7 +476,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // ─── Submission notice ────────────────────────────────────
+  // ─── Status message ───────────────────────────────────────
 
   let statusEl = null;
 
@@ -315,33 +500,30 @@ document.addEventListener("DOMContentLoaded", () => {
     statusEl.hidden = false;
   }
 
+  function clearStatus() {
+    if (!statusEl) return;
+
+    statusEl.textContent = "";
+    statusEl.hidden = true;
+  }
+
   function resetSubmitButton() {
-    if (submitBtn) {
-      submitBtn.disabled = false;
-    }
-
-    if (submitText) {
-      submitText.hidden = false;
-    }
-
-    if (submitLoading) {
-      submitLoading.hidden = true;
-    }
+    if (submitBtn) submitBtn.disabled = false;
+    if (submitText) submitText.hidden = false;
+    if (submitLoading) submitLoading.hidden = true;
   }
 
   // ─── Form submission ──────────────────────────────────────
 
   form?.addEventListener("submit", event => {
     event.preventDefault();
+    clearStatus();
 
-    // Basic honeypot check
     const honey = form.querySelector('input[name="_honey"]');
-
     if (honey?.value) return;
 
-    // Validate all required fields
     const valid = Object.keys(validators)
-      .map(id => validateField(id))
+      .map(validateField)
       .every(Boolean);
 
     if (!valid) {
@@ -358,8 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // ─── Extract form values ────────────────────────────────
-
+    // Extract values
     const data = new FormData(form);
 
     const firstName = String(data.get("firstName") || "").trim();
@@ -371,29 +552,70 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const rawType = enquiryHidden?.value || "general";
 
-    const enquiryType = Object.hasOwn(RECIPIENTS, rawType)
+    const enquiryType = Object.hasOwn(subjectLabels, rawType)
       ? rawType
       : "general";
 
-    // ─── Resolve recipient ──────────────────────────────────
+    const subsystem = subsystemHidden?.value || "";
 
-    const to = RECIPIENTS[enquiryType];
+    // Determine recipient
+    let to = "";
 
+    if (enquiryType === "technical") {
+
+      if (!Object.hasOwn(subsystemLabels, subsystem)) {
+        if (subsystemError) {
+          subsystemError.textContent =
+            "Please select a technical subsystem.";
+        }
+
+        technicalSection?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+        showStatus("Please select a technical subsystem.");
+        return;
+      }
+
+      // Subsystem recipients pending confirmation
+      to = TECHNICAL_RECIPIENTS[subsystem];
+
+      if (!to) {
+        showStatus(
+          "The email address for this subsystem hasn't been configured yet. " +
+          "Please try again once the team has added its lead's email."
+        );
+        return;
+      }
+
+    } else {
+      to = RECIPIENTS[enquiryType];
+    }
+
+    // Email subject
     const enquiryLabel =
       enquiryType.charAt(0).toUpperCase() + enquiryType.slice(1);
 
-    // ─── Build subject ──────────────────────────────────────
+    const subsystemName =
+      enquiryType === "technical"
+        ? subsystemLabels[subsystem]
+        : "";
+
+    const prefix = subsystemName
+      ? `[Technical - ${subsystemName}]`
+      : `[${enquiryLabel}]`;
 
     const subject = subjectRaw
-      ? `[${enquiryLabel}] ${subjectRaw}`
-      : `[${enquiryLabel}] ${subjectLabels[enquiryType]}`;
+      ? `${prefix} ${subjectRaw}`
+      : `${prefix} ${subjectLabels[enquiryType]}`;
 
-    // ─── Build email body ───────────────────────────────────
-
+    // Email body
     const body = [
       "Ashwa Racing Website Contact Form",
       "",
       `Enquiry Type: ${enquiryLabel}`,
+      ...(subsystemName ? [`Subsystem: ${subsystemName}`] : []),
       "",
       `Name: ${firstName} ${lastName}`,
       `Email: ${email}`,
@@ -406,30 +628,17 @@ document.addEventListener("DOMContentLoaded", () => {
       "Prepared via Ashwa Racing Contact Form"
     ].join("\n");
 
-    // ─── Open Gmail ─────────────────────────────────────────
-
-    if (submitBtn) {
-      submitBtn.disabled = true;
-    }
-
-    if (submitText) {
-      submitText.hidden = true;
-    }
-
-    if (submitLoading) {
-      submitLoading.hidden = false;
-    }
-
-    const gmailUrl = buildGmailUrl({
-      to,
-      subject,
-      body
-    });
+    if (submitBtn) submitBtn.disabled = true;
+    if (submitText) submitText.hidden = true;
+    if (submitLoading) submitLoading.hidden = false;
 
     try {
-      window.open(gmailUrl, "_blank", "noopener");
+      window.open(
+        buildGmailUrl({ to, subject, body }),
+        "_blank",
+        "noopener"
+      );
 
-      // Opening a draft is NOT confirmation of delivery.
       showStatus(
         "A Gmail draft was requested in a new tab. " +
         "Please check that it opened and click Send in Gmail " +
@@ -441,39 +650,28 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Unable to open Gmail:", error);
 
       showStatus(
-        "Unable to open Gmail. Please allow pop-ups " +
-        "and try again."
+        "Unable to open Gmail. Please allow pop-ups and try again."
       );
     }
 
-    // Keep the form visible until a real backend is added.
     resetSubmitButton();
   });
 
-  // ─── Reset / Send another ─────────────────────────────────
+  // ─── Form reset ────────────────────────────────────────────
 
   function resetContactForm() {
     form?.reset();
-
     autoPackageSubject = "";
 
     clearValidation();
+    clearSubsystem();
     setEnquiryType("general");
     updateCharacterCounter();
     resetSubmitButton();
+    clearStatus();
 
-    if (statusEl) {
-      statusEl.textContent = "";
-      statusEl.hidden = true;
-    }
-
-    if (form) {
-      form.hidden = false;
-    }
-
-    if (successEl) {
-      successEl.hidden = true;
-    }
+    if (form) form.hidden = false;
+    if (successEl) successEl.hidden = true;
   }
 
   resetBtn?.addEventListener("click", resetContactForm);
@@ -499,6 +697,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".reveal").forEach(element => {
       revealObs.observe(element);
     });
+
   } else {
     document.querySelectorAll(".reveal").forEach(element => {
       element.classList.add("visible");
