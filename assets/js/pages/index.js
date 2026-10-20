@@ -183,7 +183,7 @@ function initMaskReveal() {
 function prepareStatCounters() {
   if (prefersReducedMotion) return;
   document.querySelectorAll(".stat-num[data-count]").forEach(el => {
-    el.textContent = "0" + (el.dataset.suffix || "");
+    el.textContent = (el.dataset.prefix || "") + "0" + (el.dataset.suffix || "");
   });
 }
 
@@ -192,13 +192,14 @@ function initStatCounters() {
 
   observeOnce(document.querySelectorAll(".stat-num[data-count]"), el => {
     const target = parseInt(el.dataset.count, 10) || 0;
+    const prefix = el.dataset.prefix || "";
     const suffix = el.dataset.suffix || "";
     const start = performance.now();
 
     (function step(now) {
       const progress = Math.min((now - start) / COUNT_UP_MS, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      el.textContent = Math.round(target * eased) + suffix;
+      el.textContent = prefix + Math.round(target * eased) + suffix;
       if (progress < 1) requestAnimationFrame(step);
     })(start);
   }, { threshold: 0.5 });

@@ -20,7 +20,9 @@ async function loadTeam() {
     ...m,
     year:       String(m.year ?? ""),
     roles:      m.roles && m.roles.length ? m.roles : ["Member"],
-    subsystem:  m.subsystem || [],
+    subsystem:  [...new Set((m.subsystem || []).map(label =>
+      ["Steering", "Finance", "Steering & Finance"].includes(label) ? "Steering & Finance" : label
+    ))],
     social:     m.social || {},
     experience: m.experience || ""
   }));
@@ -36,6 +38,18 @@ const teamReady = loadTeam().catch(err => {
 // Initialised to null; set properly on first render from dynamic year list
 let activeYear      = null;
 let activeSubsystem = "All";
+const SUBSYSTEM_ALIASES = {
+  "Aero": ["Aero", "Aerodynamics"],
+  "Brakes & Logistics": ["Brakes", "Brakes & Logistics"],
+  "Chassis & Workshop Management": ["Chassis", "Chassis & Workshop Management"],
+  "Drivetrain & Human Resources": ["Drivetrain", "Drivetrain & Human Resources"],
+  "Electrical & Testing": ["Electrical", "Electrical & Testing"],
+  "Steering & Finance": ["Steering & Finance", "Steering", "Finance"],
+  "Suspension & Admin": ["Suspension", "Suspension & Admin"],
+  "IT": ["IT"],
+  "Sponsorship, Marketing & Public Relations": ["SMP", "Sponsorship", "Marketing & Public Relations", "Sponsorship, Marketing & Public Relations"],
+  "Engine": ["Engine", "Engine systems"]
+};
 const profileParams = new URLSearchParams(window.location.search);
 const profileName = profileParams.get("member");
 const profileYear = profileParams.get("year");
@@ -205,7 +219,7 @@ function renderMembers(year, subsystem) {
     const results = teamData
       .filter(m =>
         m.year === year &&
-        (subsystem === "All" || m.subsystem.includes(subsystem))
+        (subsystem === "All" || (SUBSYSTEM_ALIASES[subsystem] || [subsystem]).some(label => m.subsystem.includes(label)))
       )
       .sort((a, b) => roleSortWeight(a) - roleSortWeight(b));
 

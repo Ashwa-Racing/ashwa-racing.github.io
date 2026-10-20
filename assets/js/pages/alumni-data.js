@@ -283,7 +283,7 @@ const ORG_STRUCTURE = {
     right: [
       {
         id: "aero",
-        label: "Aerodynamics",
+        label: "Aero",
         type: "subsystem",
         members: []       // no members per spec
       },
@@ -306,20 +306,20 @@ const ORG_STRUCTURE = {
         members: []       // no members per spec
       },
       {
-        id: "engine",
-        label: "Engine",
-        type: "subsystem",
-        members: []       // no members per spec
-      },
-      {
         id: "electrical",
         label: "Electrical & Testing",
         type: "subsystem",
         members: []       // no members per spec
       },
       {
-        id: "finance",
-        label: "Finance",
+        id: "engine",
+        label: "Engine",
+        type: "subsystem",
+        members: []       // no members per spec
+      },
+      {
+        id: "steering_finance",
+        label: "Steering & Finance",
         type: "subsystem",
         members: []       // no members per spec
       },

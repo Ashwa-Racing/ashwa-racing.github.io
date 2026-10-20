@@ -18,14 +18,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Replace empty strings ONLY with confirmed subsystem lead emails.
   const TECHNICAL_RECIPIENTS = {
-    team_management: "akshayurs.ashwa@gmail.com",
-    suspension_vehicle_dynamics: "aitijhya.ashwa@gmail.com",
+    aero: "",
+    brakes_logistics: "shravancs.ashwa@gmail.com",
+    chassis_workshop: "sathviksnaik.ashwa@gmail.com",
+    drivetrain_hr: "ranjithds.ashwa@gmail.com",
+    electrical_testing: "aditeya.ashwa@gmail.com",
     engine: "talin.ashwa@gmail.com",
-    drivetrain: "ranjithds.ashwa@gmail.com",
-    electrical_it: "aditeya.ashwa@gmail.com",
-    chassis: "sathviksnaik.ashwa@gmail.com",
-    admin_brakes: "shravancs.ashwa@gmail.com",
-    smp_finance: "pranavramakrishnan.ashwa@gmail.com"
+    steering_finance: "pranavramakrishnan.ashwa@gmail.com",
+    suspension_admin: "aitijhya.ashwa@gmail.com",
+    it: "aditeya.ashwa@gmail.com",
+    smp: "pranavramakrishnan.ashwa@gmail.com"
   };
   const subjectLabels = {
     general: "General Enquiry",
@@ -36,14 +38,16 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const subsystemLabels = {
-    team_management: "Team & Management",
-    suspension_vehicle_dynamics: "Suspension & Vehicle Dynamics",
+    aero: "Aero",
+    brakes_logistics: "Brakes & Logistics",
+    chassis_workshop: "Chassis & Workshop Management",
+    drivetrain_hr: "Drivetrain & Human Resources",
+    electrical_testing: "Electrical & Testing",
     engine: "Engine",
-    drivetrain: "Drivetrain",
-    electrical_it: "Electrical & IT",
-    chassis: "Chassis",
-    admin_brakes: "Admin & Brakes",
-    smp_finance: "SMP & Finance"
+    steering_finance: "Steering & Finance",
+    suspension_admin: "Suspension & Admin",
+    it: "IT",
+    smp: "Sponsorship, Marketing & Public Relations"
   };
 
   // DOM references
