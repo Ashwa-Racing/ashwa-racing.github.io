@@ -2,7 +2,7 @@
   'use strict';
 
   const IMAGE_ROOT = 'https://assets.ashwaracing.org/images/';
-  const BATCH_SIZE = 12;
+  const BATCH_SIZE = 8;
   const imageFiles = [
     'prototypes/RZ-05-C/1.jpg', 'prototypes/RZ-07-C/12.jpg', 'prototypes/RZ-X8-C/PRE-EVENT/1.jpg',
     'gallery/XX5C.webp', 'gallery/XX6C.webp', 'prototypes/Prototypesbanner.webp',
@@ -35,6 +35,7 @@
   let loadMore;
   let sentinelObserver = null;
   let loadingBatch = false;
+  let manifestDiscoveryStarted = false;
 
   const shuffle = values => {
     const result = [...values];
@@ -82,10 +83,14 @@
     return discovered;
   };
 
-  const thumbnailSource = photo => photo.src.replace(
-    'https://assets.ashwaracing.org/images/',
-    'https://assets.ashwaracing.org/cdn-cgi/image/width=1000,format=auto,quality=82/images/'
-  );
+  const thumbnailSource = photo => {
+    const width = window.matchMedia('(max-width: 620px)').matches ? 640 : 1000;
+    const quality = width === 640 ? 78 : 80;
+    return photo.src.replace(
+      'https://assets.ashwaracing.org/images/',
+      `https://assets.ashwaracing.org/cdn-cgi/image/width=${width},format=auto,quality=${quality}/images/`
+    );
+  };
 
   const getPhotoDimensions = photo => new Promise(resolve => {
     const probe = new Image();
@@ -257,31 +262,41 @@
 
   loadMore();
 
+  const discoverWhenNeeded = () => {
+    if (manifestDiscoveryStarted) return;
+    manifestDiscoveryStarted = true;
+    discoverFromSiteManifests().then(manifestImages => {
+      const discovered = Array.isArray(manifestImages) ? manifestImages : [];
+      if (discovered.length) {
+        const known = new Set(catalog.map(photo => photo.src));
+        discovered.forEach(photo => {
+          if (!known.has(photo.src)) {
+            known.add(photo.src);
+            catalog.push(photo);
+          }
+        });
+        shuffled = [];
+      }
+    }).catch(error => console.warn('Gallery image manifest unavailable; using the built-in archive.', error));
+  };
+
   if ('IntersectionObserver' in window) {
     sentinelObserver = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) loadMore();
+      if (entries.some(entry => entry.isIntersecting)) {
+        discoverWhenNeeded();
+        loadMore();
+      }
     }, { rootMargin: '350px 0px' });
     sentinelObserver.observe(section.querySelector('.gallery-load-sentinel'));
   } else {
     window.addEventListener('scroll', () => {
       const sentinel = section.querySelector('.gallery-load-sentinel');
-      if (sentinel && sentinel.getBoundingClientRect().top < window.innerHeight + 350) loadMore();
+      if (sentinel && sentinel.getBoundingClientRect().top < window.innerHeight + 350) {
+        discoverWhenNeeded();
+        loadMore();
+      }
     }, { passive: true });
   }
-
-  discoverFromSiteManifests().then(manifestImages => {
-    const discovered = Array.isArray(manifestImages) ? manifestImages : [];
-    if (discovered.length) {
-      const known = new Set(catalog.map(photo => photo.src));
-      discovered.forEach(photo => {
-        if (!known.has(photo.src)) {
-          known.add(photo.src);
-          catalog.push(photo);
-        }
-      });
-      shuffled = [];
-    }
-  }).catch(error => console.warn('Gallery image manifest unavailable; using the built-in archive.', error));
 
   window.addEventListener('resize', () => requestAnimationFrame(layoutMasonry), { passive: true });
 })();

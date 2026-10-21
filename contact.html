@@ -27,13 +27,18 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link rel="preconnect" href="https://assets.ashwaracing.org">
+  <link rel="preload" as="image" href="https://assets.ashwaracing.org/cdn-cgi/image/width=900,format=auto,quality=78/images/heroimg/hero-desktop.jpg" media="(max-width: 680px)" fetchpriority="high">
+  <link rel="preload" as="image" href="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=auto,quality=80/images/heroimg/hero-desktop.jpg" media="(min-width: 681px)" fetchpriority="high">
 
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
 
   <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'"/>
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
 
   <script>
     (() => {
@@ -51,7 +56,7 @@
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
   <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
-  <link rel="stylesheet" href="assets/css/pages/contact.css">
+  <link rel="stylesheet" href="assets/css/pages/contact.css?v=2">
 
   <style>
     /* RED SMP ICON AND BUTTON */

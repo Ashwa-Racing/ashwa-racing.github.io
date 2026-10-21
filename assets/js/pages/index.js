@@ -16,28 +16,26 @@ const SPONSOR_LOGO_BASE =
   "https://assets.ashwaracing.org/cdn-cgi/image/height=120,format=auto,quality=85/images/sponsors/";
 const SPONSOR_TIER_ORDER = ["executive", "platinum", "gold", "silver", "technical"];
 
-const SITE_READY_TIMEOUT        = 12000;
 const COUNT_UP_MS               = 2000;
 const SPOTLIGHT_AUTO_ADVANCE_MS = 3000;
+
+const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+const skipBackgroundVideo =
+  prefersReducedMotion ||
+  matchMedia("(max-width: 768px)").matches ||
+  connection?.saveData ||
+  ["slow-2g", "2g"].includes(connection?.effectiveType);
 
 /* Data fetches start immediately so they're usually done by init time. */
 const sponsorsReady = fetchJSON(SPONSORS_URL)
   .then(data => SPONSOR_TIER_ORDER.flatMap(tier => data[tier] || []))
   .catch(err => { console.error(err); return []; });
 
-/* Resolves when loader.js releases the page (or after a fallback delay if
-   loader.js is missing/broken) so animations don't run behind the overlay. */
-const siteReady = new Promise(resolve => {
-  if (window.__siteReady) return resolve();
-  document.addEventListener("site:ready", resolve, { once: true });
-  setTimeout(resolve, SITE_READY_TIMEOUT);
-});
-
 /* ============================================================
    BACKGROUND VIDEO
    ============================================================ */
 function initBgVideo(video) {
-  if (!video) return;
+  if (!video || skipBackgroundVideo) return;
 
   const reveal = () => {
     video.classList.add("is-loaded");
@@ -125,9 +123,8 @@ function sponsorLogoUrl(sponsor) {
 function sponsorCardHTML(sponsor, isDuplicate) {
   const dup = isDuplicate ? ' aria-hidden="true" data-dup' : "";
 
-  // Eager on purpose: the marquee width depends on every logo's size, and
-  // lazy-loading would make the loop jump as images arrive.
-  const img = `<img src="${escapeHTML(sponsorLogoUrl(sponsor))}" alt="${isDuplicate ? "" : escapeHTML(sponsor.name)}" loading="eager" fetchpriority="low" decoding="async" width="360" height="360">`;
+  // Keep logos below the fold out of the initial request burst.
+  const img = `<img src="${escapeHTML(sponsorLogoUrl(sponsor))}" alt="${isDuplicate ? "" : escapeHTML(sponsor.name)}" loading="lazy" fetchpriority="low" decoding="async" width="360" height="360">`;
 
   // No website (missing or "#") -> plain card instead of a dead link.
   if (!sponsor.url || sponsor.url === "#") {
@@ -177,8 +174,8 @@ function initMaskReveal() {
 
 /* ============================================================
    STAT COUNTERS
-   The HTML holds the real numbers (works without JS); they're zeroed
-   while the loader is still up, then counted up when scrolled into view.
+   The HTML holds the real numbers (works without JS); they are counted
+   up when scrolled into view.
    ============================================================ */
 function prepareStatCounters() {
   if (prefersReducedMotion) return;
@@ -284,28 +281,18 @@ async function initBlogPreview() {
 /* ============================================================
    INIT
    ============================================================ */
-async function initHome() {
+function initHome() {
   prepareStatCounters();
-
-  // Fetch the blog now, but only render/reveal once the loader lifts.
-  const blogReady = initBlogPreview();
-
-  renderSponsorStrip(await sponsorsReady);
-
-  await siteReady;
-
-  // Hero loops have been playing behind the overlay; restart them.
-  document.querySelectorAll(".hero-video").forEach(video => {
-    try { video.currentTime = 0; } catch (e) {}
-  });
-
-  // Blog cards must exist before initReveal() goes looking for them.
-  await blogReady;
-
   initReveal();
   initMaskReveal();
   initStatCounters();
   initSpotlightToggle();
+
+  initBlogPreview().then(() => {
+    window.Ashwa.reveal(document.querySelectorAll(".news-grid .news-card"));
+  });
+
+  sponsorsReady.then(renderSponsorStrip);
 }
 
 function start() {

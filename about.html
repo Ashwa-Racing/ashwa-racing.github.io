@@ -21,13 +21,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://assets.ashwaracing.org">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
+  <link rel="preload" as="image" href="https://assets.ashwaracing.org/cdn-cgi/image/width=900,format=auto,quality=80/images/prototypes/RZ-XX6-C/event/1.JPG" media="(max-width: 800px)" fetchpriority="high">
+  <link rel="preload" as="image" href="https://assets.ashwaracing.org/cdn-cgi/image/width=1800,format=auto,quality=80/images/prototypes/RZ-XX6-C/event/1.JPG" media="(min-width: 801px)" fetchpriority="high">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap"></noscript>
   <script>(() => { let theme = null; try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {} document.documentElement.dataset.theme = theme === "light" ? "light" : "dark"; })();</script>
-  <link rel="stylesheet" href="assets/css/components/loader.css">
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
   <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
-  <link rel="stylesheet" href="assets/css/pages/about.css?v=2">
+  <link rel="stylesheet" href="assets/css/pages/about.css?v=3">
 </head>
 <body class="about-page">
   <div id="main-header"></div>
@@ -107,9 +109,7 @@
     </section>
   </main>
   <footer id="main-footer"></footer>
-  <div id="site-loader" aria-hidden="true"><div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div></div>
   <script src="assets/js/components/theme.js" defer></script>
   <script src="assets/js/components/header.js?v=7" defer></script>
-  <script src="assets/js/components/loader.js" defer></script>
 </body>
 </html>

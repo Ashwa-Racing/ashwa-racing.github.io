@@ -12,6 +12,34 @@
   const imageBase = `${assetHost}/images/newsletters/`;
   const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   const typeNames = { general: 'General', hybrid: 'Hybrid', combustion: 'Combustion', alumni: 'Alumni' };
+  let pdfJsReady;
+  const loadPDFJS = () => {
+    if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+    if (!pdfJsReady) {
+      pdfJsReady = new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+        script.async = true;
+        script.onload = () => {
+          if (!window.pdfjsLib) { pdfJsReady = null; reject(new Error('PDF.js did not initialize.')); return; }
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          resolve(window.pdfjsLib);
+        };
+        script.onerror = () => {
+          pdfJsReady = null;
+          reject(new Error('PDF.js failed to load.'));
+        };
+        document.head.appendChild(script);
+      });
+    }
+    return pdfJsReady;
+  };
+  const coverImage = (item, extension) => {
+    const columns = window.innerWidth <= 620 ? 1 : window.innerWidth <= 900 ? 2 : 3;
+    const availableWidth = window.innerWidth - (columns === 1 ? 32 : columns === 2 ? 72 : 100);
+    const width = Math.min(1100, Math.max(480, Math.ceil(availableWidth / columns * Math.min(window.devicePixelRatio || 1, 2) / 100) * 100));
+    return `${assetHost}/cdn-cgi/image/width=${width},format=auto,quality=78/images/newsletters/${item.year}/${item.year}-${item.month}.${extension}`;
+  };
   const newsletters = files.map(file => {
     const [year, month, typeFile] = file.split('-');
     const type = typeFile.replace('.pdf', '');
@@ -61,16 +89,18 @@
       const image = document.createElement('div');
       image.className = 'blog-card-image';
       const img = document.createElement('img');
-      img.src = `${first.cover}.jpg`;
+      img.src = coverImage(first, 'jpg');
       img.alt = `${first.title} newsletter cover`;
       img.loading = 'lazy';
       img.decoding = 'async';
       img.addEventListener('error', () => {
         if (!img.dataset.triedPng) {
           img.dataset.triedPng = 'true';
-          img.src = `${first.cover}.png`;
+          img.src = coverImage(first, 'png');
         } else image.hidden = true;
       });
+      img.width = 800;
+      img.height = 500;
       image.appendChild(img);
 
       const body = document.createElement('div');
@@ -140,10 +170,6 @@
   let turnTimer = null;
   let openRequest = 0;
 
-  if (window.pdfjsLib) {
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  }
-
   function createRecommendations(current) {
     const candidates = [...archiveGroups.entries()]
       .filter(([key]) => key !== `${current.year}-${current.month}`)
@@ -158,13 +184,13 @@
       button.type = 'button';
       button.className = 'reader-rec-card';
       const image = document.createElement('img');
-      image.src = `${item.cover}.jpg`;
+      image.src = coverImage(item, 'jpg');
       image.alt = '';
       image.loading = 'lazy';
       image.addEventListener('error', () => {
         if (!image.dataset.triedPng) {
           image.dataset.triedPng = 'true';
-          image.src = `${item.cover}.png`;
+          image.src = coverImage(item, 'png');
         } else image.hidden = true;
       });
       const text = document.createElement('span');
@@ -293,16 +319,10 @@
     reader.classList.remove('is-expanded');
     pageCount.textContent = '— / —';
 
-    if (!window.pdfjsLib) {
-      loadingPanel.hidden = true;
-      errorPanel.hidden = false;
-      canvas.hidden = true;
-      nextCanvas.hidden = true;
-      pageCount.textContent = 'PDF';
-      return;
-    }
     try {
-      const loadedDocument = await window.pdfjsLib.getDocument({ url: item.pdf, withCredentials: false }).promise;
+      const pdfjsLib = await loadPDFJS();
+      if (requestId !== openRequest || reader.hidden) return;
+      const loadedDocument = await pdfjsLib.getDocument({ url: item.pdf, withCredentials: false }).promise;
       if (requestId !== openRequest || reader.hidden) { loadedDocument.destroy(); return; }
       pdfDocument = loadedDocument;
       await renderPage(1);

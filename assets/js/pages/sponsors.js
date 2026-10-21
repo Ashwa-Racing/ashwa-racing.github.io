@@ -13,7 +13,11 @@
   const escapeHTML = window.Ashwa?.escapeHTML || (value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[char])));
 
   function logoUrl(filename) {
-    return `https://assets.ashwaracing.org/images/sponsors/${encodeURIComponent(filename || "")}`;
+    const path = encodeURIComponent(filename || "");
+    const base = "https://assets.ashwaracing.org/images/sponsors/";
+    return /\.svg$/i.test(filename || "")
+      ? `${base}${path}`
+      : `https://assets.ashwaracing.org/cdn-cgi/image/width=420,format=auto,quality=78/images/sponsors/${path}`;
   }
 
   function makeCard(sponsor, tier) {
@@ -113,7 +117,7 @@
   function buildHeroWall(data) {
     const wall = document.getElementById("hero-wall");
     if (!wall || window.Ashwa?.prefersReducedMotion) return;
-    const logos = tiers.flatMap(tier => (Array.isArray(data[tier.key]) ? data[tier.key] : []).filter(s => s?.logo));
+    const logos = tiers.flatMap(tier => (Array.isArray(data[tier.key]) ? data[tier.key] : []).filter(s => s?.logo)).slice(0, 20);
     if (!logos.length) return;
     const grid = document.createElement("div");
     grid.className = "sp-hero-wall-grid";
@@ -131,6 +135,7 @@
         image.src = logoUrl(sponsor.logo);
         image.alt = "";
         image.loading = "lazy";
+        image.decoding = "async";
         tile.appendChild(image);
         track.appendChild(tile);
       }));

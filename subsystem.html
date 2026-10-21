@@ -21,11 +21,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <script>(()=>{let t=null;try{t=localStorage.getItem('ashwa-theme')}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark'})();</script>
-  <link rel="stylesheet" href="assets/css/components/loader.css">
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
   <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="assets/css/components/subsystem-refresh.css?v=2">
   <link rel="stylesheet" href="assets/css/pages/subsystem-landing.css?v=3">
 </head>
@@ -45,7 +45,7 @@
         <a class="subsystem-landing-cta" href="#engineering">Explore our teams <span aria-hidden="true">↓</span></a>
       </div>
       <figure class="subsystem-landing-image">
-        <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1400,format=avif/images/prototypes/RZ-X8-H/event/10.jpg" alt="Ashwa Racing Formula Student car on track" fetchpriority="high">
+        <img src="https://assets.ashwaracing.org/cdn-cgi/image/width=1400,format=avif/images/prototypes/RZ-X8-H/event/10.jpg" srcset="https://assets.ashwaracing.org/cdn-cgi/image/width=700,format=avif/images/prototypes/RZ-X8-H/event/10.jpg 700w, https://assets.ashwaracing.org/cdn-cgi/image/width=1000,format=avif/images/prototypes/RZ-X8-H/event/10.jpg 1000w, https://assets.ashwaracing.org/cdn-cgi/image/width=1400,format=avif/images/prototypes/RZ-X8-H/event/10.jpg 1400w" sizes="(max-width: 760px) 92vw, 50vw" width="1400" height="903" alt="Ashwa Racing Formula Student car on track" fetchpriority="high" decoding="async">
         <figcaption><span>ASHWA RACING</span><span>ENGINEERING / 01</span></figcaption>
       </figure>
       <span class="subsystem-landing-index" aria-hidden="true">RVCE · FORMULA STUDENT</span>
@@ -85,9 +85,7 @@
   </main>
 
   <footer id="main-footer"></footer>
-  <div id="site-loader" aria-hidden="true"><div class="loader-inner"><div class="loader-brand"><span class="loader-ashwa">Ashwa</span><span class="loader-racing">Racing</span></div><div class="loader-sponsor"><div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div><div class="loader-sponsor-grid" id="loader-sponsor-grid"></div></div><div class="loader-progress"><span class="loader-progress-bar"></span></div><div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div></div></div>
   <script src="assets/js/components/header.js?v=7" defer></script>
   <script src="assets/js/components/theme.js" defer></script>
-  <script src="assets/js/components/loader.js" defer></script>
 </body>
 </html>

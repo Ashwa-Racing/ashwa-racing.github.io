@@ -28,7 +28,7 @@ async function loadTeam() {
   }));
 }
 
-// Start fetching immediately; the load handler below waits for it.
+// Start fetching as soon as this deferred script runs.
 const teamReady = loadTeam().catch(err => {
   console.error(err);
   return null;
@@ -327,51 +327,90 @@ function openMemberProfile(member) {
 }
 
 // ─── 3D Easter Egg ────────────────────────────────────────────
+let threeReady;
+function loadThree() {
+  if (window.THREE) return Promise.resolve(window.THREE);
+  if (!threeReady) {
+    threeReady = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/three@0.158.0/build/three.min.js";
+      script.async = true;
+      script.onload = () => resolve(window.THREE);
+      script.onerror = () => reject(new Error("Three.js failed to load"));
+      document.head.appendChild(script);
+    });
+  }
+  return threeReady;
+}
+
 function initCard3D(card) {
   const canvas = card.querySelector(".member-3d canvas");
-  if (!canvas || typeof THREE === "undefined") return;
+  if (!canvas) return;
 
-  const scene  = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-  camera.position.z = 2.5;
-
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-
-  function resize() {
-    const r = card.getBoundingClientRect();
-    renderer.setSize(r.width, r.height, false);
-    camera.aspect = r.width / r.height;
-    camera.updateProjectionMatrix();
-  }
-
-  resize();
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1.2));
-
-  const loader = new THREE.TextureLoader();
-  const tex    = loader.load(
-    "https://assets.ashwaracing.org/images/team/members/2026/easteregg.png",
-    () => renderer.render(scene, camera)
-  );
-
-  if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
-
-  const mat  = new THREE.MeshStandardMaterial({ map: tex });
-  const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), [mat, mat, mat, mat, mat, mat]);
-  scene.add(cube);
-
+  let initialized = false;
   let running = false;
+  let animate;
+  let resize;
 
-  function animate() {
-    if (!running) return;
-    requestAnimationFrame(animate);
-    cube.rotation.y += 0.01;
-    cube.rotation.x += 0.005;
-    renderer.render(scene, camera);
-  }
+  const activate = async () => {
+    if (initialized) {
+      if (resize) resize();
+      running = true;
+      animate?.();
+      return;
+    }
+    initialized = true;
 
-  card.addEventListener("mouseenter", () => { resize(); running = true; animate(); });
+    try {
+      const THREE = await loadThree();
+      if (!card.isConnected) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+      camera.position.z = 2.5;
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+
+      resize = () => {
+        const r = card.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        renderer.setSize(r.width, r.height, false);
+        camera.aspect = r.width / r.height;
+        camera.updateProjectionMatrix();
+      };
+
+      resize();
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x222222, 1.2));
+
+      const tex = new THREE.TextureLoader().load(
+        "https://assets.ashwaracing.org/images/team/members/2026/easteregg.png",
+        () => renderer.render(scene, camera)
+      );
+      if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+      tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+      const mat = new THREE.MeshStandardMaterial({ map: tex });
+      const cube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), [mat, mat, mat, mat, mat, mat]);
+      scene.add(cube);
+
+      animate = () => {
+        if (!running) return;
+        requestAnimationFrame(animate);
+        cube.rotation.y += 0.01;
+        cube.rotation.x += 0.005;
+        renderer.render(scene, camera);
+      };
+      running = true;
+      animate();
+    } catch (error) {
+      initialized = false;
+      console.error(error);
+    }
+  };
+
+  card.addEventListener("mouseenter", activate);
+  card.addEventListener("focusin", activate);
   card.addEventListener("mouseleave", () => { running = false; });
+  card.addEventListener("focusout", () => { running = false; });
 }
 
 // ─── Filter Scroll Helper ─────────────────────────────────────
@@ -452,7 +491,7 @@ backToTopBtn.addEventListener("click", () => {
 });
 
 // ─── Init ─────────────────────────────────────────────────────
-window.addEventListener("load", async () => {
+window.addEventListener("DOMContentLoaded", async () => {
 
   const loaded = await teamReady;
 

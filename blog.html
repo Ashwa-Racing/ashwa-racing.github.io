@@ -27,8 +27,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://assets.ashwaracing.org">
+  <link rel="preload" as="fetch" href="/assets/data/blog.json" crossorigin>
+  <link rel="preload" as="fetch" href="/assets/data/newsletters.json" crossorigin>
 
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap"></noscript>
 
   <script>
     (() => {
@@ -38,7 +41,6 @@
     })();
   </script>
 
-  <link rel="stylesheet" href="assets/css/components/loader.css">
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
   <link rel="stylesheet" href="assets/css/pages/blog.css?v=3">
@@ -64,7 +66,7 @@
         </p>
         </div>
         <a class="blog-latest-newsletter" id="blog-latest-newsletter" href="/newsletters/2026-08-general" aria-label="Read the latest newsletter: August 2026 · General">
-          <span class="blog-newsletter-cover" aria-hidden="true"><img id="blog-newsletter-cover" src="https://assets.ashwaracing.org/images/newsletters/2026/2026-08.png" alt="" loading="eager" fetchpriority="high" decoding="async"></span>
+          <span class="blog-newsletter-cover" aria-hidden="true"><img id="blog-newsletter-cover" src="https://assets.ashwaracing.org/cdn-cgi/image/width=480,format=auto,quality=78/images/newsletters/2026/2026-08.png" data-cover="2026-08" alt="" loading="eager" fetchpriority="high" decoding="async"></span>
           <span class="blog-newsletter-copy">
             <span class="blog-newsletter-kicker">Latest Newsletter</span>
             <strong id="blog-newsletter-title">August 2026 · General</strong>
@@ -103,25 +105,9 @@
 
   <footer id="main-footer"></footer>
 
-  <div id="site-loader" aria-hidden="true">
-    <div class="loader-inner">
-      <div class="loader-brand">
-        <span class="loader-ashwa">Ashwa</span>
-        <span class="loader-racing">Racing</span>
-      </div>
-      <div class="loader-sponsor">
-        <div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div>
-        <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
-      </div>
-      <div class="loader-progress"><span class="loader-progress-bar"></span></div>
-      <div class="loader-meta"><span id="loader-status">INITIALIZING</span><span id="loader-percent">00%</span></div>
-    </div>
-  </div>
-
-  <script src="assets/js/pages/blog.js" defer></script>
+  <script src="assets/js/pages/blog.js?v=2" defer></script>
   <script src="assets/js/components/header.js?v=7" defer></script>
   <script src="assets/js/components/theme.js" defer></script>
-  <script src="assets/js/components/loader.js" defer></script>
 
 </body>
 

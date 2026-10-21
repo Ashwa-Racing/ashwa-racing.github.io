@@ -64,26 +64,6 @@ let projectData = {};
 
 
 /* ============================================================
-   SITE READY
-   ============================================================ */
-
-const siteReady = new Promise(resolve => {
-  if (window.__siteReady) {
-    resolve();
-    return;
-  }
-
-  document.addEventListener(
-    "site:ready",
-    resolve,
-    { once: true }
-  );
-
-  setTimeout(resolve, 12000);
-});
-
-
-/* ============================================================
    RUNTIME STATE
    ============================================================ */
 
@@ -285,6 +265,7 @@ function loadProjectImage(index, token, identity, year) {
   record.promise = new Promise(resolve => {
     const image = new Image();
     image.decoding = "async";
+    image.fetchPriority = index === slideIndex ? "high" : "low";
     image.onload = () => {
       record.status = "loaded";
       record.image = image;
@@ -295,6 +276,7 @@ function loadProjectImage(index, token, identity, year) {
         progImage.style.opacity = "1";
         setPhotoLoading(false);
         scheduleProjectPhotoAdvance();
+        preloadNextProjectImage(index, token, identity, year);
       }
       resolve(record);
     };
@@ -327,12 +309,22 @@ function showProjectImage(index, token, identity, year) {
     requestAnimationFrame(() => { progImage.style.opacity = "1"; });
     setPhotoLoading(false);
     scheduleProjectPhotoAdvance();
+    preloadNextProjectImage(slideIndex, token, identity, year);
     return;
   }
 
   progImage.style.opacity = "0.22";
   setPhotoLoading(true, `Loading photo ${slideIndex + 1} of ${imageRecords.length}`);
   loadProjectImage(slideIndex, token, identity, year);
+}
+
+
+function preloadNextProjectImage(index, token, identity, year) {
+  if (token !== renderToken || imageRecords.length < 2) return;
+  const nextIndex = (index + 1) % imageRecords.length;
+  if (imageRecords[nextIndex]?.status === "idle") {
+    loadProjectImage(nextIndex, token, identity, year);
+  }
 }
 
 function updatePhotoCarouselControls() {
@@ -722,15 +714,6 @@ function renderYear(
     }
   });
 
-  const preloadRemaining = async () => {
-    for (let offset = 1; offset < imageRecords.length; offset += 2) {
-      if (currentToken !== renderToken) return;
-      await Promise.all(imageRecords.slice(offset, offset + 2).map((_, index) =>
-        loadProjectImage(offset + index, currentToken, identity, year)
-      ));
-    }
-  };
-  preloadRemaining();
 }
 
 
@@ -1728,8 +1711,6 @@ async function init() {
     buildProgIndex();
 
     initYearScroll();
-
-    await siteReady;
 
     initReveal();
 

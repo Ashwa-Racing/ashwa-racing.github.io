@@ -16,7 +16,7 @@
 .sp-hero-wall { position: absolute; inset: 0; pointer-events: none; }
 .sp-hero-bg {
   z-index: -3;
-  background: url("https://assets.ashwaracing.org/cdn-cgi/image/width=1920,format=auto,quality=85/images/prototypes/RZ-X9-H/event/11.jpg") center 42% / cover no-repeat;
+  background: url("https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=auto,quality=80/images/prototypes/RZ-X9-H/event/11.jpg") center 42% / cover no-repeat;
   filter: brightness(.36) saturate(.65);
   transform: scale(1.03);
 }
@@ -100,6 +100,7 @@
 }
 @media (max-width: 700px) {
   .sp-hero { min-height: min(620px, 82svh); }
+  .sp-hero-bg { background-image: url("https://assets.ashwaracing.org/cdn-cgi/image/width=900,format=auto,quality=78/images/prototypes/RZ-X9-H/event/11.jpg"); }
   .sp-hero-content { padding-bottom: 48px; }
   .sp-hero-wall { inset-inline-start: 20%; opacity: .3; }
   .tier-nav { justify-content: flex-start; overflow-x: auto; }

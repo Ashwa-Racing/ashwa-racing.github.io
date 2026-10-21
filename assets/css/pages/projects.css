@@ -38,6 +38,12 @@
   z-index: 0;
 }
 
+@media (max-width: 768px) {
+  .proj-hero-bg {
+    background-image: url('https://assets.ashwaracing.org/cdn-cgi/image/width=1100,format=auto,quality=80/images/prototypes/Prototypes%20Banner.png');
+  }
+}
+
 .proj-hero:hover .proj-hero-bg {
   transform: scale(1.0);
 }

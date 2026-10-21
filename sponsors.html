@@ -11,7 +11,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://assets.ashwaracing.org">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+  <link rel="preload" as="image" href="https://assets.ashwaracing.org/cdn-cgi/image/width=900,format=auto,quality=78/images/prototypes/RZ-X9-H/event/11.jpg" media="(max-width: 700px)" fetchpriority="high">
+  <link rel="preload" as="image" href="https://assets.ashwaracing.org/cdn-cgi/image/width=1600,format=auto,quality=80/images/prototypes/RZ-X9-H/event/11.jpg" media="(min-width: 701px)" fetchpriority="high">
+  <link rel="preload" as="fetch" href="/assets/data/sponsors.json" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap"></noscript>
   <script>
     (() => {
       let theme = null;
@@ -22,7 +26,7 @@
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
   <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
-  <link rel="stylesheet" href="assets/css/pages/sponsors.css">
+  <link rel="stylesheet" href="assets/css/pages/sponsors.css?v=2">
 </head>
 <body>
   <div id="main-header"></div>
@@ -62,6 +66,6 @@
   <script src="assets/js/components/utils.js" defer></script>
   <script src="assets/js/components/header.js?v=7" defer></script>
   <script src="assets/js/components/theme.js" defer></script>
-  <script src="assets/js/pages/sponsors.js" defer></script>
+  <script src="assets/js/pages/sponsors.js?v=2" defer></script>
 </body>
 </html>
