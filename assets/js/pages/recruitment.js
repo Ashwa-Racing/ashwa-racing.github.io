@@ -354,6 +354,29 @@ function initStatCounters() {
 
 
 /* ============================================================
+   VIDEO FACADE
+   ============================================================ */
+
+function initVideoFacade() {
+  document.querySelectorAll(".rc-video-facade[data-video-id]").forEach(button => {
+    button.addEventListener("click", () => {
+      const videoId = button.dataset.videoId;
+      if (!videoId) return;
+
+      const frame = document.createElement("iframe");
+      frame.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&rel=0&playsinline=1`;
+      frame.title = "A day with Ashwa Racing";
+      frame.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share";
+      frame.allowFullscreen = true;
+      frame.referrerPolicy = "strict-origin-when-cross-origin";
+
+      button.replaceWith(frame);
+    }, { once: true });
+  });
+}
+
+
+/* ============================================================
    INIT
    ============================================================ */
 
@@ -363,6 +386,7 @@ function initRecruitment() {
   initRecruitmentStatus();
   initReveal();
   initStatCounters();
+  initVideoFacade();
 }
 
 

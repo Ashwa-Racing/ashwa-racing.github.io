@@ -18,7 +18,10 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  </noscript>
 
   <script>
     (() => {
@@ -28,30 +31,11 @@
     })();
   </script>
 
-  <link rel="stylesheet" href="assets/css/components/loader.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
   <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
-  <link rel="stylesheet" href="assets/css/pages/recruitment.css?v=3">
+  <link rel="stylesheet" href="assets/css/pages/recruitment.css?v=4">
 </head>
 <body>
-
-  <div id="site-loader" aria-hidden="true">
-    <div class="loader-inner">
-      <div class="loader-brand">
-        <span class="loader-ashwa">Ashwa</span>
-        <span class="loader-racing">Racing</span>
-      </div>
-      <div class="loader-sponsor">
-        <div class="loader-sponsor-tier" id="loader-sponsor-tier">INITIALIZING</div>
-        <div class="loader-sponsor-grid" id="loader-sponsor-grid"></div>
-      </div>
-      <div class="loader-progress"><span class="loader-progress-bar"></span></div>
-      <div class="loader-meta">
-        <span id="loader-status">INITIALIZING</span>
-        <span id="loader-percent">00%</span>
-      </div>
-    </div>
-  </div>
 
   <div id="main-header"></div>
 
@@ -125,13 +109,12 @@
       </div>
 
       <div class="rc-video-frame">
-        <iframe
-          src="https://www.youtube.com/embed/LFsJqttrivI?rel=0&modestbranding=1&playsinline=1"
-          title="A day with Ashwa Racing"
-          loading="lazy"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen>
-        </iframe>
+        <button class="rc-video-facade" type="button" data-video-id="LFsJqttrivI" aria-label="Play A day with Ashwa Racing">
+          <img src="https://i.ytimg.com/vi/LFsJqttrivI/hqdefault.jpg" alt="" width="480" height="360" loading="eager" decoding="async" fetchpriority="low">
+          <span class="rc-video-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false"><path d="M8 5v14l11-7z" /></svg>
+          </span>
+        </button>
         <div class="rc-video-corner rc-video-corner--tl" aria-hidden="true"></div>
         <div class="rc-video-corner rc-video-corner--br" aria-hidden="true"></div>
       </div>
@@ -366,8 +349,7 @@
 <footer id="main-footer"></footer>
 
 <script src="assets/js/components/header.js?v=7" defer></script>
-<script src="assets/js/components/loader.js" defer></script>
-<script src="assets/js/pages/recruitment.js?v=2" defer></script>
+<script src="assets/js/pages/recruitment.js?v=3" defer></script>
 
 </body>
 </html>

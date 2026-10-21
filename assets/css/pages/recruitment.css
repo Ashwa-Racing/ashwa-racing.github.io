@@ -1147,6 +1147,49 @@ html[data-theme="light"] .footer-divider {
   border: 0;
 }
 
+.rc-video-facade {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: #050608;
+  cursor: pointer;
+}
+
+.rc-video-facade img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .82;
+  transition: opacity .2s ease, transform .35s ease;
+}
+
+.rc-video-facade:hover img { opacity: 1; transform: scale(1.025); }
+
+.rc-video-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 62px;
+  height: 62px;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: 50%;
+  background: rgba(232,0,29,.9);
+  color: #fff;
+  transform: translate(-50%, -50%);
+  transition: background .2s ease, scale .2s ease;
+}
+
+.rc-video-play svg { width: 25px; height: 25px; fill: currentColor; }
+.rc-video-facade:hover .rc-video-play { background: var(--red-dark); scale: 1.06; }
+.rc-video-facade:focus-visible { outline: 3px solid #fff; outline-offset: -5px; }
+
 .rc-video-corner {
   position: absolute;
   width: 22px;
