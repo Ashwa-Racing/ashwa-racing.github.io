@@ -22,7 +22,6 @@ const SPOTLIGHT_AUTO_ADVANCE_MS = 3000;
 const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
 const skipBackgroundVideo =
   prefersReducedMotion ||
-  matchMedia("(max-width: 768px)").matches ||
   connection?.saveData ||
   ["slow-2g", "2g"].includes(connection?.effectiveType);
 

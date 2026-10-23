@@ -1409,10 +1409,36 @@ html[data-theme="light"] .proj-hero-coords { color: rgba(255,255,255,.6); }
   }
 }
 
+/* Keep the stacked mobile viewer readable after the shared viewer rules below. */
+@media (max-width: 860px) {
+  html[data-theme="light"] .prog-content {
+    background: var(--page-bg);
+    color: var(--text);
+  }
+
+  html[data-theme="light"] .prog-changes li,
+  html[data-theme="light"] .prog-achievements li,
+  html[data-theme="light"] .prog-desc,
+  html[data-theme="light"] .prog-content li {
+    color: var(--text);
+  }
+
+  html[data-theme="light"] .prog-spec span {
+    color: var(--text-muted);
+  }
+}
+
 @media (max-width: 600px) {
   .prog-image-panel { height: clamp(230px, 72vw, 330px); }
   .prog-slide-counter { bottom: 12px; left: 14px; }
-  .prog-photo-controls { left: 14px; bottom: 12px; gap: 7px; max-width: calc(100% - 28px); flex-wrap: wrap; }
+  .prog-photo-controls {
+    left: 14px;
+    right: 14px;
+    bottom: 12px;
+    gap: 7px;
+    max-width: none;
+    flex-wrap: wrap;
+  }
   .prog-carousel-dots { max-width: min(180px, calc(100vw - 180px)); }
   .prog-photo-status { font-size: .56rem; }
   .prog-carousel-hint { font-size: .52rem; }
