@@ -121,7 +121,6 @@ const photoLoadingText = document.getElementById("prog-photo-loading-text");
 const photoLoadStatus = document.getElementById("prog-photo-status");
 const photoCarouselDots = document.getElementById("prog-carousel-dots");
 const photoCarouselHint = document.getElementById("prog-carousel-hint");
-const photoCarouselToggle = document.getElementById("prog-carousel-toggle");
 
 const progContent =
   document.getElementById(
@@ -213,6 +212,35 @@ function optimizeProjectImage(path) {
     return path;
   }
 }
+
+function highQualityProjectImage(path) {
+  try {
+    const url = new URL(path, window.location.href);
+    if (url.origin !== "https://assets.ashwaracing.org") return url.href;
+    const imagePath = url.pathname.match(/(?:\/cdn-cgi\/image\/[^/]+)?(\/images\/.*)$/i)?.[1];
+    if (!imagePath) return url.href;
+    return `${url.origin}/cdn-cgi/image/width=2400,format=auto,quality=90${imagePath}`;
+  } catch (error) { return path; }
+}
+
+const projectImageDialog = document.getElementById("project-image-dialog");
+const projectImageLarge = document.getElementById("project-image-large");
+function openProjectImage() {
+  const record = imageRecords[slideIndex];
+  if (!record || record.status !== "loaded" || !projectImageDialog || !projectImageLarge) return;
+  projectImageLarge.src = record.largeSrc;
+  projectImageLarge.alt = progImage?.alt || "Expanded project photo";
+  projectImageDialog.showModal();
+}
+progImage?.addEventListener("keydown", event => {
+  if (event.key !== "Enter" && event.key !== " ") return;
+  event.preventDefault();
+  openProjectImage();
+});
+document.getElementById("project-image-dialog-close")?.addEventListener("click", () => projectImageDialog?.close());
+projectImageDialog?.addEventListener("click", event => {
+  if (event.target === projectImageDialog) projectImageDialog.close();
+});
 
 
 function updateSlideCounter(
@@ -332,10 +360,6 @@ function updatePhotoCarouselControls() {
   const hasCarousel = imageRecords.length > 1;
   photoCarouselDots.hidden = !hasCarousel;
   if (photoCarouselHint) photoCarouselHint.hidden = !hasCarousel;
-  if (photoCarouselToggle) {
-    photoCarouselToggle.hidden = !hasCarousel;
-    updatePhotoCarouselToggle();
-  }
   photoCarouselDots.replaceChildren();
   if (!hasCarousel) return;
 
@@ -351,16 +375,6 @@ function updatePhotoCarouselControls() {
     });
     photoCarouselDots.append(dot);
   });
-}
-
-function updatePhotoCarouselToggle() {
-  if (!photoCarouselToggle) return;
-  photoCarouselToggle.setAttribute("aria-pressed", String(isCarouselPaused));
-  photoCarouselToggle.setAttribute("aria-label", isCarouselPaused ? "Play slideshow" : "Pause slideshow");
-  const icon = photoCarouselToggle.querySelector(".prog-carousel-toggle-icon");
-  const label = photoCarouselToggle.querySelector(".prog-carousel-toggle-label");
-  if (icon) icon.innerHTML = isCarouselPaused ? "&#9654;" : "&#10074;&#10074;";
-  if (label) label.textContent = isCarouselPaused ? "Play" : "Pause";
 }
 
 function scheduleProjectPhotoAdvance() {
@@ -380,13 +394,6 @@ function moveProjectPhoto(direction) {
   showProjectImage(nextIndex, renderToken, PROGRAMMES[activeProgKey], activeYear);
 }
 
-photoCarouselToggle?.addEventListener("click", () => {
-  isCarouselPaused = !isCarouselPaused;
-  updatePhotoCarouselToggle();
-  if (isCarouselPaused) clearTimeout(photoCarouselTimer);
-  else scheduleProjectPhotoAdvance();
-});
-
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) clearTimeout(photoCarouselTimer);
   else scheduleProjectPhotoAdvance();
@@ -395,6 +402,10 @@ document.addEventListener("visibilitychange", () => {
 
 const photoCarousel = document.getElementById("prog-image-wrap");
 let carouselPointerStart = null;
+photoCarousel?.addEventListener("click", event => {
+  if (event.target.closest("button, .prog-photo-controls, #prog-content")) return;
+  openProjectImage();
+});
 photoCarousel?.addEventListener("pointerdown", event => {
   if (event.target.closest("button") || imageRecords.length < 2) return;
   carouselPointerStart = { x: event.clientX, y: event.clientY, id: event.pointerId };
@@ -620,7 +631,7 @@ function renderYear(
       <div>
 
         <div class="prog-section-label">
-          Specs · ${escapeHTML(year)}
+          SPECIFICATIONS
         </div>
 
         <ul class="prog-changes">
@@ -689,9 +700,9 @@ function renderYear(
   /* Project photos load progressively; visitors control the gallery. */
   const rawImages = (
     data.images || (data.image ? [data.image] : [])
-  ).map(path => optimizeProjectImage(resolveImage(path)));
+  ).map(path => resolveImage(path));
 
-  imageRecords = rawImages.map(src => ({ src, status: "idle", promise: null, image: null }));
+  imageRecords = rawImages.map(path => ({ src: optimizeProjectImage(path), largeSrc: highQualityProjectImage(path), status: "idle", promise: null, image: null }));
   clearTimeout(photoCarouselTimer);
   isCarouselPaused = prefersReducedMotion;
   if (progImage) {

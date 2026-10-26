@@ -47,7 +47,7 @@
   };
 
   const discoverFromSiteManifests = async () => {
-    const manifestPaths = ['assets/data/projects.json', 'assets/data/team.json', 'assets/data/sponsors.json', 'assets/data/blog.json'];
+    const manifestPaths = ['assets/data/projects.json', 'assets/data/team.json', 'assets/data/sponsors.json'];
     const discovered = [];
     const addValue = value => {
       if (typeof value === 'string') {

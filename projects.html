@@ -144,7 +144,7 @@
       <!-- Left: image panel -->
       <div class="prog-image-panel" id="prog-image-wrap" role="region" aria-roledescription="carousel" aria-label="Project photos" tabindex="0">
         <div class="prog-image-accent" id="prog-image-accent"></div>
-        <img id="prog-image" src="" alt="" loading="lazy" draggable="false">
+        <img id="prog-image" src="" alt="" loading="lazy" draggable="false" tabindex="0" aria-label="Open project photo at full size">
         <div class="prog-image-overlay"></div>
 
         <div class="prog-photo-loading" id="prog-photo-loading" role="status" aria-live="polite" hidden>
@@ -163,15 +163,15 @@
           </div>
           <div class="prog-carousel-dots" id="prog-carousel-dots" aria-label="Choose a project photo" hidden></div>
           <span class="prog-carousel-hint" id="prog-carousel-hint" hidden>Swipe or drag to explore</span>
-          <button class="prog-carousel-toggle" id="prog-carousel-toggle" type="button" aria-label="Pause slideshow" aria-pressed="false" hidden>
-            <span class="prog-carousel-toggle-icon" aria-hidden="true">&#10074;&#10074;</span>
-            <span class="prog-carousel-toggle-label">Pause</span>
-          </button>
         </div>
 
         <!-- Year badge overlaid on image -->
-        <div class="prog-year-badge" id="prog-year-badge" aria-hidden="true"></div>
       </div>
+
+      <dialog class="project-image-dialog" id="project-image-dialog" aria-label="Expanded project photo">
+        <button class="project-image-dialog-close" id="project-image-dialog-close" type="button" aria-label="Close expanded photo">×</button>
+        <img id="project-image-large" alt="">
+      </dialog>
 
       <!-- Right: content panel -->
       <div class="prog-content" id="prog-content">
