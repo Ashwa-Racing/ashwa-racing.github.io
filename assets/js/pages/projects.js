@@ -733,7 +733,8 @@ function renderYear(
    ============================================================ */
 
 function switchProgramme(
-  progKey
+  progKey,
+  selectedYear
 ) {
   const identity =
     PROGRAMMES[progKey];
@@ -753,6 +754,7 @@ function switchProgramme(
     Object.keys(
       programme.years
     )
+      .filter(year => !programme.years[year]?.hidden)
       .map(Number)
       .sort(
         (a, b) => b - a
@@ -860,35 +862,20 @@ function switchProgramme(
         item.setAttribute("aria-pressed", String(active));
       });
 
-
-    /* Programme count */
-
-    const countEl =
-      document.getElementById(
-        "prog-index-count"
-      );
-
-    const keys =
-      Object.keys(
-        projectData
-      );
-
-    const index =
-      keys.indexOf(
-        progKey
-      );
-
-    if (countEl) {
-      countEl.textContent =
-        `${index + 1} / ${keys.length}`;
-    }
+    document.querySelectorAll(".garage-season").forEach(item => {
+      const active = item.dataset.prog === progKey &&
+        item.dataset.year === String(selectedYear || years[0]);
+      item.classList.toggle("is-current", active);
+      if (active) item.setAttribute("aria-current", "true");
+      else item.removeAttribute("aria-current");
+    });
 
 
     /* Render newest year */
 
     renderYear(
       progKey,
-      years[0]
+      years.includes(Number(selectedYear)) ? Number(selectedYear) : years[0]
     );
 
     viewer.style.opacity =
@@ -903,136 +890,57 @@ function switchProgramme(
    ============================================================ */
 
 function buildProgIndex() {
-  const list =
-    document.getElementById(
-      "prog-index-list"
-    );
+  const list = document.getElementById("prog-index-list");
+  if (!list) return;
 
-  if (!list) {
-    return;
-  }
-
+  const programmeOrder = ["ev", "hyb", "hyp", "cv", "dv"];
+  const groups = programmeOrder
+    .filter(key => PROGRAMMES[key] && projectData[key]?.years &&
+      Object.values(projectData[key].years).some(season => !season.hidden))
+    .map(key => [key, projectData[key]]);
+  const total = groups.reduce((sum, [, programme]) =>
+    sum + Object.values(programme.years).filter(season => !season.hidden).length, 0);
   list.innerHTML = "";
 
-  const keys =
-    Object.keys(
-      projectData
-    );
+  groups.forEach(([key, programme], groupIndex) => {
+    const identity = PROGRAMMES[key];
+    const group = document.createElement("details");
+    group.className = "garage-program";
+    if (groupIndex === 0) group.open = true;
 
-  const countEl =
-    document.getElementById(
-      "prog-index-count"
-    );
+    const visibleYears = Object.keys(programme.years).filter(year => !programme.years[year]?.hidden);
+    const latestYear = visibleYears.sort((a, b) => Number(b) - Number(a))[0];
+    const latestData = programme.years[latestYear];
+    const coverPath = latestData.images?.[0] || latestData.image || "";
+    const cover = coverPath ? optimizeProjectImage(resolveImage(coverPath)) : "";
+    const summary = document.createElement("summary");
+    summary.innerHTML =
+      '<span class="garage-program-thumb">' + (cover ? '<img src="' + escapeHTML(cover) + '" alt="" loading="lazy" decoding="async">' : "") + '</span>' +
+      '<span class="garage-program-code" style="--item-accent:' + identity.accent + '">' + escapeHTML(identity.code) + '</span>' +
+      '<span class="garage-program-name">' + escapeHTML(programme.title) + '</span>' +
+      '<span class="garage-program-count">' + visibleYears.length + '</span>';
+    group.appendChild(summary);
 
-  if (countEl) {
-    countEl.textContent =
-      `1 / ${keys.length}`;
-  }
-
-
-  keys.forEach(key => {
-    const identity =
-      PROGRAMMES[key];
-
-    const programme =
-      projectData[key];
-
-    if (
-      !identity ||
-      !programme
-    ) {
-      return;
-    }
-
-    const years =
-      Object.keys(
-        programme.years
-      )
-        .map(Number)
-        .sort(
-          (a, b) => b - a
-        );
-
-    if (!years.length) {
-      return;
-    }
-
-    const yearRange =
-      years.length > 1
-        ? `${years[years.length - 1]} – ${years[0]}`
-        : String(years[0]);
-
-
-    const item = document.createElement("button");
-    item.type = "button";
-
-    item.className =
-      "prog-index-item";
-
-    item.dataset.prog =
-      key;
-
-    item.setAttribute(
-      "aria-label",
-      `${identity.tag} programme`
-    );
-    item.setAttribute("aria-pressed", "false");
-
-    item.style.setProperty(
-      "--item-accent",
-      identity.accent
-    );
-
-    item.innerHTML = `
-      <div
-        class="prog-index-item-bg-code"
-        aria-hidden="true">
-        ${escapeHTML(identity.code)}
-      </div>
-
-      <div
-        class="prog-index-item-dot"
-        aria-hidden="true">
-      </div>
-
-      <div class="prog-index-item-code">
-        ${escapeHTML(identity.code)}
-      </div>
-
-      <div class="prog-index-item-name">
-        ${escapeHTML(programme.title)}
-      </div>
-
-      <div class="prog-index-item-meta">
-        ${escapeHTML(yearRange)} · ${years.length}
-        season${years.length !== 1 ? "s" : ""}
-      </div>
-    `;
-
-
-    function activate() {
-      switchProgramme(
-        key
-      );
-
-      viewer?.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-    }
-
-
-    item.addEventListener(
-      "click",
-      activate
-    );
-
-    list.appendChild(
-      item
-    );
+    const seasons = document.createElement("div");
+    seasons.className = "garage-seasons";
+    visibleYears.forEach(year => {
+      const data = programme.years[year];
+      const name = (data.changes || [])[0] || programme.title + " prototype";
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "garage-season";
+      item.dataset.prog = key;
+      item.dataset.year = year;
+      item.innerHTML =
+        '<span class="garage-season-year">' + escapeHTML(year) + '</span>' +
+        '<span class="garage-season-name">' + escapeHTML(name.split(/\s[\u2014\u2013-]\s/)[0]) + '</span>';
+      item.addEventListener("click", () => switchProgramme(key, year));
+      seasons.appendChild(item);
+    });
+    group.appendChild(seasons);
+    list.appendChild(group);
   });
 }
-
 
 /* ============================================================
    YEAR SELECTOR
@@ -1726,11 +1634,8 @@ async function init() {
     initReveal();
 
     const firstKey =
-      Object.keys(
-        projectData
-      ).find(
-        key =>
-          PROGRAMMES[key]
+      ["ev", "hyb", "hyp", "cv", "dv"].find(
+        key => PROGRAMMES[key] && projectData[key]?.years
       );
 
     if (firstKey) {

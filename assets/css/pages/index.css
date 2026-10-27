@@ -98,25 +98,34 @@
   padding: 32px 0;
   border-bottom: 1px solid var(--border);
   overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
-          mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 }
 html[data-theme="light"] .sponsor-strip { --sp-bg: #fff; --sp-filter: none; }
 
+.sponsor-strip-heading { display:flex; justify-content:center; margin-bottom:28px; text-align:center; }
+.sponsor-strip-heading p { margin:0 0 8px; color:var(--red); font:700 .58rem/1.2 var(--display); letter-spacing:.2em; }
+.sponsor-strip-heading h2 { margin:0; color:var(--text-strong); font:800 clamp(1.8rem,3.2vw,2.7rem)/.95 var(--display); text-transform:uppercase; }
+.sponsor-strip-heading h2 em { color:var(--red); font-style:normal; }
+.sponsor-strip-cta { display:flex; justify-content:center; margin-top:28px; }
+.sponsor-strip-cta a { display:inline-flex; align-items:center; gap:12px; padding:11px 17px; border:1px solid var(--border-strong); color:var(--text-strong); font:700 .65rem/1.2 var(--display); letter-spacing:.1em; text-decoration:none; text-transform:uppercase; transition:background .2s ease,border-color .2s ease,color .2s ease; }
+.sponsor-strip-cta a:hover { border-color:var(--red); background:var(--red); color:#fff; }
+.sponsor-strip-cta a span { color:var(--red); }
+.sponsor-strip-cta a:hover span { color:#fff; }
+
+.sponsor-strip-viewport { overflow:hidden; -webkit-mask-image:linear-gradient(to right, transparent, black 12%, black 88%, transparent); mask-image:linear-gradient(to right, transparent, black 12%, black 88%, transparent); }
 .sponsor-strip-track {
   display: flex;
   align-items: center;
   flex-wrap: nowrap;
-  gap: 48px;
+  gap: 88px;
   width: max-content;
-  animation: sponsor-scroll 60s linear infinite;
+  animation: sponsor-scroll 100s linear infinite;
   will-change: transform;
 }
 .sponsor-strip-track img { max-height: 60px; width: auto; object-fit: contain; filter: var(--sp-filter); }
 
 @keyframes sponsor-scroll {
   from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(calc(-50% - 24px), 0, 0); }
+  to   { transform: translate3d(calc(-50% - 44px), 0, 0); }
 }
 .sponsor-strip:hover .sponsor-strip-track { animation-play-state: paused; }
 
@@ -405,6 +414,8 @@ html[data-theme="light"] .sponsor-strip { --sp-bg: #fff; --sp-filter: none; }
 @media (max-width: 600px) {
   .hero-content h1 { font-size: clamp(2rem, 11vw, 4rem); }
   .spotlight-overlay { padding: 180px 24px 32px; }
+  .sponsor-strip-heading { margin-bottom:20px; }
+  .sponsor-strip-cta { margin-top:20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -419,5 +430,5 @@ html[data-theme="light"] .sponsor-strip { --sp-bg: #fff; --sp-filter: none; }
   /* No marquee: let the strip scroll by hand and hide the duplicate loop copy. */
   .sponsor-strip-track { animation: none; }
   .sponsor-strip-track [data-dup] { display: none; }
-  .sponsor-strip { overflow-x: auto; -webkit-mask-image: none; mask-image: none; }
+  .sponsor-strip-viewport { overflow-x:auto; -webkit-mask-image:none; mask-image:none; }
 }

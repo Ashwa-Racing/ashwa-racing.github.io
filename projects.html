@@ -33,7 +33,7 @@
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
   <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
-  <link rel="stylesheet" href="assets/css/pages/projects.css?v=2">
+  <link rel="stylesheet" href="assets/css/pages/projects.css?v=5">
 
   <link rel="preload" as="fetch" href="/assets/data/projects.json" crossorigin>
 </head>
@@ -57,59 +57,23 @@
   <!-- ═══════════════════════════
        HERO
   ════════════════════════════ -->
-  <section class="proj-hero">
-    <div class="proj-hero-bg" aria-hidden="true"></div>
-    <div class="proj-hero-overlay"></div>
-    <div class="proj-hero-grid"></div>
-
-    <!-- Vertical accent stripe — right side -->
-    <div class="proj-hero-stripe" id="proj-hero-stripe"></div>
-
-    <!-- Horizontal rule at bottom of hero -->
-    <div class="proj-hero-rule"></div>
-
-    <div class="proj-hero-coords proj-hero-coords--tl" aria-hidden="true">
-      <span>12°58'N</span>
-      <span>77°33'E</span>
-    </div>
-    <div class="proj-hero-coords proj-hero-coords--br" aria-hidden="true">
-      <span>RVCE · BENGALURU</span>
-      <span>22 YEARS OF ASHWA</span>
-    </div>
-
-    <div class="proj-hero-content container">
-
-      <!-- Eyebrow label -->
-      <div class="proj-eyebrow">
-        <span class="eyebrow-dash"></span>
-        Ashwa Racing · Engineering Archive
+  <section class="garage-heading" aria-labelledby="garage-heading-title">
+    <div class="container garage-heading-inner">
+      <div>
+        <p class="garage-eyebrow"><span></span> ASHWA RACING · RVCE BENGALURU</p>
+        <h1 id="garage-heading-title">Cars &amp; <em>Projects</em></h1>
       </div>
-
-      <!-- Main title -->
-      <h1 class="proj-hero-title">
-        OUR<br><em>PROJECTS</em>
-      </h1>
-
-      <!-- Descriptor -->
-      <p class="proj-hero-desc">
-        Across combustion, electric, hybrid, hyperloop, and autonomous platforms —
-        Ashwa Racing engineers high-performance prototypes built for competition.
-      </p>
+      <p>From combustion and hybrid race cars to our first EV and Hyperloop pod, explore the engineering that keeps Ashwa moving forward.</p>
     </div>
   </section>
 
   <!-- ═══════════════════════════
        PROGRAMME INDEX
   ════════════════════════════ -->
-  <section class="prog-index" id="prog-index" aria-labelledby="prog-index-heading">
-    <div class="prog-index-header container">
-      <h2 class="prog-index-label" id="prog-index-heading">Select Programme</h2>
-      <span class="prog-index-count" id="prog-index-count">— / —</span>
-    </div>
-    <div class="prog-index-list" id="prog-index-list">
-      <!-- Injected by JS -->
-    </div>
-  </section>
+  <section class="projects-explorer" aria-label="Ashwa Racing project archive">
+    <aside class="garage-sidebar">
+      <nav class="garage-nav" id="prog-index-list" aria-label="Vehicle programmes"></nav>
+    </aside>
 
   <!-- ═══════════════════════════
        PROGRAMME VIEWER
@@ -131,10 +95,6 @@
           </div>
         </div>
 
-        <div class="prog-years-wrapper" id="prog-years-wrapper">
-          <!-- arrows + fade edges injected by JS -->
-          <div class="prog-years" id="prog-years" role="tablist" aria-label="Year selector"></div>
-        </div>
       </div>
     </div>
 
@@ -181,6 +141,7 @@
     </div>
 
   </section>
+  </section>
 
 
   </main>
@@ -189,7 +150,7 @@
 
   <script src="assets/js/components/theme.js" defer></script>
   <script src="assets/js/components/utils.js" defer></script>
-  <script src="assets/js/pages/projects.js?v=3" defer></script>
+  <script src="assets/js/pages/projects.js?v=7" defer></script>
   <script src="assets/js/components/header.js?v=7" defer></script>
 </body>
 </html>

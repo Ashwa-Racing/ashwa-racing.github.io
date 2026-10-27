@@ -2165,6 +2165,7 @@
         }
       },
       "2020": {
+        "hidden": true,
         "images": [
           "assets/images/prototypes/RZ-XX-HY/IMG_4019.JPG"
         ],

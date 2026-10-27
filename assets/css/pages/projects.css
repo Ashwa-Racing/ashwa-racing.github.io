@@ -1237,7 +1237,7 @@ html[data-theme="light"] .proj-hero-coords { color: rgba(255,255,255,.6); }
 }
 .prog-changes li,
 .prog-achievements li,
-.prog-desc { color: var(--white); }
+.prog-desc { color: var(--text); }
 .prog-desc { border-color: var(--border-strong); }
 .prog-spec { background: var(--surface); }
 .prog-spec:hover { background: var(--surface-hi); }
@@ -1256,7 +1256,7 @@ html[data-theme="light"] .proj-hero-coords { color: rgba(255,255,255,.6); }
   background: color-mix(in srgb, var(--page-bg) 5%, transparent);
 }
 
-.prog-content li { color: var(--white); }
+.prog-content li { color: var(--text); }
 .prog-technical-disclosure > summary {
   display: flex;
   align-items: center;
@@ -1455,3 +1455,67 @@ html[data-theme="light"] .proj-hero-coords { color: rgba(255,255,255,.6); }
 }
 
 @media (prefers-reduced-motion: reduce) { .prog-photo-spinner,.prog-photo-status.is-loading::before { animation: none; border-top-color: var(--prog-accent); border-right-color: var(--prog-accent); } }
+
+/* Ashwa Garage: archive navigation and selected build share one workspace. */
+.garage-heading { padding:clamp(36px,5vw,68px) 0 30px; background:var(--page-bg); border-bottom:1px solid var(--border); }
+.garage-heading-inner { display:flex; align-items:end; justify-content:space-between; gap:32px; }
+.garage-heading-inner h1 { margin:0; color:var(--text-strong); font:800 clamp(2.6rem,6vw,5.2rem)/.9 var(--display); letter-spacing:-.03em; text-transform:uppercase; }
+.garage-heading-inner h1 em { color:var(--red); font-style:normal; }
+.garage-heading-inner > p { max-width:390px; margin:0; color:var(--text-muted); font-size:.94rem; line-height:1.65; }
+.garage-eyebrow { display:flex; align-items:center; gap:9px; margin:0 0 12px; color:var(--text-muted); font:700 .62rem/1 var(--display); letter-spacing:.2em; }
+.garage-eyebrow span { display:block; width:22px; height:2px; background:var(--red); }
+.projects-explorer { display:grid; grid-template-columns:250px minmax(0,1fr); align-items:start; gap:22px; width:min(calc(100% - (var(--site-gutter) * 2)),1440px); margin:28px auto 72px; }
+.garage-sidebar { position:sticky; top:calc(var(--nav-h) + 16px); max-height:calc(100vh - var(--nav-h) - 32px); overflow-y:auto; border:1px solid var(--border); background:var(--section-bg); scrollbar-color:var(--border-strong) transparent; }
+.garage-nav { display:block; width:100%; margin:0; overflow:visible; }
+.garage-program { border-bottom:1px solid var(--border); }
+.garage-program > summary { display:grid; grid-template-columns:50px 34px minmax(0,1fr) auto 16px; align-items:center; gap:8px; min-height:66px; padding:8px 12px; color:var(--text-strong); font:700 .75rem/1 var(--display); letter-spacing:.05em; text-transform:uppercase; cursor:pointer; list-style:none; }
+.garage-program > summary::-webkit-details-marker { display:none; }
+.garage-program > summary::after { content:"+"; color:var(--text-muted); font:500 1.1rem/1 var(--body); }
+.garage-program[open] > summary::after { content:"-"; color:var(--red); }
+.garage-program-thumb { display:block; width:50px; height:38px; overflow:hidden; background:var(--surface); }
+.garage-program-thumb img { display:block; width:100%; height:100%; object-fit:cover; }
+.garage-program-code { color:var(--item-accent); font:800 1rem/1 var(--display); }
+.garage-program-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.garage-program-count { color:var(--text-muted); font:600 .6rem/1 var(--display); }
+.garage-seasons { padding:3px 10px 11px; }
+.garage-season { display:grid; grid-template-columns:43px minmax(0,1fr); align-items:baseline; gap:8px; width:100%; padding:8px 8px; border:0; border-left:2px solid transparent; background:transparent; color:var(--text); text-align:left; cursor:pointer; }
+.garage-season:hover { background:var(--surface); }
+.garage-season.is-current { border-left-color:var(--red); background:var(--surface); }
+.garage-season-year { color:var(--text-muted); font:700 .68rem/1 var(--display); }
+.garage-season-name { overflow:hidden; font:500 .72rem/1.2 var(--body); text-overflow:ellipsis; white-space:nowrap; }
+.garage-season:focus-visible,.garage-program > summary:focus-visible { outline:2px solid var(--red); outline-offset:-2px; }
+.projects-explorer .prog-viewer { width:100%; min-width:0; margin:0; }
+.projects-explorer .prog-identity { width:100%; padding:0 26px; }
+.projects-explorer .prog-identity-inner { padding:14px 0; }
+.projects-explorer .prog-code-bg { left:auto; right:3%; font-size:8rem; }
+.projects-explorer .prog-split { display:flex; width:100%; height:clamp(620px,72vh,820px); margin:0; overflow:hidden; }
+.projects-explorer .prog-image-panel { position:relative; inset:auto; flex:1 1 56%; width:56%; height:100%; }
+.projects-explorer .prog-content { position:relative; inset:auto; flex:1 1 44%; width:44%; height:100%; max-height:none; padding:clamp(24px,3vw,42px); background:var(--page-bg); border-left:1px solid var(--border); backdrop-filter:none; }
+.projects-explorer .prog-year-badge { font-size:clamp(3.2rem,6vw,5.5rem); }
+.garage-nav .prog-index-item:focus-visible,.year-btn:focus-visible { outline:2px solid var(--red); outline-offset:-3px; }
+
+@media(max-width:1000px) {
+  .projects-explorer { grid-template-columns:205px minmax(0,1fr); gap:14px; }
+  .projects-explorer .prog-identity { padding-inline:18px; }
+  .projects-explorer .prog-split { height:clamp(700px,86vh,900px); }
+  .projects-explorer .prog-image-panel { flex-basis:48%; width:48%; }
+  .projects-explorer .prog-content { flex-basis:52%; width:52%; padding:24px; }
+}
+@media(max-width:760px) {
+  .garage-heading-inner { align-items:start; flex-direction:column; gap:15px; }
+  .projects-explorer { display:flex; flex-direction:column; width:100%; margin:0 auto 48px; gap:0; }
+  .garage-sidebar { position:relative; top:auto; width:100%; max-height:none; border-width:0 0 1px; }
+  .garage-sidebar { max-height:42vh; overflow:auto; }
+  .garage-nav { display:block; width:100%; overflow:visible; padding:0; }
+  .projects-explorer .prog-viewer { border-width:0 0 1px; }
+  .projects-explorer .prog-identity { padding-inline:var(--site-gutter); }
+  .projects-explorer .prog-split { display:flex; flex-direction:column; height:auto; min-height:0; overflow:visible; }
+  .projects-explorer .prog-image-panel { flex:none; width:100%; height:clamp(300px,60vw,520px); }
+  .projects-explorer .prog-content { flex:none; width:100%; height:auto; max-height:none; padding:28px var(--site-gutter); overflow:visible; border:0; }
+}
+@media(max-width:480px) {
+  .garage-heading { padding:32px 0 24px; }
+  .garage-heading-inner > p { font-size:.85rem; }
+  .projects-explorer .prog-identity-inner { align-items:flex-start; flex-direction:column; }
+  .projects-explorer .prog-code { font-size:1.8rem; }
+}
