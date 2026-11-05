@@ -154,7 +154,6 @@
   const loadingPanel = document.getElementById('reader-loading');
   const canvas = document.getElementById('reader-canvas');
   const nextCanvas = document.getElementById('reader-canvas-next');
-  const sheet = document.getElementById('reader-sheet');
   const nextSheet = document.getElementById('reader-sheet-next');
   const stage = document.getElementById('reader-stage');
   const pageCount = document.getElementById('reader-page-count');
@@ -167,7 +166,8 @@
   let zoom = 1;
   let lastFocus = null;
   let renderTasks = [];
-  let turnTimer = null;
+  let turnInProgress = false;
+  let turnOutAnimation = null;
   let openRequest = 0;
 
   function createRecommendations(current) {
@@ -201,8 +201,39 @@
     });
   }
 
-  async function renderPage(page = pageNumber, animate = false) {
+  async function animatePageTurn(direction, phase) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const sign = direction > 0 ? -1 : 1;
+    const frames = phase === 'out'
+      ? [
+          { transform: 'translateX(0) rotateY(0deg) scale(1)', opacity: 1, filter: 'brightness(1)' },
+          { transform: `translateX(${sign * 24}px) rotateY(${sign * 9}deg) scale(.985)`, opacity: .18, filter: 'brightness(.72)' }
+        ]
+      : [
+          { transform: `translateX(${sign * 24}px) rotateY(${sign * 9}deg) scale(.985)`, opacity: .18, filter: 'brightness(.72)' },
+          { transform: 'translateX(0) rotateY(0deg) scale(1)', opacity: 1, filter: 'brightness(1)' }
+        ];
+    const animation = stage.animate(frames, {
+      duration: phase === 'out' ? 190 : 260,
+      easing: phase === 'out' ? 'cubic-bezier(.55, 0, .8, .35)' : 'cubic-bezier(.16, .75, .25, 1)',
+      fill: 'both'
+    });
+    if (phase === 'out') turnOutAnimation = animation;
+    else {
+      turnOutAnimation?.cancel();
+      turnOutAnimation = null;
+    }
+    try { await animation.finished; } catch (_) { /* A newer render can cancel the visual transition. */ }
+    if (phase === 'in') animation.cancel();
+  }
+
+  async function renderPage(page = pageNumber, animate = false, direction = 1) {
     if (!pdfDocument || !stage.clientWidth || !stage.clientHeight) return;
+    if (animate && turnInProgress) return;
+    if (animate) {
+      turnInProgress = true;
+      await animatePageTurn(direction, 'out');
+    }
     pageNumber = Math.max(1, Math.min(pdfDocument.numPages, page));
     const isMobile = window.matchMedia('(max-width: 760px)').matches;
     const isSinglePage = isMobile || singlePageMode;
@@ -224,12 +255,6 @@
     document.getElementById('reader-page-prev').disabled = pageNumber <= 1;
     document.getElementById('reader-page-next').disabled = pageNumber + pageStep > pdfDocument.numPages;
 
-    if (animate) {
-      sheet.classList.add('is-turning');
-      nextSheet.classList.add('is-turning');
-      clearTimeout(turnTimer);
-      await new Promise(resolve => setTimeout(resolve, 140));
-    }
     renderTasks.forEach(task => task.cancel());
     renderTasks = [];
     try {
@@ -254,9 +279,20 @@
         renderTasks.push(task);
         await task.promise;
       }));
-      if (animate) turnTimer = setTimeout(() => { sheet.classList.remove('is-turning'); nextSheet.classList.remove('is-turning'); }, 20);
     } catch (error) {
       if (error?.name !== 'RenderingCancelledException') console.warn('Newsletter page render failed:', error);
+    } finally {
+      if (animate) {
+        await animatePageTurn(direction, 'in');
+        turnInProgress = false;
+        if (pdfDocument) {
+          const step = isSinglePage ? 1 : 2;
+          document.getElementById('reader-prev').disabled = pageNumber <= 1;
+          document.getElementById('reader-next').disabled = pageNumber + step > pdfDocument.numPages;
+          document.getElementById('reader-page-prev').disabled = pageNumber <= 1;
+          document.getElementById('reader-page-next').disabled = pageNumber + step > pdfDocument.numPages;
+        }
+      }
     }
   }
 
@@ -381,10 +417,10 @@
   });
 
   function turnPage(direction) {
-    if (!pdfDocument) return;
+    if (!pdfDocument || turnInProgress) return;
     const nextPage = pageNumber + direction * (window.matchMedia('(max-width: 760px)').matches || singlePageMode ? 1 : 2);
     if (nextPage < 1 || nextPage > pdfDocument.numPages) return;
-    renderPage(nextPage, true);
+    renderPage(nextPage, true, direction);
   }
 
   document.querySelectorAll('[data-reader-close]').forEach(button => button.addEventListener('click', closeReader));
@@ -393,14 +429,15 @@
   document.getElementById('reader-page-prev').addEventListener('click', () => turnPage(-1));
   document.getElementById('reader-page-next').addEventListener('click', () => turnPage(1));
   viewToggle.addEventListener('click', () => {
+    if (turnInProgress) return;
     singlePageMode = !singlePageMode;
     dialog.classList.toggle('is-expanded', singlePageMode);
     reader.classList.toggle('is-expanded', singlePageMode);
     if (singlePageMode) dialog.querySelector('.reader-close').focus();
-    renderPage(pageNumber, true);
+    renderPage(pageNumber);
   });
-  document.getElementById('reader-zoom-out').addEventListener('click', () => { zoom = Math.max(.7, zoom - .15); zoomLabel.textContent = `${Math.round(zoom * 100)}%`; renderPage(); });
-  document.getElementById('reader-zoom-in').addEventListener('click', () => { zoom = Math.min(1.8, zoom + .15); zoomLabel.textContent = `${Math.round(zoom * 100)}%`; renderPage(); });
+  document.getElementById('reader-zoom-out').addEventListener('click', () => { if (turnInProgress) return; zoom = Math.max(.7, zoom - .15); zoomLabel.textContent = `${Math.round(zoom * 100)}%`; renderPage(); });
+  document.getElementById('reader-zoom-in').addEventListener('click', () => { if (turnInProgress) return; zoom = Math.min(1.8, zoom + .15); zoomLabel.textContent = `${Math.round(zoom * 100)}%`; renderPage(); });
   document.addEventListener('keydown', event => {
     if (reader.hidden) return;
     if (event.key === 'Escape') closeReader();
@@ -416,7 +453,7 @@
       else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     }
   });
-  window.addEventListener('resize', () => { if (!reader.hidden) renderPage(); });
+  window.addEventListener('resize', () => { if (!reader.hidden && !turnInProgress) renderPage(); });
 
   let touchStart = null;
   stage.addEventListener('touchstart', event => {
