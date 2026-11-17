@@ -147,6 +147,9 @@ async function loadLatestSiteUpdate() {
       minimizeButton.textContent = minimizedId === id ? "AR" : "×";
       minimizeButton.setAttribute("aria-label", minimizedId === id ? "Show latest Ashwa Racing update" : "Minimize update");
       minimizeButton.addEventListener("click", () => setMinimized(!toast.classList.contains("is-minimized")));
+      window.addEventListener("scroll", () => {
+        if (!toast.classList.contains("is-minimized")) setMinimized(true);
+      }, { passive: true });
       document.body.appendChild(toast);
       requestAnimationFrame(() => toast.classList.add("is-visible"));
     }, 900);
