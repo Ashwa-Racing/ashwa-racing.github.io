@@ -5,7 +5,7 @@ The official website for Ashwa Racing, the Formula Student team of RV College of
 [![Live website](https://img.shields.io/badge/website-ashwaracing.org-e8001d?style=flat-square)](https://ashwaracing.org)
 [![License: MIT](https://img.shields.io/badge/license-MIT-e8001d?style=flat-square)](LICENSE)
 
-**Live site:** [ashwaracing.org](https://ashwaracing.org) · **Repository:** [Ashwa-Racing/ashwa-racing.github.io](https://github.com/Ashwa-Racing/ashwa-racing.github.io) · **Contact:** [ashwa.smp@gmail.com](mailto:ashwa.smp@gmail.com)
+**Live site:** [ashwaracing.org](https://ashwaracing.org) · **Repository:** [Ashwa-Racing/ashwa-racing.github.io](https://github.com/Ashwa-Racing/ashwa-racing.github.io) · **Contact:** [ashwasmp@gmail.com](mailto:ashwasmp@gmail.com)
 
 ## About the site
 
@@ -83,7 +83,7 @@ Email updates: follow [`scripts/email-updates/SETUP.md`](scripts/email-updates/S
 3. Build locally with `python scripts/build_site.py` and review the generated page in a local server.
 4. Open a pull request with a short summary and screenshots for visual changes.
 
-For questions or to report a problem, [open a GitHub issue](https://github.com/Ashwa-Racing/ashwa-racing.github.io/issues) or email [ashwa.smp@gmail.com](mailto:ashwa.smp@gmail.com).
+For questions or to report a problem, [open a GitHub issue](https://github.com/Ashwa-Racing/ashwa-racing.github.io/issues) or email [ashwasmp@gmail.com](mailto:ashwasmp@gmail.com).
 
 Please follow the project's [Code of Conduct](CODE_OF_CONDUCT.md).
 
