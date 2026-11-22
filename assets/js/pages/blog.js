@@ -54,7 +54,7 @@
         newsletterCoverEl.src = `${coverBase}.jpg`;
       }
     } catch (error) {
-      console.error('Ashwa Blog: failed to load latest newsletter.', error);
+      console.error('Blog: failed to load latest newsletter.', error);
     }
   };
 
@@ -301,7 +301,7 @@
 
     } catch (error) {
       console.error(
-        'Ashwa Blog: failed to load blog data.',
+        'Blog: failed to load blog data.',
         error
       );
 

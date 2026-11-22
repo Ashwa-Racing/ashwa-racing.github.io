@@ -272,7 +272,7 @@ async function initBlogPreview() {
 
     grid.innerHTML = posts.map(blogCardHTML).join("");
   } catch (error) {
-    console.error("Ashwa Blog: failed to load homepage articles.", error);
+    console.error("Blog: failed to load homepage articles.", error);
     grid.innerHTML = "";
   }
 }

@@ -253,7 +253,7 @@
 
       default:
         console.warn(
-          `Ashwa Blog: unknown block type "${block.type}".`
+          `Blog: unknown block type "${block.type}".`
         );
 
         return '';
@@ -599,7 +599,7 @@
 
     } catch (error) {
       console.error(
-        'Ashwa Blog: failed to load article.',
+        'Blog: failed to load article.',
         error
       );
 

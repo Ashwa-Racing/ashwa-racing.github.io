@@ -121,7 +121,7 @@ async function loadLatestSiteUpdate() {
           post.excerpt || "A new article from the Ashwa Racing team.";
       } else {
         blogLink.href = "/blog.html";
-        blogLink.querySelector(".site-update-toast__item-title").textContent = "Explore Ashwa Racing stories";
+        blogLink.querySelector(".site-update-toast__item-title").textContent = "Visit the Blog";
         blogLink.querySelector(".site-update-toast__item-description").textContent =
           "Browse engineering, competition, projects, and stories from the team.";
       }
