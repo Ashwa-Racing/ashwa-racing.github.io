@@ -35,13 +35,13 @@
     (() => {
       let theme = null;
       try { theme = localStorage.getItem("ashwa-theme"); } catch (e) {}
-      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+      document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
     })();
   </script>
 
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
-  <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
+  <link rel="stylesheet" href="assets/css/components/footer.css?v=47">
   <link rel="stylesheet" href="assets/css/pages/alumni.css?v=3">
 </head>
 
@@ -140,7 +140,7 @@
 
   <script src="assets/js/components/theme.js" defer></script>
   <script src="assets/js/components/utils.js" defer></script>
-  <script src="assets/js/components/header.js?v=7" defer></script>
+  <script src="assets/js/components/header.js?v=21" defer></script>
   <script src="assets/js/pages/alumni.js" defer></script>
 
 </body>

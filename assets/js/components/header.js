@@ -18,7 +18,12 @@ loadComponent("main-header", "components/header.html", () => {
   markActivePage();
 });
 
-loadComponent("main-footer", "components/footer.html", initEmailUpdates);
+loadComponent("main-footer", "components/footer.html", () => {
+  initEmailUpdates();
+  import("./footer.js?v=14")
+    .then(({ initFooterSponsors }) => initFooterSponsors())
+    .catch(error => console.warn("Ashwa footer: failed to load sponsor component.", error));
+});
 
 async function initEmailUpdates() {
   const forms = [...document.querySelectorAll("[data-updates-form]")];

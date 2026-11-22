@@ -30,12 +30,12 @@
     (() => {
       let theme = null;
       try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {}
-      document.documentElement.dataset.theme = theme === "light" ? "light" : "dark";
+      document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
     })();
   </script>
   <link rel="stylesheet" href="assets/css/components/base.css">
   <link rel="stylesheet" href="assets/css/components/header.css?v=5">
-  <link rel="stylesheet" href="assets/css/components/footer.css?v=2">
+  <link rel="stylesheet" href="assets/css/components/footer.css?v=47">
   <link rel="stylesheet" href="assets/css/pages/team.css">
 </head>
 <body class="team-page">
@@ -106,7 +106,7 @@
 
   <button id="back-to-top" class="back-to-top" type="button" aria-label="Back to filters"><i class="fas fa-arrow-up"></i></button>
   <footer id="main-footer"></footer>
-  <script src="assets/js/components/header.js?v=7" defer></script>
+  <script src="assets/js/components/header.js?v=21" defer></script>
   <script src="assets/js/pages/team.js?v=2" defer></script>
   <script src="assets/js/components/theme.js" defer></script>
 </body>

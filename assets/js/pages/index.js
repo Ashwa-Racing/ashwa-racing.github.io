@@ -7,14 +7,7 @@ const { prefersReducedMotion, escapeHTML, fetchJSON, observeOnce } = window.Ashw
 /* ============================================================
    CONFIG
    ============================================================ */
-const SPONSORS_URL = "/assets/data/sponsors.json";
 const BLOG_URL     = "/assets/data/blog.json";
-
-// Logos are shown ~60px tall, so they're resized/re-encoded at the edge
-// (Cloudflare Images) instead of shipping the 360px originals.
-const SPONSOR_LOGO_BASE =
-  "https://assets.ashwaracing.org/cdn-cgi/image/height=120,format=auto,quality=85/images/sponsors/";
-const SPONSOR_TIER_ORDER = ["executive", "platinum", "gold", "silver", "technical"];
 
 const COUNT_UP_MS               = 2000;
 const SPOTLIGHT_AUTO_ADVANCE_MS = 3000;
@@ -24,11 +17,6 @@ const skipBackgroundVideo =
   prefersReducedMotion ||
   connection?.saveData ||
   ["slow-2g", "2g"].includes(connection?.effectiveType);
-
-/* Data fetches start immediately so they're usually done by init time. */
-const sponsorsReady = fetchJSON(SPONSORS_URL)
-  .then(data => SPONSOR_TIER_ORDER.flatMap(tier => data[tier] || []))
-  .catch(err => { console.error(err); return []; });
 
 /* ============================================================
    BACKGROUND VIDEO
@@ -109,40 +97,6 @@ function initSpotlightToggle() {
       if (section.dataset.active === "ev") setActive("cv");
     }, SPOTLIGHT_AUTO_ADVANCE_MS);
   }, { threshold: 0.4 });
-}
-
-/* ============================================================
-   SPONSOR STRIP
-   ============================================================ */
-function sponsorLogoUrl(sponsor) {
-  const logo = sponsor?.logo || "";
-  return /^(https?:)?\/\//i.test(logo) ? logo : SPONSOR_LOGO_BASE + logo;
-}
-
-function sponsorCardHTML(sponsor, isDuplicate) {
-  const dup = isDuplicate ? ' aria-hidden="true" data-dup' : "";
-
-  // Keep logos below the fold out of the initial request burst.
-  const img = `<img src="${escapeHTML(sponsorLogoUrl(sponsor))}" alt="${isDuplicate ? "" : escapeHTML(sponsor.name)}" loading="lazy" fetchpriority="low" decoding="async" width="360" height="360">`;
-
-  // No website (missing or "#") -> plain card instead of a dead link.
-  if (!sponsor.url || sponsor.url === "#") {
-    return `<div class="sp-card"${dup}>${img}</div>`;
-  }
-
-  const tab = isDuplicate ? ' tabindex="-1"' : "";
-  return `<a href="${escapeHTML(sponsor.url)}" target="_blank" rel="noopener" class="sp-card"${dup}${tab}>${img}</a>`;
-}
-
-function renderSponsorStrip(sponsors) {
-  const track = document.getElementById("sponsor-track");
-  if (!track || !sponsors.length) return;
-
-  // The list is rendered twice for the seamless loop; the second copy is
-  // hidden from assistive tech and the tab order.
-  track.innerHTML =
-    sponsors.map(s => sponsorCardHTML(s, false)).join("") +
-    sponsors.map(s => sponsorCardHTML(s, true)).join("");
 }
 
 /* ============================================================
@@ -290,8 +244,6 @@ function initHome() {
   initBlogPreview().then(() => {
     window.Ashwa.reveal(document.querySelectorAll(".news-grid .news-card"));
   });
-
-  sponsorsReady.then(renderSponsorStrip);
 }
 
 function start() {
