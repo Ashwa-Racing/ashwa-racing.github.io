@@ -56,7 +56,7 @@
 
   --site-gutter:  clamp(20px, 5vw, 72px);
   --section-pad:  clamp(56px, 7vw, 112px);
-  --nav-h:        68px;
+  --nav-h:        60px;
   --content-width: 1150px;
   --wrap:         min(calc(100% - (var(--site-gutter) * 2)), var(--content-width));
   --rule:         rgba(10,10,10,0.14);
@@ -200,7 +200,8 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-#main-header { min-height: var(--nav-h); contain: layout; position: relative; z-index: 1000; }
+#main-header { min-height: var(--nav-h); position: sticky; top: 0; z-index: 1000; transition: min-height .22s ease; }
+#main-header.scrolled { min-height: 52px; }
 
 .container { width: var(--wrap); margin-inline: auto; }
 .icon { flex-shrink: 0; }

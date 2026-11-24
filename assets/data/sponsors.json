@@ -4,25 +4,25 @@
       "name": "RV College of Engineering",
       "logo": "rvce.svg",
       "url": "https://rvce.edu.in",
-      "description": "Established in 1963, RVCE now offers 13 undergraduate and 13 master's degree programmes. Rated among the top ten self-financing engineering institutions in India with an annual intake of over 2,000 students."
+      "description": "Founded in 1963, RVCE is an autonomous engineering institution in Bengaluru focused on technical education, interdisciplinary research, and innovation."
     },
     {
       "name": "Infineon Technologies",
       "logo": "infineon.svg",
       "url": "https://www.infineon.com",
-      "description": "Semiconductor solutions supporting power electronics, sensor integration, and microcontroller systems — powering Ashwa's electrical and testing programme."
+      "description": "Infineon is a global semiconductor company developing power systems and IoT solutions for energy efficiency, clean mobility, and secure connected devices."
     },
     {
       "name": "Adani Group",
       "logo": "adani.svg",
       "url": "https://www.adani.com/",
-      "description": "Market leader in transport logistics and energy utility portfolio businesses. Adani Group supports Ashwa Racing's infrastructure and logistics capabilities across competition seasons."
+      "description": "The Adani Group develops businesses across infrastructure, energy and utilities, transport and logistics, materials, and consumer sectors."
     },
     {
       "name": "Dynamatic Technologies",
       "logo": "dynamatics.svg",
       "url": "https://dynamatics.com/",
-      "description": "Delivers precision-engineered products for Metallurgy, Aerospace, and Hydraulics applications — pioneering Indian private sector manufacture of complex aerostructures for global OEMs."
+      "description": "Dynamatic Technologies designs and manufactures engineered products for aerospace, hydraulics, metallurgy, and security applications, with operations in India and Europe."
     }
   ],
 
@@ -30,42 +30,50 @@
     {
       "name": "SKF",
       "logo": "skf.svg",
-      "url": "https://www.skf.com/in"
+      "url": "https://www.skf.com/in",
+      "description": "SKF develops bearings, seals, lubrication systems, and related services for automotive and industrial applications, helping improve equipment reliability and efficiency."
     },
     {
       "name": "Analog Devices",
       "logo": "analogdevices.svg",
-      "url": "https://www.analog.com/en/index.html"
+      "url": "https://www.analog.com/en/index.html",
+      "description": "Analog Devices builds high-performance analog, mixed-signal, and digital signal-processing technologies that connect the physical and digital worlds."
     },
     {
       "name": "Sansera Engineering",
-      "logo": "sansera.png",
-      "url": "https://sansera.in/"
+      "logo": "sansera.jpg",
+      "url": "https://sansera.in/",
+      "description": "Sansera engineers and manufactures precision-forged and machined components for automotive, aerospace, defence, and other industrial sectors."
     },
     {
       "name": "VRL Logistics",
       "logo": "vrl.svg",
-      "url": "https://vrlgroup.in/vrl_group_home.aspx"
+      "url": "https://vrlgroup.in/vrl_group_home.aspx",
+      "description": "VRL Logistics provides surface transport and parcel services through a nationwide network, serving businesses and communities across India."
     },
     {
       "name": "Pegasys Systems",
       "logo": "pegasyssystemspvtltd.png",
-      "url": "https://pegasyssystems.com/"
+      "url": "https://pegasyssystems.com/",
+      "description": "Pegasys Systems manufactures special-purpose machinery, including shaft-straightening, crack-detection, testing, inspection, and assembly systems."
     },
     {
       "name": "Motul",
       "logo": "motul.svg",
-      "url": "https://www.motul.com/en-IN"
+      "url": "https://www.motul.com/en-IN",
+      "description": "Motul develops high-performance lubricants and fluids for road and track, with a long-standing presence in motorsport and industrial lubrication."
     },
     {
       "name": "LAPP",
       "logo": "lapp.svg",
-      "url": "https://www.lapp.com/en_US/us/"
+      "url": "https://www.lapp.com/en_US/us/",
+      "description": "LAPP provides cable, connectivity, and automation solutions designed for demanding industrial environments and applications."
     },
     {
       "name": "Henkel",
       "logo": "henkel.svg",
-      "url": "https://www.henkel.in/"
+      "url": "https://www.henkel.in/",
+      "description": "Henkel Adhesive Technologies develops adhesives, sealants, and functional coatings for manufacturing and mobility applications."
     }
   ],
 

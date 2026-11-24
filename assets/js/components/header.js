@@ -1,11 +1,28 @@
 "use strict";
 
 const prefix = "/";
+const componentCacheVersion = "v2";
 
 async function loadComponent(id, path, callback) {
   try {
-    const html = await fetch(prefix + path).then(r => r.text());
-    document.getElementById(id).innerHTML = html;
+    const cacheKey = `ashwa:component:${componentCacheVersion}:${path}`;
+    let html = "";
+    try {
+      html = sessionStorage.getItem(cacheKey) || "";
+    } catch (error) {}
+
+    if (!html) {
+      const response = await fetch(prefix + path, { cache: "force-cache" });
+      if (!response.ok) throw new Error(`${path} request failed (${response.status})`);
+      html = await response.text();
+      try {
+        sessionStorage.setItem(cacheKey, html);
+      } catch (error) {}
+    }
+
+    const mount = document.getElementById(id);
+    if (!mount) return;
+    mount.innerHTML = html;
     callback?.();
   } catch (err) {
     console.warn(`${id} load failed:`, err);
@@ -16,6 +33,16 @@ loadComponent("main-header", "components/header.html", () => {
   initNav();
   initScrollShrink();
   markActivePage();
+  document.addEventListener("ashwa:pagechange", () => {
+    markActivePage();
+    document.querySelectorAll(".nav-dropdown.open").forEach(dropdown => {
+      dropdown.classList.remove("open");
+      dropdown.querySelector(".nav-drop-btn")?.setAttribute("aria-expanded", "false");
+    });
+  });
+  import("./navigation.js?v=3")
+    .then(({ initPersistentNavigation }) => initPersistentNavigation())
+    .catch(error => console.warn("Ashwa navigation: persistent page navigation unavailable.", error));
 });
 
 loadComponent("main-footer", "components/footer.html", () => {
@@ -252,6 +279,12 @@ function markActivePage() {
   const page = normalizePage(location.pathname.split("/").filter(Boolean).pop() || "index");
 
   document.querySelectorAll(".nav-desktop a[href], .mobile-menu a[href]").forEach(link => {
+    link.classList.remove("active");
+    link.removeAttribute("aria-current");
+  });
+  document.querySelectorAll(".nav-drop-btn, .mob-accordion-btn").forEach(button => button.classList.remove("active"));
+
+  document.querySelectorAll(".nav-desktop a[href], .mobile-menu a[href]").forEach(link => {
     const target = normalizePage(new URL(link.href, location.href).pathname.split("/").filter(Boolean).pop() || "index");
     const isActive = target === page || (page === "blog-post" && target === "blog");
     if (!isActive) return;
@@ -265,7 +298,8 @@ function markActivePage() {
 
 function initScrollShrink() {
   const navbar = document.querySelector(".navbar");
-  if (!navbar) return;
+  const header = document.getElementById("main-header");
+  if (!navbar || !header) return;
 
   let last = false;
 
@@ -273,6 +307,7 @@ function initScrollShrink() {
     const scrolled = scrollY > 60;
     if (scrolled !== last) {
       navbar.classList.toggle("scrolled", scrolled);
+      header.classList.toggle("scrolled", scrolled);
       last = scrolled;
     }
   };

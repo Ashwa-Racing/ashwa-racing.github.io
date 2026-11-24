@@ -77,5 +77,10 @@ function initBrandLogoObserver() {
   updateBrandLogos();
 }
 
+document.addEventListener("ashwa:pagechange", () => {
+  initThemeToggle();
+  updateBrandLogos();
+});
+
 initThemeToggle();
 initBrandLogoObserver();

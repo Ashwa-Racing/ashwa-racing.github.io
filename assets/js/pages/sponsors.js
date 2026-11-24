@@ -92,8 +92,8 @@
   async function init() {
     try {
       const data = window.Ashwa?.fetchJSON
-        ? await window.Ashwa.fetchJSON("/assets/data/sponsors.json")
-        : await fetch("/assets/data/sponsors.json").then(response => {
+        ? await window.Ashwa.fetchJSON("/assets/data/sponsors.json?v=2")
+        : await fetch("/assets/data/sponsors.json?v=2").then(response => {
             if (!response.ok) throw new Error(`Sponsors request failed (${response.status})`);
             return response.json();
           });

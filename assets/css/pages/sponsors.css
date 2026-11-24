@@ -63,7 +63,7 @@
 .sp-tier-heading h2, .sp-bottom-cta h2 { color: var(--text-strong); font: 800 clamp(2.25rem, 5vw, 4rem)/.95 var(--display); letter-spacing: -.02em; text-transform: uppercase; }
 .sp-grid { display: grid; gap: 16px; }
 .sp-grid-executive { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.sp-grid-platinum { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.sp-grid-platinum { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .sp-grid-gold { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .sp-grid-silver { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .sp-grid-technical { grid-template-columns: repeat(6, minmax(0, 1fr)); }
@@ -80,6 +80,11 @@
 .sp-card-logo a img { transition: transform .25s var(--expo); }
 .sp-card:hover .sp-card-logo a img { transform: scale(1.04); }
 .sp-card-body { flex: 1; padding: 18px 20px 20px; }
+.sp-card-executive { flex-direction: row; min-height: 230px; }
+.sp-card-executive .sp-card-logo { flex: 0 0 34%; min-height: 230px; }
+.sp-card-executive .sp-card-body { align-self: center; padding: 28px; }
+.sp-card-platinum .sp-card-body { display: flex; flex-direction: column; align-items: flex-start; }
+.sp-card-platinum .sp-card-name { min-height: 2.1em; }
 .sp-card-name { color: var(--card-text); font: 700 1.25rem/1.05 var(--display); text-transform: uppercase; }
 .sp-card-description { margin-top: 9px; color: var(--card-muted); font-size: .94rem; line-height: 1.55; }
 .sp-card-link { display: inline-flex; gap: 8px; align-items: center; margin-top: 14px; color: var(--red); font: 700 .75rem/1.2 var(--display); letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
@@ -94,7 +99,7 @@
 .sp-cta-button { flex: none; padding: 16px 20px; border: 1px solid var(--red); color: var(--text-strong); }
 
 @media (max-width: 1000px) {
-  .sp-grid-platinum, .sp-grid-gold { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sp-grid-platinum, .sp-grid-gold { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sp-grid-silver { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .sp-grid-technical { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
@@ -106,6 +111,9 @@
   .tier-nav { justify-content: flex-start; overflow-x: auto; }
   .tier-nav-btn { flex: 0 0 112px; }
   .sp-grid-executive, .sp-grid-platinum, .sp-grid-gold { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sp-card-executive { min-height: 200px; }
+  .sp-card-executive .sp-card-logo { flex-basis: 36%; min-height: 200px; padding: 14px; }
+  .sp-card-executive .sp-card-body { padding: 18px; }
   .sp-grid-silver, .sp-grid-technical { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sp-card-logo { min-height: 110px; padding: 16px; }
   .sp-card-logo img { height: 72px; }
@@ -115,6 +123,9 @@
 @media (max-width: 460px) {
   .sp-hero-title { font-size: clamp(4rem, 18vw, 6rem); }
   .sp-grid-executive, .sp-grid-platinum, .sp-grid-gold { grid-template-columns: 1fr; }
+  .sp-card-executive { flex-direction: column; min-height: 0; }
+  .sp-card-executive .sp-card-logo { flex: none; min-height: 130px; }
+  .sp-card-executive .sp-card-body { align-self: stretch; padding: 16px; }
   .sp-grid-silver, .sp-grid-technical { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sp-card-body { padding: 14px; }
   .sp-card-name { font-size: 1.1rem; }

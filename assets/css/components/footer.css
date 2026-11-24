@@ -5,96 +5,128 @@
   font-family: var(--body, var(--font-body, 'Barlow', Arial, sans-serif));
 }
 
-/* Sponsor layout. Adjust row-gap and column-gap for spacing within a tier;
-   margin-bottom controls the larger gap between tiers. */
+/* ==========================================================================
+   FOOTER SPONSORS — replaces every .footer-sponsor* rule in the old file
+   (base rules + the sponsor rules inside @media 1120px and @media 760px).
+
+   Idea: sponsor logos are supplied by third parties, so they come in every
+   colour and background. Instead of filtering them per theme (invert /
+   grayscale / screen-blend), the whole section is a fixed light "plate" in
+   BOTH themes. Logos keep their real brand colours, white JPG boxes vanish
+   (multiply), and hierarchy comes from size + a tinted band for the top tiers.
+   ========================================================================== */
+
 .footer-sponsors {
-  padding: 42px max(var(--site-gutter, 20px), calc((100vw - var(--content-width, 1150px)) / 2)) 34px;
-  border-bottom: 1px solid var(--border, rgba(255,255,255,.08));
+  --sp-bg: #ffffff;
+  --sp-band: #f3f4f6;
+  --sp-ink: #0b0d12;
+  --sp-muted: #596070;
+  --sp-line: #e2e5ea;
+  --sp-accent: var(--red, #e8001d);
+
+  position: relative;
+  overflow-x: clip;               /* contains the 100vw band, no sideways scroll */
+  padding: clamp(36px, 5vw, 56px)
+           max(var(--site-gutter, 20px), calc((100vw - var(--content-width, 1150px)) / 2))
+           clamp(28px, 4vw, 40px);
+  background: var(--sp-bg);
+  color: var(--sp-ink);
+  border-bottom: 1px solid var(--sp-line);
 }
 
-/* This row-gap controls the vertical spacing between sponsor tiers. */
-.footer-sponsors-tiers {
-  display: flex;
-  flex-direction: column;
-  row-gap: 48px;
-}
-
-.footer-sponsor-premium-tiers {
-  display: flex;
-  width: 100vw;
-  flex-direction: column;
-  row-gap: 38px;
-  margin-inline: calc(50% - 50vw);
-  padding-block: 26px;
-  background: #fff;
-}
+/* ---------- Heading ---------- */
 
 .footer-sponsors-heading {
-  margin-bottom: 26px;
+  margin-bottom: clamp(22px, 3vw, 32px);
   text-align: center;
 }
 
 .footer-sponsors-heading > p {
-  margin: 0 0 7px;
-  color: var(--red);
-  font: 700 .58rem/1.2 var(--display);
+  margin: 0 0 8px;
+  color: var(--sp-accent);
+  font: 700 .62rem/1.2 var(--display, 'Barlow Condensed', sans-serif);
   letter-spacing: .2em;
 }
 
 .footer-sponsors-heading h2 {
   margin: 0;
-  color: var(--text-strong);
-  font: 800 clamp(1.5rem, 3vw, 2.2rem)/.95 var(--display);
+  color: var(--sp-ink);
+  font: 800 clamp(1.5rem, 3vw, 2.2rem)/.95 var(--display, 'Barlow Condensed', sans-serif);
   text-transform: uppercase;
 }
 
 .footer-sponsors-heading h2 em {
-  color: var(--red);
+  color: var(--sp-accent);
   font-style: normal;
 }
 
+/* ---------- Tier stack ---------- */
+
+/* row-gap = space between tiers */
+.footer-sponsors-tiers {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0;
+}
+
+/* Executive + Platinum: full-bleed tinted band */
+.footer-sponsor-premium-tiers {
+  display: flex;
+  width: 100vw;
+  flex-direction: column;
+  row-gap: clamp(20px, 3vw, 30px);
+  margin-inline: calc(50% - 50vw);
+  padding-block: clamp(22px, 3vw, 34px);
+  background: var(--sp-band);
+  border-block: 1px solid var(--sp-line);
+}
+
+/* Gold + Silver sit on the white plate, separated by a hairline */
+.footer-sponsors-tiers > .footer-sponsor-tier {
+  padding-block: clamp(22px, 3vw, 30px);
+}
+
+.footer-sponsors-tiers > .footer-sponsor-tier + .footer-sponsor-tier {
+  border-top: 1px solid var(--sp-line);
+}
+
 .footer-sponsor-tier {
+  width: min(100%, var(--content-width, 1150px));
   margin-inline: auto;
-  max-width: var(--content-width, 1150px);
 }
 
 .footer-sponsor-tier > div {
   display: grid;
+  width: 100%;
   align-items: center;
-  justify-content: center;
   justify-items: center;
-  row-gap: 8px;
+  row-gap: 14px;
 }
 
 .footer-sponsor-tier--executive > div {
-  grid-template-columns: repeat(4, max-content);
-  column-gap: 18px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(20px, 4vw, 56px);
 }
 
 .footer-sponsor-tier--platinum > div {
-  grid-template-columns: repeat(4, 156px);
-  column-gap: 72px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(18px, 3vw, 40px);
 }
 
 .footer-sponsor-tier--gold > div,
 .footer-sponsor-tier--silver > div {
-  grid-template-columns: repeat(3, max-content);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: clamp(18px, 3vw, 40px);
 }
 
-.footer-sponsor-tier--gold > div {
-  column-gap: 14px;
-}
-
-.footer-sponsor-tier--silver > div {
-  column-gap: 12px;
-}
+/* ---------- Partner cell + logo ---------- */
 
 .footer-sponsor-partner {
   display: grid;
   min-width: 0;
-  min-height: 42px;
+  min-height: 48px;
   place-items: center;
-  padding: 4px 6px;
+  padding: 6px 8px;
 }
 
 .footer-sponsor-partner a,
@@ -102,8 +134,14 @@
   display: grid;
   width: 100%;
   min-width: 0;
-  min-height: 42px;
+  min-height: 48px;
   place-items: center;
+  border-radius: 4px;
+}
+
+.footer-sponsor-partner a:focus-visible {
+  outline: 2px solid var(--sp-accent);
+  outline-offset: 4px;
 }
 
 .footer-sponsor-partner img {
@@ -111,136 +149,82 @@
   width: auto;
   height: auto;
   object-fit: contain;
+  /* Real brand colours; white image boxes disappear into the plate/band */
+  mix-blend-mode: multiply;
+  filter: none;
+  transition: transform .2s ease;
+}
+
+.footer-sponsor-partner a:hover img {
+  transform: scale(1.04);
 }
 
 .footer-sponsor-partner img[hidden] {
   display: none;
 }
 
-.footer-sponsor-partner--executive img {
-  max-width: clamp(128px, 17vw, 200px);
-  max-height: 74px;
-}
+/* Desktop sizes (original caps) */
+.footer-sponsor-partner--executive img { max-width: clamp(128px, 17vw, 200px); max-height: 74px; }
+.footer-sponsor-partner--platinum img  { max-width: clamp(100px, 11vw, 144px); max-height: 48px; }
+.footer-sponsor-partner--gold img      { max-width: clamp(110px, 12vw, 150px); max-height: 52px; }
+.footer-sponsor-partner--silver img    { max-width: clamp(98px, 10.5vw, 130px); max-height: 46px; }
+.footer-sponsor-partner--technical img { max-width: clamp(66px, 7vw, 80px);    max-height: 30px; }
 
-.footer-sponsor-partner--platinum img {
-  max-width: clamp(100px, 11vw, 144px);
-  max-height: 48px;
-}
+/* ---------- Per-logo exceptions (class names kept from the old CSS) ---------- */
 
-.footer-sponsor-partner--gold img {
-  max-width: clamp(110px, 12vw, 150px);
-  max-height: 52px;
-}
-
-.footer-sponsor-partner--silver img {
-  max-width: clamp(98px, 10.5vw, 130px);
-  max-height: 46px;
-}
-
-.footer-sponsor-partner--technical img {
-  max-width: clamp(66px, 7vw, 80px);
-  max-height: 30px;
-}
-
+/* These two are rendered as solid black marks */
 .footer-sponsor-partner--technical img.footer-sponsor-logo--royalbrothers,
 .footer-sponsor-partner--technical img.footer-sponsor-logo--bender {
   width: 80px;
   height: 30px;
   max-width: 100%;
   max-height: 30px;
+  filter: brightness(1);
+  opacity: 1;
+  mix-blend-mode: normal;
 }
 
-.footer-sponsor-partner--technical {
-  padding-inline: 2px;
+/* Dark-source logos already read fine on white; extra punch for weak ones */
+/* .footer-sponsor-partner img.footer-sponsor-logo--contrast,
+.footer-sponsor-partner img.footer-sponsor-logo--progressive {
+  filter: brightness(.72) contrast(1.5) saturate(1.3);
+} */
+
+.footer-sponsor-partner img.footer-sponsor-logo--invert-dark {
+  filter: none;
+  mix-blend-mode: normal;
 }
 
-.footer-sponsor-tier--gold img {
-  max-width: clamp(110px, 12vw, 150px);
-  max-height: 52px;
-}
-
-.footer-sponsor-tier--silver img {
-  max-width: clamp(98px, 10.5vw, 130px);
-  max-height: 46px;
-}
+/* ---------- Technical partners (two grouped grids) ---------- */
 
 .footer-sponsor-partners {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
-  gap: clamp(72px, 9vw, 128px);
-  max-width: 1300px;
+  gap: clamp(16px, 2vw, 32px);
+  width: min(100%, var(--content-width, 1150px));
   margin-inline: auto;
+  padding-top: clamp(22px, 3vw, 30px);
+  border-top: 1px solid var(--sp-line);
 }
 
 .footer-sponsor-partner-grid {
   display: grid;
-  grid-template-columns: repeat(5, max-content);
+  width: 100%;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   grid-template-rows: repeat(3, auto);
   grid-auto-flow: row;
   align-items: center;
-  justify-content: center;
   justify-items: center;
-  row-gap: 8px;
+  row-gap: 10px;
   column-gap: 12px;
 }
 
-html[data-theme="light"] .footer-sponsor-partner:not(.footer-sponsor-partner--executive):not(.footer-sponsor-partner--platinum) img {
-  filter: grayscale(1) brightness(0.78) contrast(2.4);
-}
-
-html[data-theme="light"] .footer-sponsor-partner:not(.footer-sponsor-partner--executive):not(.footer-sponsor-partner--platinum) img.footer-sponsor-logo--contrast {
-  filter: grayscale(1) brightness(0.72) contrast(2.4);
-}
-
-html[data-theme="light"] .footer-sponsor-partner:not(.footer-sponsor-partner--executive):not(.footer-sponsor-partner--platinum) img.footer-sponsor-logo--progressive {
-  filter: grayscale(1) brightness(0.68) contrast(2.6);
-}
-
-html[data-theme="light"] .footer-sponsors .footer-sponsor-partner--technical img.footer-sponsor-logo--royalbrothers,
-html[data-theme="light"] .footer-sponsors .footer-sponsor-partner--technical img.footer-sponsor-logo--bender {
-  filter: grayscale(1) brightness(0) contrast(1);
-  mix-blend-mode: normal;
-}
-
-html:not([data-theme="light"]) .footer-sponsor-partner:not(.footer-sponsor-partner--executive):not(.footer-sponsor-partner--platinum) img {
-  filter: grayscale(1) brightness(0.78) invert(1) contrast(2.4);
-  mix-blend-mode: screen;
-}
-
-html:not([data-theme="light"]) .footer-sponsor-partner:not(.footer-sponsor-partner--executive):not(.footer-sponsor-partner--platinum) img.footer-sponsor-logo--contrast {
-  filter: grayscale(1) brightness(0.72) invert(1) contrast(2.4);
-}
-
-html:not([data-theme="light"]) .footer-sponsor-partner:not(.footer-sponsor-partner--executive):not(.footer-sponsor-partner--platinum) img.footer-sponsor-logo--progressive {
-  filter: grayscale(1) brightness(0.68) invert(1) contrast(2.6);
-}
-
-html:not([data-theme="light"]) .footer-sponsors .footer-sponsor-partner--technical img.footer-sponsor-logo--royalbrothers,
-html:not([data-theme="light"]) .footer-sponsors .footer-sponsor-partner--technical img.footer-sponsor-logo--bender {
-  filter: grayscale(1) brightness(0) invert(1);
-  mix-blend-mode: screen;
-}
-
-html[data-theme="light"] .footer-sponsor-partner--platinum img,
-html:not([data-theme="light"]) .footer-sponsor-partner--platinum img {
-  filter: none;
-  mix-blend-mode: normal;
-}
-
-html:not([data-theme="light"]) .footer-sponsor-logo--invert-dark {
-  filter: brightness(0) invert(1);
-  mix-blend-mode: screen;
-}
-
-html:not([data-theme="light"]) .footer-sponsor-premium-tiers .footer-sponsor-logo--invert-dark {
-  filter: none;
-  mix-blend-mode: normal;
-}
+/* ---------- Fallback text when a logo fails to load ---------- */
 
 .footer-sponsor-fallback {
-  color: var(--text-strong);
-  font: 600 0.75rem/1.2 var(--body);
+  color: var(--sp-ink);
+  font: 600 .78rem/1.2 var(--body, 'Barlow', Arial, sans-serif);
   text-align: center;
 }
 
@@ -248,24 +232,145 @@ html:not([data-theme="light"]) .footer-sponsor-premium-tiers .footer-sponsor-log
   display: none;
 }
 
+/* ---------- "All sponsors" link ---------- */
+
 .footer-sponsors-link {
   display: flex;
   justify-content: center;
   gap: 9px;
-  margin-top: 23px;
-  color: var(--text-soft);
-  font: 700 .65rem/1.2 var(--display);
+  margin-top: clamp(20px, 3vw, 28px);
+  color: var(--sp-muted);
+  font: 700 .68rem/1.2 var(--display, 'Barlow Condensed', sans-serif);
   letter-spacing: .1em;
   text-decoration: none;
   text-transform: uppercase;
 }
 
 .footer-sponsors-link span {
-  color: var(--red);
+  color: var(--sp-accent);
 }
 
-.footer-sponsors-link:hover {
-  color: var(--red);
+.footer-sponsors-link:hover,
+.footer-sponsors-link:focus-visible {
+  color: var(--sp-accent);
+}
+
+.footer-sponsors-link:focus-visible {
+  outline: 2px solid var(--sp-accent);
+  outline-offset: 4px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1120px) {
+  .footer-sponsor-partners {
+    gap: clamp(16px, 3vw, 28px);
+  }
+
+  .footer-sponsor-tier--executive > div { column-gap: 24px; }
+  .footer-sponsor-tier--platinum > div { column-gap: 16px; }
+  .footer-sponsor-tier--gold > div     { column-gap: 14px; }
+  .footer-sponsor-tier--silver > div   { column-gap: 12px; }
+
+  .footer-sponsor-partner--technical img {
+    max-width: clamp(48px, 6vw, 68px);
+  }
+}
+
+@media (max-width: 760px) {
+  .footer-sponsors {
+    padding: 28px 16px 22px;
+  }
+
+  .footer-sponsor-premium-tiers {
+    row-gap: 18px;
+    padding-block: 18px;
+  }
+
+  .footer-sponsors-tiers > .footer-sponsor-tier {
+    padding-block: 18px;
+  }
+
+  .footer-sponsor-tier > div { row-gap: 10px; }
+
+  .footer-sponsor-tier--executive > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 12px;
+  }
+
+  .footer-sponsor-tier--platinum > div {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 12px;
+  }
+
+  .footer-sponsor-tier--gold > div,
+  .footer-sponsor-tier--silver > div {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .footer-sponsor-tier--gold > div   { column-gap: 8px; }
+  .footer-sponsor-tier--silver > div { column-gap: 6px; }
+
+  .footer-sponsor-partners {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    padding-top: 18px;
+  }
+
+  /* 4 per row, orphan rows centred instead of left-stuck */
+  .footer-sponsor-partner-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 16px 14px;
+  }
+
+  .footer-sponsor-partner-grid > .footer-sponsor-partner {
+    flex: 0 0 calc((100% - 42px) / 4);
+    max-width: calc((100% - 42px) / 4);
+  }
+
+  .footer-sponsor-partner {
+    min-height: 0;
+    padding: 0 4px;
+  }
+
+  .footer-sponsor-partner a,
+  .footer-sponsor-partner span {
+    min-height: 0;
+  }
+
+  .footer-sponsor-partner--technical {
+    padding-inline: 0;
+  }
+
+  /* MOBILE ONLY: strict descending scale. Each logo fits a fixed box. */
+  .footer-sponsor-partner img
+  /* .footer-sponsor-partner--technical img.footer-sponsor-logo--royalbrothers, */
+  /* .footer-sponsor-partner--technical img.footer-sponsor-logo--bender  */
+  {
+    width: 100%;
+    max-width: var(--w);
+    height: var(--h);
+    max-height: var(--h);
+  }
+
+  .footer-sponsor-partner--executive { --w: 150px; --h: 56px; }
+  .footer-sponsor-partner--platinum  { --w: 104px; --h: 40px; }
+  .footer-sponsor-partner--gold      { --w: 88px;  --h: 34px; }
+  .footer-sponsor-partner--silver    { --w: 72px;  --h: 28px; }
+  .footer-sponsor-partner--technical { --w: 60px;  --h: 22px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .footer-sponsor-partner img {
+    transition: none;
+  }
+
+  .footer-sponsor-partner a:hover img {
+    transform: none;
+  }
 }
 
 .footer-updates {
@@ -612,30 +717,6 @@ html[data-theme="light"] .footer-socials img {
 }
 
 @media (max-width: 1120px) {
-  .footer-sponsor-partner--technical img {
-    max-width: clamp(48px, 6vw, 68px);
-  }
-
-  .footer-sponsor-partners {
-    gap: clamp(44px, 5vw, 64px);
-  }
-
-  .footer-sponsor-tier--executive > div {
-    column-gap: 24px;
-  }
-
-  .footer-sponsor-tier--platinum > div {
-    column-gap: 16px;
-  }
-
-  .footer-sponsor-tier--gold > div {
-    column-gap: 14px;
-  }
-
-  .footer-sponsor-tier--silver > div {
-    column-gap: 12px;
-  }
-
   .footer-top {
     grid-template-columns: minmax(180px, 0.7fr) minmax(0, 2.3fr);
     gap: 36px;
@@ -649,110 +730,6 @@ html[data-theme="light"] .footer-socials img {
 }
 
 @media (max-width: 760px) {
-  .footer-sponsors {
-    padding: 24px 16px 20px;
-  }
-
-  .footer-sponsors-tiers {
-    row-gap: 24px;
-  }
-
-  .footer-sponsor-premium-tiers {
-    row-gap: 18px;
-    padding-block: 12px;
-  }
-
-  .footer-sponsor-tier {
-    margin-inline: auto;
-  }
-
-  .footer-sponsor-tier > div {
-    row-gap: 8px;
-  }
-
-  .footer-sponsor-tier--executive > div {
-    grid-template-columns: repeat(2, max-content);
-    column-gap: 8px;
-  }
-
-  .footer-sponsor-tier--platinum > div {
-    grid-template-columns: repeat(2, 80px);
-    column-gap: 8px;
-  }
-
-  .footer-sponsor-tier--gold > div,
-  .footer-sponsor-tier--silver > div {
-    grid-template-columns: repeat(3, max-content);
-  }
-
-  .footer-sponsor-tier--gold > div { column-gap: 8px; }
-  .footer-sponsor-tier--silver > div { column-gap: 6px; }
-
-  .footer-sponsor-partners {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-  }
-
-  .footer-sponsor-partner-grid {
-    width: 100%;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    grid-template-rows: repeat(5, auto);
-    grid-auto-flow: row;
-    row-gap: 8px;
-    column-gap: 2px;
-  }
-
-  .footer-sponsor-partner-grid--13 > :last-child {
-    grid-column: 2;
-  }
-
-  .footer-sponsor-partner {
-    min-height: 0;
-    padding: 0 4px;
-  }
-
-  .footer-sponsor-partner a,
-  .footer-sponsor-partner span {
-    min-height: 0;
-  }
-
-  .footer-sponsor-partner--technical {
-    padding-inline: 0;
-  }
-
-  .footer-sponsor-partner--executive img {
-    max-width: 96px;
-    max-height: 44px;
-  }
-
-  .footer-sponsor-partner--platinum img {
-    max-width: 72px;
-    max-height: 34px;
-  }
-
-  .footer-sponsor-partner--gold img {
-    max-width: 60px;
-    max-height: 28px;
-  }
-
-  .footer-sponsor-partner--silver img {
-    max-width: 50px;
-    max-height: 24px;
-  }
-
-  .footer-sponsor-partner--technical img {
-    max-width: 32px;
-    max-height: 16px;
-  }
-
-  .footer-sponsor-partner--technical img.footer-sponsor-logo--royalbrothers,
-  .footer-sponsor-partner--technical img.footer-sponsor-logo--bender {
-    width: 50px;
-    height: 22px;
-    max-width: 100%;
-    max-height: 22px;
-  }
-
   .footer-updates {
     grid-template-columns: 1fr;
     gap: 22px;
