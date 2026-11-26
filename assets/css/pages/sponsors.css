@@ -62,8 +62,8 @@
 .sp-tier-heading .sp-eyebrow { margin-bottom: 10px; }
 .sp-tier-heading h2, .sp-bottom-cta h2 { color: var(--text-strong); font: 800 clamp(2.25rem, 5vw, 4rem)/.95 var(--display); letter-spacing: -.02em; text-transform: uppercase; }
 .sp-grid { display: grid; gap: 16px; }
-.sp-grid-executive { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.sp-grid-platinum { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sp-grid-executive { grid-template-columns: 1fr; }
+.sp-grid-platinum { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .sp-grid-gold { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 .sp-grid-silver { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 .sp-grid-technical { grid-template-columns: repeat(6, minmax(0, 1fr)); }
@@ -80,18 +80,44 @@
 .sp-card-logo a img { transition: transform .25s var(--expo); }
 .sp-card:hover .sp-card-logo a img { transform: scale(1.04); }
 .sp-card-body { flex: 1; padding: 18px 20px 20px; }
-.sp-card-executive { flex-direction: row; min-height: 230px; }
-.sp-card-executive .sp-card-logo { flex: 0 0 34%; min-height: 230px; }
+.sp-card-executive { flex-direction: row; min-height: 290px; }
+.sp-card-executive:nth-child(even) { flex-direction: row-reverse; }
+.sp-card-executive .sp-card-logo { flex: 0 0 38%; min-height: 290px; }
+.sp-card-executive .sp-card-logo img { height: 176px; }
 .sp-card-executive .sp-card-body { align-self: center; padding: 28px; }
+.sp-card-executive .sp-card-description { font-size: 1.08rem; line-height: 1.7; }
 .sp-card-platinum .sp-card-body { display: flex; flex-direction: column; align-items: flex-start; }
+.sp-card-platinum .sp-card-logo { min-height: 164px; }
+.sp-card-platinum .sp-card-logo img { height: 124px; }
 .sp-card-platinum .sp-card-name { min-height: 2.1em; }
 .sp-card-name { color: var(--card-text); font: 700 1.25rem/1.05 var(--display); text-transform: uppercase; }
 .sp-card-description { margin-top: 9px; color: var(--card-muted); font-size: .94rem; line-height: 1.55; }
 .sp-card-link { display: inline-flex; gap: 8px; align-items: center; margin-top: 14px; color: var(--red); font: 700 .75rem/1.2 var(--display); letter-spacing: .08em; text-decoration: none; text-transform: uppercase; }
 .sp-card-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+.sp-gold-card { min-height: 300px; overflow: visible; perspective: 1000px; }
+.sp-gold-inner { position: relative; min-height: 300px; transform-style: preserve-3d; transition: transform .65s cubic-bezier(.2,.7,.2,1); }
+.sp-gold-card.is-flipped .sp-gold-inner { transform: rotateY(180deg); }
+@media (hover: hover) and (pointer: fine) {
+  .sp-gold-card:hover .sp-gold-inner { transform: rotateY(180deg); }
+}
+.sp-gold-face { position: absolute; inset: 0; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border); border-top: 2px solid var(--tier-color); background: var(--card-bg); backface-visibility: hidden; -webkit-backface-visibility: hidden; box-shadow: 0 12px 30px var(--shadow); }
+.sp-gold-front { background: #fff; }
+.sp-gold-back { transform: rotateY(180deg); padding: 22px; }
+.sp-gold-toggle { width: 100%; height: 100%; min-height: 296px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 22px; border: 0; background: transparent; color: inherit; cursor: pointer; text-align: center; text-decoration: none; }
+.sp-gold-toggle:focus-visible { outline: 3px solid var(--red); outline-offset: -5px; }
+.sp-mobile-flip { display: none; }
+.sp-gold-logo { width: 100%; height: 158px; display: grid; place-items: center; }
+.sp-gold-logo img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.sp-gold-name { color: #171717; }
+.sp-gold-hint { color: #454545; font: 700 .72rem/1.2 var(--display); letter-spacing: .08em; text-transform: uppercase; }
+.sp-gold-back-content { flex: 1; min-height: 0; align-items: flex-start; gap: 0; padding: 0; text-align: left; }
+.sp-gold-back-content .sp-card-description { display: block; color: var(--card-muted); }
 .sp-card-logo-missing .sp-card-logo { background: var(--surface); }
 .sp-card-logo-missing .sp-card-logo::after { content: "Logo unavailable"; color: var(--text-muted); font: 600 .75rem/1 var(--display); letter-spacing: .1em; text-transform: uppercase; }
 .sp-card-logo-missing .sp-card-logo img { display: none; }
+.sp-card-logo-missing .sp-gold-logo { background: var(--surface); }
+.sp-card-logo-missing .sp-gold-logo::after { content: "Logo unavailable"; color: var(--text-muted); font: 600 .75rem/1 var(--display); letter-spacing: .1em; text-transform: uppercase; }
+.sp-card-logo-missing .sp-gold-logo img { display: none; }
 .sp-error { width: var(--wrap); margin: 0 auto; padding: 80px 0; color: var(--text-muted); }
 .sp-bottom-cta { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: var(--section-pad) max(var(--site-gutter), calc((100% - var(--content-width)) / 2)); background: var(--panel); }
 .sp-bottom-cta > div { max-width: 640px; }
@@ -110,27 +136,52 @@
   .sp-hero-wall { inset-inline-start: 20%; opacity: .3; }
   .tier-nav { justify-content: flex-start; overflow-x: auto; }
   .tier-nav-btn { flex: 0 0 112px; }
-  .sp-grid-executive, .sp-grid-platinum, .sp-grid-gold { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .sp-card-executive { min-height: 200px; }
-  .sp-card-executive .sp-card-logo { flex-basis: 36%; min-height: 200px; padding: 14px; }
+  .sp-grid-executive { grid-template-columns: 1fr; }
+  .sp-grid-platinum, .sp-grid-gold { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sp-card-executive { min-height: 240px; }
+  .sp-card-executive .sp-card-logo { flex-basis: 36%; min-height: 240px; padding: 14px; }
+  .sp-card-executive .sp-card-logo img { height: 144px; }
   .sp-card-executive .sp-card-body { padding: 18px; }
   .sp-grid-silver, .sp-grid-technical { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .sp-card-logo { min-height: 110px; padding: 16px; }
   .sp-card-logo img { height: 72px; }
+  .sp-card-platinum .sp-card-logo { min-height: 130px; }
+  .sp-card-platinum .sp-card-logo img { height: 98px; }
+  .sp-gold-card, .sp-gold-inner { min-height: 280px; }
+  .sp-gold-toggle { min-height: 276px; padding: 18px; }
+  .sp-gold-logo { height: 142px; }
+  .sp-gold-back { padding: 18px; }
   .sp-card-body { padding: 15px; }
   .sp-bottom-cta { align-items: flex-start; flex-direction: column; }
+}
+@media (hover: none) {
+  .sp-mobile-flip { position: absolute; right: 14px; bottom: 14px; z-index: 2; display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border: 1px solid var(--border-strong); background: var(--card-bg); color: var(--text-strong); font: 700 .72rem/1.2 var(--display); letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+  .sp-mobile-flip:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+  .sp-mobile-flip--back { right: 14px; bottom: 14px; }
+  .sp-gold-front .sp-gold-toggle { padding-bottom: 54px; }
+  .sp-gold-back-content { padding-bottom: 52px; }
 }
 @media (max-width: 460px) {
   .sp-hero-title { font-size: clamp(4rem, 18vw, 6rem); }
   .sp-grid-executive, .sp-grid-platinum, .sp-grid-gold { grid-template-columns: 1fr; }
+  .sp-grid-gold { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sp-card-executive { flex-direction: column; min-height: 0; }
+  .sp-card-executive:nth-child(even) { flex-direction: column; }
   .sp-card-executive .sp-card-logo { flex: none; min-height: 130px; }
+  .sp-card-executive .sp-card-logo img { height: 110px; }
   .sp-card-executive .sp-card-body { align-self: stretch; padding: 16px; }
+  .sp-card-platinum .sp-card-logo { min-height: 150px; }
+  .sp-card-platinum .sp-card-logo img { height: 110px; }
   .sp-grid-silver, .sp-grid-technical { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .sp-card-body { padding: 14px; }
   .sp-card-name { font-size: 1.1rem; }
+  .sp-gold-card, .sp-gold-inner { min-height: 260px; }
+  .sp-gold-toggle { min-height: 256px; padding: 14px; }
+  .sp-gold-logo { height: 124px; }
+  .sp-gold-back { padding: 14px; }
+  .sp-gold-hint { font-size: .64rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sp-wall-track { animation: none !important; }
-  .sp-card, .sp-cta, .tier-nav-btn { transition: none; }
+  .sp-card, .sp-gold-inner, .sp-cta, .tier-nav-btn { transition: none; }
 }

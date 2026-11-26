@@ -21,6 +21,7 @@
   }
 
   function makeCard(sponsor, tier) {
+    if (["gold", "silver", "technical"].includes(tier.key)) return makeFlipCard(sponsor, tier);
     const card = document.createElement("article");
     card.className = `sp-card sp-card-${tier.key}`;
     const media = document.createElement("div");
@@ -63,6 +64,108 @@
     return card;
   }
 
+  function makeFlipCard(sponsor, tier) {
+    const card = document.createElement("article");
+    card.className = `sp-card sp-card-${tier.key} sp-gold-card`;
+    const inner = document.createElement("div");
+    inner.className = "sp-gold-inner";
+    const front = document.createElement("div");
+    front.className = "sp-gold-face sp-gold-front";
+    const frontLink = document.createElement("a");
+    frontLink.className = "sp-gold-toggle";
+    frontLink.href = sponsor.url && sponsor.url !== "#" ? sponsor.url : "#";
+    frontLink.target = "_blank";
+    frontLink.rel = "noopener noreferrer";
+    frontLink.setAttribute("aria-label", `Visit ${sponsor.name || "partner"} website`);
+    const logo = document.createElement("span");
+    logo.className = "sp-gold-logo";
+    const image = document.createElement("img");
+    image.src = logoUrl(sponsor.logo);
+    image.alt = "";
+    image.loading = "lazy";
+    image.decoding = "async";
+    image.width = 260;
+    image.height = 130;
+    image.addEventListener("error", () => card.classList.add("sp-card-logo-missing"), { once: true });
+    logo.appendChild(image);
+    const name = document.createElement("span");
+    name.className = "sp-card-name sp-gold-name";
+    name.textContent = sponsor.name || "Partner";
+    const hint = document.createElement("span");
+    hint.className = "sp-gold-hint";
+    hint.textContent = "Visit sponsor website";
+    frontLink.append(logo, name, hint);
+    front.appendChild(frontLink);
+    const frontDetails = document.createElement("button");
+    frontDetails.className = "sp-mobile-flip";
+    frontDetails.type = "button";
+    frontDetails.textContent = "About this partner";
+    frontDetails.setAttribute("aria-label", `Show ${sponsor.name || "partner"} description`);
+    front.appendChild(frontDetails);
+
+    const back = document.createElement("div");
+    back.className = "sp-gold-face sp-gold-back";
+    back.setAttribute("aria-hidden", "true");
+    const backLink = document.createElement("a");
+    backLink.className = "sp-gold-toggle sp-gold-back-content";
+    backLink.href = sponsor.url && sponsor.url !== "#" ? sponsor.url : "#";
+    backLink.target = "_blank";
+    backLink.rel = "noopener noreferrer";
+    backLink.tabIndex = -1;
+    backLink.setAttribute("aria-label", `Visit ${sponsor.name || "partner"} website`);
+    const backName = document.createElement("span");
+    backName.className = "sp-card-name";
+    backName.textContent = sponsor.name || "Partner";
+    const description = document.createElement("span");
+    description.className = "sp-card-description";
+    description.textContent = sponsor.description || "Learn more about this partner and their support for Ashwa Racing.";
+    backLink.append(backName, description);
+    back.appendChild(backLink);
+    const backDetails = document.createElement("button");
+    backDetails.className = "sp-mobile-flip sp-mobile-flip--back";
+    backDetails.type = "button";
+    backDetails.textContent = "Show logo";
+    backDetails.setAttribute("aria-label", `Show ${sponsor.name || "partner"} logo`);
+    back.appendChild(backDetails);
+
+    inner.append(front, back);
+    card.appendChild(inner);
+    const updateFlip = flipped => {
+      const activeOnFront = front.contains(document.activeElement);
+      const activeOnBack = back.contains(document.activeElement);
+      card.classList.toggle("is-flipped", flipped);
+      front.setAttribute("aria-hidden", String(flipped && !activeOnFront));
+      back.setAttribute("aria-hidden", String(!flipped && !activeOnBack));
+      frontLink.tabIndex = flipped ? -1 : 0;
+      backLink.tabIndex = flipped ? 0 : -1;
+      frontDetails.tabIndex = flipped ? -1 : 0;
+      backDetails.tabIndex = flipped ? 0 : -1;
+    };
+    frontDetails.addEventListener("click", () => {
+      updateFlip(true);
+      backDetails.focus();
+      updateFlip(true);
+    });
+    backDetails.addEventListener("click", () => {
+      updateFlip(false);
+      frontDetails.focus();
+      updateFlip(false);
+    });
+    card.addEventListener("pointerenter", event => {
+      if (event.pointerType === "mouse") updateFlip(true);
+    });
+    card.addEventListener("pointerleave", event => {
+      if (event.pointerType === "mouse") updateFlip(card.contains(document.activeElement));
+    });
+    card.addEventListener("focusin", event => {
+      if (event.target === frontLink || event.target === backLink) updateFlip(true);
+    });
+    card.addEventListener("focusout", event => {
+      if (!card.contains(event.relatedTarget)) updateFlip(false);
+    });
+    return card;
+  }
+
   function buildCategoryNav(tier, sponsors) {
     if (!sponsors.length) return;
     const link = document.createElement("a");
@@ -92,8 +195,8 @@
   async function init() {
     try {
       const data = window.Ashwa?.fetchJSON
-        ? await window.Ashwa.fetchJSON("/assets/data/sponsors.json?v=2")
-        : await fetch("/assets/data/sponsors.json?v=2").then(response => {
+        ? await window.Ashwa.fetchJSON("/assets/data/sponsors.json?v=5")
+        : await fetch("/assets/data/sponsors.json?v=5").then(response => {
             if (!response.ok) throw new Error(`Sponsors request failed (${response.status})`);
             return response.json();
           });

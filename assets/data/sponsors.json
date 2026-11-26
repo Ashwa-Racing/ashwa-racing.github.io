@@ -4,25 +4,25 @@
       "name": "RV College of Engineering",
       "logo": "rvce.svg",
       "url": "https://rvce.edu.in",
-      "description": "Founded in 1963, RVCE is an autonomous engineering institution in Bengaluru focused on technical education, interdisciplinary research, and innovation."
+      "description": "Founded in 1963, RV College of Engineering is an autonomous institution in Bengaluru offering undergraduate, postgraduate, and doctoral programmes. Its teaching and research across engineering disciplines help prepare students to solve practical technical challenges, making it a natural partner for a student racing team."
     },
     {
       "name": "Infineon Technologies",
       "logo": "infineon.svg",
       "url": "https://www.infineon.com",
-      "description": "Infineon is a global semiconductor company developing power systems and IoT solutions for energy efficiency, clean mobility, and secure connected devices."
+      "description": "Infineon develops semiconductors and system solutions for automotive electronics, power systems, and the Internet of Things. Its technologies support vehicle electrification, energy conversion, connectivity, and embedded control—fields closely connected to modern race car engineering."
     },
     {
       "name": "Adani Group",
       "logo": "adani.svg",
       "url": "https://www.adani.com/",
-      "description": "The Adani Group develops businesses across infrastructure, energy and utilities, transport and logistics, materials, and consumer sectors."
+      "description": "The Adani Group operates across infrastructure, energy and utilities, transport and logistics, and other industrial sectors. Its businesses build and run large-scale systems that connect energy, materials, mobility, and commerce across India."
     },
     {
       "name": "Dynamatic Technologies",
       "logo": "dynamatics.svg",
       "url": "https://dynamatics.com/",
-      "description": "Dynamatic Technologies designs and manufactures engineered products for aerospace, hydraulics, metallurgy, and security applications, with operations in India and Europe."
+      "description": "Dynamatic Technologies designs and manufactures precision-engineered products for aerospace, hydraulics, automotive, and metallurgical applications. Its work includes high-precision structures and components used in demanding environments, where reliability and manufacturing quality matter."
     }
   ],
 
@@ -81,17 +81,20 @@
     {
       "name": "TIA Technology India",
       "logo": "tia.png",
-      "url": "https://tiatechnology.in/"
+      "url": "https://tiatechnology.in/",
+      "description": "TIA Technology India designs weighing, filling, packaging, batching, and process-automation solutions for industrial customers."
     },
     {
       "name": "Delhivery",
       "logo": "delhivery.svg",
-      "url": "https://www.delhivery.com"
+      "url": "https://www.delhivery.com",
+      "description": "Delhivery provides technology-enabled logistics and supply-chain services, connecting businesses with customers across India."
     },
     {
       "name": "Aruani Grid",
       "logo": "aruanigrid.png",
-      "url": "https://aruanigrid.com/"
+      "url": "https://aruanigrid.com/",
+      "description": "Aruani Grid is a Bengaluru motorsports venue for go-karting, track days, and driver development."
     }
   ],
 
@@ -99,17 +102,20 @@
     {
       "name": "Fastolex",
       "logo": "fastolex.png",
-      "url": "https://www.tatanexarc.com/company/fastolex-products-utn3938fas42bno/"
+      "url": "https://www.tatanexarc.com/company/fastolex-products-utn3938fas42bno/",
+      "description": "Fastolex Products supplies industrial fasteners, welding accessories, cable ties, drill bits, and related workshop essentials."
     },
     {
       "name": "Speedworks",
       "logo": "speedworks.png",
-      "url": "https://www.speedworks.cc/"
+      "url": "https://www.speedworks.cc/",
+      "description": "Speedworks is a Bengaluru-based automotive performance and tuning business serving drivers and enthusiasts."
     },
     {
       "name": "Progressive Engineers",
       "logo": "progressive-engineers.png",
-      "url": "https://www.progressiveengineers.co.in/"
+      "url": "https://www.progressiveengineers.co.in/",
+      "description": "Progressive Engineers provides engineering products and solutions for industrial automation, machinery, and electronic applications."
     }
   ],
 
@@ -117,132 +123,158 @@
     {
       "name": "Uniflex",
       "logo": "uniflex.svg",
-      "url": "https://myuniflex.com/"
+      "url": "https://myuniflex.com/",
+      "description": "UNIFLEX manufactures hose and tube assemblies, fuel-injection pipes, fittings, adapters, and precision components for automotive, marine, and industrial applications."
     },
     {
       "name": "Royal Brothers",
       "logo": "royalbrothers.svg",
-      "url": "https://www.royalbrothers.com/bangalore/bike-rentals"
+      "url": "https://www.royalbrothers.com/bangalore/bike-rentals",
+      "description": "Royal Brothers connects riders with two-wheeler rentals, making motorcycles and scooters available for local trips and longer journeys."
     },
     {
       "name": "Barrel Exhaust",
       "logo": "barrelexhaust.webp",
-      "url": "https://www.barrelexhaust.com/"
+      "url": "https://www.barrelexhaust.com/",
+      "description": "Barrel Exhaust builds and supplies exhaust systems and components for automotive and motorsport applications."
     },
     {
       "name": "BMC Air Filter",
       "logo": "bmcairfilter.png",
-      "url": "https://www.bmcairfilters.com/en"
+      "url": "https://www.bmcairfilters.com/en",
+      "description": "BMC develops air filtration products for cars, motorcycles, and motorsport, including high-performance air filters and intake systems."
     },
     {
       "name": "Bender",
       "logo": "bender.svg",
-      "url": "https://www.bender-in.com/"
+      "url": "https://www.bender-in.com/",
+      "description": "Bender develops electrical safety products, including insulation monitoring and ground-fault detection systems for industrial and mobile power applications."
     },
     {
       "name": "Elcoats",
       "logo": "elcoats.png",
-      "url": "https://elcoats.com/"
+      "url": "https://elcoats.com/",
+      "description": "Elcoats & Allied Industries provides aluminium anodizing, hard anodizing, chromatising, and electroless nickel finishing for industrial components."
     },
     {
       "name": "Mercedes-Benz",
       "logo": "mercedes.png",
-      "url": "https://www.akshayamotors.mercedes-benz.co.in/passengercars/about-us.html"
+      "url": "https://www.akshayamotors.mercedes-benz.co.in/passengercars/about-us.html",
+      "description": "Mercedes-Benz develops passenger vehicles and mobility technologies, bringing a long engineering legacy in vehicle design, safety, and performance."
     },
     {
       "name": "Endless Customs",
       "logo": "endlesscustoms.png",
-      "url": "https://www.instagram.com/endlesscustomsblr/?hl=en"
+      "url": "https://www.instagram.com/endlesscustomsblr/?hl=en",
+      "description": "Endless Customs is a Bengaluru automotive customization workshop working with vehicle styling and bespoke modifications."
     },
     {
       "name": "Ansys",
       "logo": "ansys.svg",
-      "url": "https://www.ansys.com/en-in"
+      "url": "https://www.ansys.com/en-in",
+      "description": "Ansys simulation software helps engineers model how products and systems behave under real-world operating conditions before they are built."
     },
     {
       "name": "ICP India",
       "logo": "icp.jpg",
-      "url": "http://www.icp-india.com/"
+      "url": "http://www.icp-india.com/",
+      "description": "ICP India is a Bengaluru-based manufacturer of composite products and engineering materials used in industrial applications."
     },
     {
       "name": "Impulse Power",
       "logo": "impulsepower.jpg",
-      "url": "https://impulse-power.com/"
+      "url": "https://impulse-power.com/",
+      "description": "Impulse Power supplies lithium iron phosphate batteries designed for dependable starting power in motorcycles and other demanding applications."
     },
     {
       "name": "Motousher",
       "logo": "motousher.png",
-      "url": "https://www.motousher.com/"
+      "url": "https://www.motousher.com/",
+      "description": "Motousher supplies motorcycle parts, maintenance consumables, riding accessories, and components for adventure bikes."
     },
     {
       "name": "Lion Circuits",
       "logo": "lioncircuits.svg",
-      "url": "https://www.lioncircuits.com/"
+      "url": "https://www.lioncircuits.com/",
+      "description": "Lion Circuits provides electronics manufacturing services, including printed circuit board fabrication and assembly for product teams."
     },
     {
       "name": "Pankaj",
       "logo": "pankaj.png",
-      "url": "https://pankaj.com/"
+      "url": "https://pankaj.com/",
+      "description": "Pankaj Potentiometers manufactures precision potentiometers and position-sensing devices for automation, aerospace, instrumentation, and other engineering applications."
     },
     {
       "name": "Magod Laser",
       "logo": "magodlaser.png",
-      "url": "https://www.magodlaser.in/"
+      "url": "https://www.magodlaser.in/",
+      "description": "Magod Laser provides laser-based manufacturing services including sheet, tube, and 3D-part cutting, welding, cladding, drilling, and metal 3D printing."
     },
     {
       "name": "United Rubber Industries (I) Pvt. Ltd.",
       "logo": "unitedrubber.png",
-      "url": "https://unitedrubber.com/"
+      "url": "https://unitedrubber.com/",
+      "description": "United Rubber Industries manufactures rubber products and components for industrial and engineering applications."
     },
     {
       "name": "PCBWay",
       "logo": "pcbway.svg",
-      "url": "https://www.pcbway.com/"
+      "url": "https://www.pcbway.com/",
+      "description": "PCBWay supports electronics prototyping and production with printed circuit board fabrication, assembly, and related manufacturing services."
     },
     {
       "name": "Powerhaus",
       "logo": "powerhaus.jpg",
-      "url": "https://www.powerhaus.in/MainPageFiles/index.htm"
+      "url": "https://www.powerhaus.in/MainPageFiles/index.htm",
+      "description": "PowerHaus Automotive India distributes performance automotive parts and accessories, connecting specialist brands with workshops, dealers, and retailers."
     },
     {
       "name": "PC Process",
       "logo": "pcprocess.png",
-      "url": "https://www.pcprocess.in/"
+      "url": "https://www.pcprocess.in/",
+      "description": "PC Process is one of Ashwa Racing’s technical partners, contributing expertise and resources to support the team’s engineering work."
     },
     {
       "name": "Triumph Laser",
       "logo": "triumphlaser.png",
-      "url": "https://www.justdial.com/Bangalore/Triumph-Laser-Peenya-2nd-Stage/080PXX80-XX80-180307235407-G2Q7_BZDET"
+      "url": "https://www.justdial.com/Bangalore/Triumph-Laser-Peenya-2nd-Stage/080PXX80-XX80-180307235407-G2Q7_BZDET",
+      "description": "Triumph Laser offers laser-based cutting and manufacturing services for precision components."
     },
     {
       "name": "SolidWorks",
       "logo": "solidworks.svg",
-      "url": "https://www.solidworks.com/"
+      "url": "https://www.solidworks.com/",
+      "description": "SOLIDWORKS provides computer-aided design and product-development tools used to model, test, and document engineering designs."
     },
     {
       "name": "SVE",
       "logo": "sve.png",
-      "url": "#"
+      "url": "#",
+      "description": "SVE is one of Ashwa Racing’s technical partners, supporting the student team as it designs, builds, and develops its race car."
     },
     {
       "name": "ND",
       "logo": "nd.png",
-      "url": "#"
+      "url": "#",
+      "description": "ND is one of Ashwa Racing’s technical partners, contributing to the expertise and resources behind the team’s engineering projects."
     },
     {
       "name": "BTPL",
       "logo": "btpl.png",
-      "url": "#"
+      "url": "#",
+      "description": "BTPL supports Ashwa Racing as a technical partner, helping students take their engineering work from design into practice."
     },
     {
       "name": "Objectify Technologies",
       "logo": "objectify.png",
-      "url": "https://objectify.co.in/"
+      "url": "https://objectify.co.in/",
+      "description": "Objectify Technologies provides 3D printing and additive-manufacturing services that help teams develop and produce functional parts."
     },
     {
       "name": "Realis Simulation",
       "logo": "realissimulation.svg",
-      "url": "https://www.realis-simulation.com/"
+      "url": "https://www.realis-simulation.com/",
+      "description": "Realis Simulation develops virtual engineering software for modelling and optimizing complex physical systems, including vehicle propulsion, structures, and mechanical systems."
     }
   ]
 }
