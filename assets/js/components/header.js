@@ -167,16 +167,28 @@ async function loadLatestSiteUpdate() {
       }
 
       const minimizeButton = toast.querySelector(".site-update-toast__close");
+      const setMinimizeButtonContent = minimized => {
+        minimizeButton.replaceChildren();
+        if (minimized) {
+          const icon = document.createElement("img");
+          icon.src = "https://assets.ashwaracing.org/images/favicon/favicon.svg";
+          icon.alt = "";
+          icon.setAttribute("aria-hidden", "true");
+          minimizeButton.appendChild(icon);
+        } else {
+          minimizeButton.textContent = "×";
+        }
+      };
       const setMinimized = minimized => {
         toast.classList.toggle("is-minimized", minimized);
-        minimizeButton.textContent = minimized ? "AR" : "×";
+        setMinimizeButtonContent(minimized);
         minimizeButton.setAttribute("aria-label", minimized ? "Show latest Ashwa Racing update" : "Minimize update");
         try {
           if (minimized) localStorage.setItem("ashwa-minimized-blog-update-v2", id);
           else localStorage.removeItem("ashwa-minimized-blog-update-v2");
         } catch (error) {}
       };
-      minimizeButton.textContent = minimizedId === id ? "AR" : "×";
+      setMinimizeButtonContent(minimizedId === id);
       minimizeButton.setAttribute("aria-label", minimizedId === id ? "Show latest Ashwa Racing update" : "Minimize update");
       minimizeButton.addEventListener("click", () => setMinimized(!toast.classList.contains("is-minimized")));
       window.addEventListener("scroll", () => {
