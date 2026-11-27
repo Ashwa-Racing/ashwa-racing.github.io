@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;500;600;700;800&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script>(()=>{let t=null;try{t=localStorage.getItem('ashwa-theme')}catch(e){}document.documentElement.dataset.theme=t==='dark'?'dark':'light'})();</script>
+  <script>(()=>{const q=matchMedia("(prefers-color-scheme: dark)");const set=()=>document.documentElement.dataset.theme=q.matches?"dark":"light";set();q.addEventListener?.("change",set)})();</script>
   <link rel="stylesheet" href="assets/css/pages/admin.css">
 </head>
 <body>
@@ -38,10 +38,7 @@
       <a href="https://ashwaracing.org/blog">Explore</a>
       <a class="ops-nav-cta" href="https://ashwaracing.org/contact">Contact us</a>
     </nav>
-    <button class="ops-theme-toggle" id="ops-theme-toggle" type="button" aria-label="Switch to dark mode" aria-pressed="false">
-      <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z"/></svg>
-      <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l-1.41-1.41"/></svg>
-    </button>
+
   </header>
   <main class="ops-shell">
     <div class="ops-rails" aria-hidden="true">

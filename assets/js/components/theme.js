@@ -1,41 +1,11 @@
 "use strict";
 
-/* ============================================================
-   ASHWA RACING — theme.js
-   Shared theme toggle + theme-aware brand logos, extracted from
-   pages/index.js. The inline <head> script sets data-theme before
-   first paint; this file only wires up the toggle.
-   ============================================================ */
+/* Follow the device appearance preference and update theme-aware logos. */
+const ashwaColorScheme = window.matchMedia("(prefers-color-scheme: dark)");
 
-function initThemeToggle() {
-  const button = document.getElementById("theme-toggle");
-  if (!button) return;
-
-  const root = document.documentElement;
-
-  function updateButton(theme) {
-    const isLight = theme === "light";
-    button.setAttribute("aria-pressed", String(isLight));
-    button.setAttribute("aria-label", isLight ? "Switch to dark mode" : "Switch to light mode");
-    updateBrandLogos();
-  }
-
-  updateButton(root.dataset.theme === "light" ? "light" : "dark");
-
-  button.addEventListener("click", () => {
-    const nextTheme = root.dataset.theme === "light" ? "dark" : "light";
-
-    // Restart the colour-transition class (void read forces a reflow).
-    root.classList.remove("theme-transition");
-    void root.offsetWidth;
-    root.classList.add("theme-transition");
-
-    root.dataset.theme = nextTheme;
-    try { localStorage.setItem("ashwa-theme", nextTheme); } catch (e) {}
-
-    updateButton(nextTheme);
-    setTimeout(() => root.classList.remove("theme-transition"), 500);
-  });
+function applySystemTheme() {
+  document.documentElement.dataset.theme = ashwaColorScheme.matches ? "dark" : "light";
+  updateBrandLogos();
 }
 
 /* ── Theme-aware logos: foo.svg -> foo-light.svg in light mode ── */
@@ -78,9 +48,9 @@ function initBrandLogoObserver() {
 }
 
 document.addEventListener("ashwa:pagechange", () => {
-  initThemeToggle();
-  updateBrandLogos();
+  applySystemTheme();
 });
 
-initThemeToggle();
+ashwaColorScheme.addEventListener?.("change", applySystemTheme);
+applySystemTheme();
 initBrandLogoObserver();

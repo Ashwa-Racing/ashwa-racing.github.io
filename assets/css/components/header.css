@@ -374,6 +374,7 @@
 .site-update-toast__close:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
 .site-update-toast.is-minimized .site-update-toast__close { width: 100%; height: 100%; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; color: var(--text-strong); font: 800 .72rem/1 var(--display); letter-spacing: .08em; }
 .site-update-toast.is-minimized .site-update-toast__close img { display: block; width: 34px; height: 34px; object-fit: contain; }
+html[data-theme="dark"] .site-update-toast.is-minimized .site-update-toast__close img { filter: grayscale(1) brightness(0) invert(1); }
 .site-update-toast.is-minimized .site-update-toast__close:hover { background: var(--red); color: #fff; }
 @media (max-width: 480px) {
   .site-update-toast { right: 12px; bottom: 12px; grid-template-columns: 7px minmax(0, 1fr) 26px; gap: 8px; width: min(360px, calc(100vw - 24px)); max-height: min(80vh, 620px); max-height: min(80svh, 620px); padding: 12px; }

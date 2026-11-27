@@ -5,7 +5,6 @@
   const filters = document.getElementById('category-filters');
   const groups = document.getElementById('resource-groups');
   const search = document.getElementById('resource-search');
-  const themeToggle = document.getElementById('ops-theme-toggle');
   const loaderStartedAt = performance.now();
   let resources = [];
   let privateLinks = {};
@@ -92,12 +91,6 @@
     ], 'Blog articles and newsletter issues published by year');
   }
 
-  function syncThemeToggle() {
-    const light = document.documentElement.dataset.theme === 'light';
-    themeToggle.setAttribute('aria-pressed', String(light));
-    themeToggle.setAttribute('aria-label', `Switch to ${light ? 'dark' : 'light'} mode`);
-  }
-
   function renderFilters() {
     filters.innerHTML = categories.map(category => `<button class="filter" type="button" aria-pressed="${category === activeCategory}" data-category="${escapeHtml(category)}">${escapeHtml(category)}</button>`).join('');
     filters.querySelectorAll('button').forEach(button => button.addEventListener('click', () => { activeCategory = button.dataset.category; renderFilters(); renderResources(); }));
@@ -128,13 +121,6 @@
   }
 
   search.addEventListener('input', renderResources);
-  themeToggle.addEventListener('click', () => {
-    const nextTheme = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
-    document.documentElement.dataset.theme = nextTheme;
-    try { localStorage.setItem('ashwa-theme', nextTheme); } catch (error) {}
-    syncThemeToggle();
-  });
-  syncThemeToggle();
   loadPublishedCounts();
   Promise.all([
     fetch(dataPath, { cache:'no-cache' }).then(response => { if (!response.ok) throw new Error('The directory data is not available.'); return response.json(); }),

@@ -33,16 +33,10 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap"></noscript>
 
-  <script>
-    (() => {
-      let theme = null;
-      try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {}
-      document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
-    })();
-  </script>
+  <script>(()=>{const q=matchMedia("(prefers-color-scheme: dark)");const set=()=>document.documentElement.dataset.theme=q.matches?"dark":"light";set()})();</script>
 
   <link rel="stylesheet" href="assets/css/components/base.css?v=49">
-  <link rel="stylesheet" href="assets/css/components/header.css?v=8">
+  <link rel="stylesheet" href="assets/css/components/header.css?v=10">
   <link rel="stylesheet" href="assets/css/pages/blog.css?v=3">
   <link rel="stylesheet" href="assets/css/components/footer.css?v=52">
 </head>
@@ -50,10 +44,7 @@
 <body class="blog-page">
 
   <div id="main-header"></div>
-  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" /></svg>
-  </button>
+
 
   <main>
     <section class="blog-hero" aria-labelledby="blog-title">
@@ -107,7 +98,7 @@
 
   <script src="assets/js/pages/blog.js?v=2" defer></script>
   <script src="assets/js/components/header.js?v=25" defer></script>
-  <script src="assets/js/components/theme.js?v=1" defer></script>
+  <script src="assets/js/components/theme.js?v=2" defer></script>
 
 </body>
 

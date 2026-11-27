@@ -703,84 +703,6 @@ body {
 }
 
 /* ============================================================
-   THEME TOGGLE
-   ============================================================ */
-
-.theme-toggle {
-  position: fixed;
-  top: calc(var(--nav-h) + 16px);
-  right: var(--site-gutter);
-  z-index: 1100;
-  width: 42px;
-  height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: 0;
-  background: rgba(8,9,12,.72);
-  color: var(--text-strong);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  cursor: pointer;
-  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s var(--expo);
-}
-
-.theme-toggle:hover {
-  background: var(--red);
-  border-color: var(--red);
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-.theme-toggle:focus-visible {
-  outline: 2px solid var(--red);
-  outline-offset: 3px;
-}
-
-.theme-toggle svg {
-  width: 18px;
-  height: 18px;
-  display: block;
-}
-
-.theme-toggle .icon-sun { display: none; }
-.theme-toggle .icon-moon { display: block; }
-
-html[data-theme="light"] .theme-toggle {
-  background: rgba(255,255,255,.86);
-  color: var(--text-strong);
-}
-
-html[data-theme="light"] .theme-toggle .icon-sun { display: block; }
-html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
-
-/* ============================================================
-   THEME TRANSITION
-   ============================================================ */
-
-html::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  background: #808080;
-  opacity: 0;
-}
-
-html.theme-transition::before {
-  animation: theme-fade .38s ease;
-}
-
-@keyframes theme-fade {
-  0% { opacity: 0; }
-  45% { opacity: .10; }
-  100% { opacity: 0; }
-}
-
-/* ============================================================
    LIGHT MODE
    ============================================================ */
 
@@ -954,15 +876,7 @@ html[data-theme="light"] .footer-divider {
   background: var(--border);
 }
 
-/* Mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: calc(var(--nav-h) + 12px);
-    right: var(--site-gutter);
-    width: 38px;
-    height: 38px;
-  }
-}
+
 
 /* ─── Accessibility ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {

@@ -143,48 +143,6 @@ html[data-theme="light"] :is(
   background-repeat: repeat, repeat, no-repeat, no-repeat;
 }
 
-/* â”€â”€ Theme toggle â”€â”€ */
-.theme-toggle {
-  position: fixed;
-  top: calc(var(--nav-h) + 16px);
-  right: var(--site-gutter);
-  z-index: 1100;
-  width: 42px;
-  height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 1px solid var(--border-strong);
-  background: rgba(8,9,12,0.72);
-  color: var(--text-strong);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  cursor: pointer;
-  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s var(--expo);
-}
-.theme-toggle:hover { background: var(--red); border-color: var(--red); color: #fff; transform: translateY(-2px); }
-.theme-toggle:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
-.theme-toggle svg { width: 18px; height: 18px; display: block; }
-.theme-toggle .icon-sun  { display: none; }
-.theme-toggle .icon-moon { display: block; }
-
-html[data-theme="light"] .theme-toggle { background: rgba(255,255,255,0.86); }
-html[data-theme="light"] .theme-toggle .icon-sun  { display: block; }
-html[data-theme="light"] .theme-toggle .icon-moon { display: none; }
-
-@media (max-width: 768px) {
-  .theme-toggle { top: calc(var(--nav-h) + 12px); width: 38px; height: 38px; }
-}
-
-/* Colour transition while the theme flips (class is added/removed by theme.js) */
-html.theme-transition,
-html.theme-transition *,
-html.theme-transition *::before,
-html.theme-transition *::after {
-  transition: background-color .35s ease, color .35s ease, border-color .35s ease !important;
-}
-
 /* â”€â”€ Page base â”€â”€ */
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

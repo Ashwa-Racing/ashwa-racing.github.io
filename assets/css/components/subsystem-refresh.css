@@ -106,7 +106,6 @@ body.site-subsystem-page img { max-width: 100%; }
 body.site-subsystem-page main img:not([src$=".svg"]) { border-color: var(--border); }
 body.site-subsystem-page :is(.btn,.btn-ashwa-red,.cw-btn,.smp-main-content a.btn) { border-radius: 0; }
 body.site-subsystem-page :is(.build-mode,.placeholder-page,.under-construction) { min-height: 66svh; padding: var(--section-pad) var(--site-gutter); color: var(--text); background: var(--page-bg); }
-body.site-subsystem-page .theme-toggle { position: fixed; }
 
 /* Purposeful launch pages for the three sections that previously only said "under development". */
 .ss-page { background: var(--page-bg); }

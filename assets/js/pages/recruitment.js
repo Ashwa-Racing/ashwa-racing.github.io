@@ -12,134 +12,6 @@ const RECRUITMENT = {
 const prefersReducedMotion =
   matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-
-/* ============================================================
-   THEME
-   ============================================================ */
-
-function getLightLogoUrl(url) {
-  return url
-    ? url.replace(/(\.[^./?#]+)([?#].*)?$/, "-light$1$2")
-    : url;
-}
-
-function updateBrandLogos() {
-  const isLight = document.documentElement.dataset.theme === "light";
-
-  document.querySelectorAll(".brand-logo-img").forEach(logo => {
-    const darkLogo =
-      logo.dataset.darkLogo || logo.getAttribute("src");
-
-    if (!darkLogo) return;
-
-    logo.dataset.darkLogo = darkLogo;
-
-    const wanted =
-      isLight && !logo.dataset.lightMissing
-        ? getLightLogoUrl(darkLogo)
-        : darkLogo;
-
-    logo.onerror = isLight
-      ? () => {
-          logo.onerror = null;
-          logo.dataset.lightMissing = "1";
-          logo.setAttribute("src", darkLogo);
-        }
-      : null;
-
-    if (logo.getAttribute("src") !== wanted) {
-      logo.setAttribute("src", wanted);
-    }
-  });
-}
-
-function initThemeToggle() {
-  const button = document.getElementById("theme-toggle");
-  if (!button) return;
-
-  const root = document.documentElement;
-
-  function updateButton(theme) {
-    const isLight = theme === "light";
-
-    button.setAttribute(
-      "aria-pressed",
-      String(isLight)
-    );
-
-    button.setAttribute(
-      "aria-label",
-      isLight
-        ? "Switch to dark mode"
-        : "Switch to light mode"
-    );
-
-    updateBrandLogos();
-  }
-
-  updateButton(
-    root.dataset.theme === "light"
-      ? "light"
-      : "dark"
-  );
-
-  button.addEventListener("click", () => {
-    const nextTheme =
-      root.dataset.theme === "light"
-        ? "dark"
-        : "light";
-
-    root.classList.remove("theme-transition");
-
-    void root.offsetWidth;
-
-    root.classList.add("theme-transition");
-    root.dataset.theme = nextTheme;
-
-    try {
-      localStorage.setItem(
-        "ashwa-theme",
-        nextTheme
-      );
-    } catch (e) {}
-
-    updateButton(nextTheme);
-
-    setTimeout(
-      () =>
-        root.classList.remove(
-          "theme-transition"
-        ),
-      500
-    );
-  });
-}
-
-
-/*
- * Header and footer are injected dynamically.
- * Watch only those containers for their logos.
- */
-function initBrandLogoObserver() {
-  const observer =
-    new MutationObserver(updateBrandLogos);
-
-  ["main-header", "main-footer"].forEach(id => {
-    const element =
-      document.getElementById(id);
-
-    if (!element) return;
-
-    observer.observe(element, {
-      childList: true,
-      subtree: true
-    });
-  });
-
-  updateBrandLogos();
-}
-
-
 /* ============================================================
    RECRUITMENT STATUS
    ============================================================ */
@@ -205,7 +77,6 @@ function initRecruitmentStatus() {
   }
 }
 
-
 /* ============================================================
    SCROLL REVEALS
    ============================================================ */
@@ -253,7 +124,6 @@ function initReveal() {
     observer.observe(el)
   );
 }
-
 
 /* ============================================================
    STAT COUNTERS
@@ -352,7 +222,6 @@ function initStatCounters() {
   );
 }
 
-
 /* ============================================================
    VIDEO FACADE
    ============================================================ */
@@ -375,20 +244,16 @@ function initVideoFacade() {
   });
 }
 
-
 /* ============================================================
    INIT
    ============================================================ */
 
 function initRecruitment() {
-  initThemeToggle();
-  initBrandLogoObserver();
   initRecruitmentStatus();
   initReveal();
   initStatCounters();
   initVideoFacade();
 }
-
 
 /* ============================================================
    DOM READY

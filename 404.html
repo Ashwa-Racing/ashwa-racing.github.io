@@ -10,24 +10,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-  <script>
-    (() => {
-      let theme = null;
-      try { theme = localStorage.getItem("ashwa-theme"); } catch (error) {}
-      document.documentElement.dataset.theme = theme === "dark" ? "dark" : "light";
-    })();
-  </script>
+  <script>(()=>{const q=matchMedia("(prefers-color-scheme: dark)");const set=()=>document.documentElement.dataset.theme=q.matches?"dark":"light";set()})();</script>
   <link rel="stylesheet" href="/assets/css/components/base.css?v=49">
-  <link rel="stylesheet" href="/assets/css/components/header.css?v=8">
+  <link rel="stylesheet" href="/assets/css/components/header.css?v=10">
   <link rel="stylesheet" href="/assets/css/components/footer.css?v=52">
   <link rel="stylesheet" href="/assets/css/pages/404.css">
 </head>
 <body>
   <div id="main-header"></div>
-  <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light mode" aria-pressed="false">
-    <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.6 6.6 0 0 0 21 12.8Z" /></svg>
-    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l-1.41 1.41M17.66 6.34l1.41-1.41" /></svg>
-  </button>
+
   <main class="not-found">
     <div class="not-found-mark" aria-hidden="true">404</div>
     <div class="not-found-copy">
@@ -45,6 +36,6 @@
   </main>
   <footer id="main-footer"></footer>
   <script src="/assets/js/components/header.js?v=25" defer></script>
-  <script src="/assets/js/components/theme.js?v=1" defer></script>
+  <script src="/assets/js/components/theme.js?v=2" defer></script>
 </body>
 </html>
